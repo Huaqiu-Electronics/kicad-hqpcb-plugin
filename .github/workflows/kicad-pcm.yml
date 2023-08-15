@@ -37,7 +37,7 @@ jobs:
           tag: ${{ steps.latest-release.outputs.tag }}
 
       - name: Trigger custom kicad repo rebuild
-        uses: benc-uk/workflow-dispatch@v1
+        uses: benc-uk/workflow-dispatch@v1.2.2
         with:
           workflow: Rebuild repository
           ref: refs/heads/main
