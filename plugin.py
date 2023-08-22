@@ -6,7 +6,7 @@ from . import dialog_amf
 
 class Plugin(pcbnew.ActionPlugin):
     def __init__(self):
-        self.name = "NextPCB"
+        self.name = "HQ NextPCB Active Manufacturing"
         self.category = "Manufacturing"
         self.description = "Quote and place order with one button click."
         self.pcbnew_icon_support = hasattr(self, "show_toolbar_button")
