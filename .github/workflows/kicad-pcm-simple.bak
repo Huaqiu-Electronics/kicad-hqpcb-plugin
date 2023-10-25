@@ -2,7 +2,7 @@
 # This is a workflow to generate the zip file and metadata.json for KiCAD PCM
 # https://gitlab.com/kicad/addons/metadata/-/merge_requests/14
 
-name: KiCAD PCM packaging and trigger kicad-addone
+name: KiCAD PCM packaging
 on: # yamllint disable-line rule:truthy
   release:
     branches: [main]
@@ -17,7 +17,7 @@ jobs:
       - name: Get latest tag
         uses: oprypin/find-latest-tag@v1
         with:
-          repository: SYSUeric66/kicad-amf-plugin
+          repository: Liangtie/kicad-amf-plugin
           releases-only: true
         id: latest-release
 
@@ -36,17 +36,8 @@ jobs:
       - name: Upload zip as asset to release
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.ACTION_SECRETS_1 }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./PCM/KiCAD-PCM-${{ steps.latest-release.outputs.tag }}.zip
           asset_name: KiCAD-PCM-${{ steps.latest-release.outputs.tag }}.zip
           overwrite: true
           tag: ${{ steps.latest-release.outputs.tag }}
-
-      - name: Trigger custom kicad repo rebuild
-        uses: benc-uk/workflow-dispatch@v1.2.2
-        with:
-          workflow: Rebuild repository
-          ref: refs/heads/main
-          repo: SYSUeric66/SYSUeric66-kicad-addone-repository
-          token: ${{ secrets.PERSONAL_TOKEN1 }}
-          inputs: '{ "VERSION": "${{env.VERSION}}", "DOWNLOAD_SHA256": "${{env.DOWNLOAD_SHA256}}", "DOWNLOAD_SIZE": "${{env.DOWNLOAD_SIZE}}", "DOWNLOAD_URL": "${{env.DOWNLOAD_URL}}", "INSTALL_SIZE": "${{env.INSTALL_SIZE}}" }'

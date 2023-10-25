@@ -4,6 +4,8 @@ import os
 import re
 from pathlib import Path
 from zipfile import ZipFile
+import contextlib
+import shutil
 
 from pcbnew import (
     EXCELLON_WRITER,
@@ -34,25 +36,34 @@ from pcbnew import (
 from .helpers import get_exclude_from_pos, get_footprint_by_ref, get_smd, is_nightly
 
 
-class Fabrication:
-    def __init__(self, parent):
+class FabricationDataGenerator:
+    def __init__(self, board):
         self.logger = logging.getLogger(__name__)
-        self.parent = parent
-        self.board = GetBoard()
+        self.board = board
         self.corrections = []
         self.path, self.filename = os.path.split(self.board.GetFileName())
-        self.create_folders()
+
+    @property
+    def nextpcb_root(self):
+        return os.path.join(self.path, "nextpcb_amf")
+
+    @property
+    def output_dir(self):
+        return os.path.join(self.nextpcb_root, "output_files")
+
+    def __del__(self):
+        if os.path.exists(self.output_dir):
+            os.remove(self.output_dir)
 
     def create_folders(self):
         """Create output folders if they not already exist."""
-        self.outputdir = os.path.join(self.path, "nextpcb_amf", "output_files")
-        Path(self.outputdir).mkdir(parents=True, exist_ok=True)
+        Path(self.output_dir).mkdir(parents=True, exist_ok=True)
         self.gerberdir = os.path.join(self.path, "nextpcb_amf", "gerber")
         Path(self.gerberdir).mkdir(parents=True, exist_ok=True)
 
     def fill_zones(self):
         """Refill copper zones following user prompt."""
-        #if self.parent.settings.get("gerber", {}).get("fill_zones", True):
+        # if self.parent.settings.get("gerber", {}).get("fill_zones", True):
         filler = ZONE_FILLER(self.board)
         zones = self.board.Zones()
         filler.Fill(zones)
@@ -122,60 +133,39 @@ class Fabrication:
         if not layer_count:
             layer_count = self.board.GetCopperLayerCount()
 
+        plot_plan_top = [
+            ("CuTop", F_Cu, "Top layer"),
+            ("SilkTop", F_SilkS, "Silk top"),
+            ("MaskTop", F_Mask, "Mask top"),
+            ("PasteTop", F_Paste, "Paste top"),
+        ]
+        plot_plan_bottom = [
+            ("CuBottom", B_Cu, "Bottom layer"),
+            ("SilkBottom", B_SilkS, "Silk top"),
+            ("MaskBottom", B_Mask, "Mask bottom"),
+            ("PasteBottom", B_Paste, "Paste bottom"),
+            ("EdgeCuts", Edge_Cuts, "Edges"),
+            ("VScore", Cmts_User, "V score cut"),
+        ]
+
+        plot_plan = []
+
+        # Single sided PCB
         if layer_count == 1:
-            plot_plan = [
-                ("CuTop", F_Cu, "Top layer"),
-                ("SilkTop", F_SilkS, "Silk top"),
-                ("MaskTop", F_Mask, "Mask top"),
-                ("PasteTop", F_Paste, "Paste top"),
-                ("EdgeCuts", Edge_Cuts, "Edges"),
-                ("VScore", Cmts_User, "V score cut"),
-            ]
+            plot_plan = plot_plan_top + plot_plan_bottom[-2:]
+        # Double sided PCB
         elif layer_count == 2:
-            plot_plan = [
-                ("CuTop", F_Cu, "Top layer"),
-                ("SilkTop", F_SilkS, "Silk top"),
-                ("MaskTop", F_Mask, "Mask top"),
-                ("PasteTop", F_Paste, "Paste top"),
-                ("CuBottom", B_Cu, "Bottom layer"),
-                ("SilkBottom", B_SilkS, "Silk top"),
-                ("MaskBottom", B_Mask, "Mask bottom"),
-                ("PasteBottom", B_Paste, "Paste bottom"),
-                ("EdgeCuts", Edge_Cuts, "Edges"),
-                ("VScore", Cmts_User, "V score cut"),
-            ]
-        elif layer_count == 4:
-            plot_plan = [
-                ("CuTop", F_Cu, "Top layer"),
-                ("SilkTop", F_SilkS, "Silk top"),
-                ("MaskTop", F_Mask, "Mask top"),
-                ("PasteTop", F_Paste, "Paste top"),
-                ("CuIn1", In1_Cu, "Inner layer 1"),
-                ("CuIn2", In2_Cu, "Inner layer 2"),
-                ("CuBottom", B_Cu, "Bottom layer"),
-                ("SilkBottom", B_SilkS, "Silk top"),
-                ("MaskBottom", B_Mask, "Mask bottom"),
-                ("PasteBottom", B_Paste, "Paste bottom"),
-                ("EdgeCuts", Edge_Cuts, "Edges"),
-                ("VScore", Cmts_User, "V score cut"),
-            ]
-        elif layer_count == 6:
-            plot_plan = [
-                ("CuTop", F_Cu, "Top layer"),
-                ("SilkTop", F_SilkS, "Silk top"),
-                ("MaskTop", F_Mask, "Mask top"),
-                ("PasteTop", F_Paste, "Paste top"),
-                ("CuIn1", In1_Cu, "Inner layer 1"),
-                ("CuIn2", In2_Cu, "Inner layer 2"),
-                ("CuIn3", In3_Cu, "Inner layer 3"),
-                ("CuIn4", In4_Cu, "Inner layer 4"),
-                ("CuBottom", B_Cu, "Bottom layer"),
-                ("SilkBottom", B_SilkS, "Silk top"),
-                ("MaskBottom", B_Mask, "Mask bottom"),
-                ("PasteBottom", B_Paste, "Paste bottom"),
-                ("EdgeCuts", Edge_Cuts, "Edges"),
-                ("VScore", Cmts_User, "V score cut"),
-            ]
+            plot_plan = plot_plan_top + plot_plan_bottom
+        # Everything with inner layers
+        else:
+            plot_plan = (
+                plot_plan_top
+                + [
+                    (f"CuIn{layer}", layer, f"Inner layer {layer}")
+                    for layer in range(1, layer_count - 1)
+                ]
+                + plot_plan_bottom
+            )
 
         for layer_info in plot_plan:
             if layer_info[1] <= B_Cu:
@@ -205,8 +195,7 @@ class Fabrication:
 
     def zip_gerber_excellon(self):
         """Zip Gerber and Excellon files, ready for upload."""
-        zipname = f"GERBER-{self.filename.split('.')[0]}.zip"
-        with ZipFile(os.path.join(self.outputdir, zipname), "w") as zipfile:
+        with ZipFile(self.zip_file_path, "w") as zipfile:
             for folderName, subfolders, filenames in os.walk(self.gerberdir):
                 for filename in filenames:
                     if not filename.endswith(("gbr", "drl", "pdf")):
@@ -218,10 +207,10 @@ class Fabrication:
     def generate_cpl(self):
         """Generate placement file (CPL)."""
         cplname = f"CPL-{self.filename.split('.')[0]}.csv"
-        #self.corrections = self.parent.library.get_all_correction_data()
+        # self.corrections = self.parent.library.get_all_correction_data()
         aux_orgin = self.board.GetDesignSettings().GetAuxOrigin()
         with open(
-            os.path.join(self.outputdir, cplname), "w", newline="", encoding="utf-8"
+            os.path.join(self.output_dir, cplname), "w", newline="", encoding="utf-8"
         ) as csvfile:
             writer = csv.writer(csvfile, delimiter=",")
             writer.writerow(
@@ -239,7 +228,7 @@ class Fabrication:
                             part[2],
                             ToMM(position.x),
                             ToMM(position.y) * -1,
-                            '',
+                            "",
                             "top" if fp.GetLayer() == 0 else "bottom",
                         ]
                     )
@@ -249,10 +238,28 @@ class Fabrication:
         """Generate BOM file."""
         bomname = f"BOM-{self.filename.split('.')[0]}.csv"
         with open(
-            os.path.join(self.outputdir, bomname), "w", newline="", encoding="utf-8"
+            os.path.join(self.output_dir, bomname), "w", newline="", encoding="utf-8"
         ) as csvfile:
             writer = csv.writer(csvfile, delimiter=",")
             writer.writerow(["Value", "Designator", "Footprint", "MPN"])
             for part in self.parent.store.read_bom_parts():
                 writer.writerow(part)
         self.logger.info("Finished generating BOM file")
+
+    @property
+    def zip_file_path(self):
+        return os.path.join(
+            self.output_dir, f"GERBER-{self.filename.split('.')[0]}.zip"
+        )
+
+    @contextlib.contextmanager
+    def create_kicad_pcb_file(self):
+        try:
+            self.create_folders()
+            self.fill_zones()
+            self.generate_geber(None)
+            self.generate_excellon()
+            self.zip_gerber_excellon()
+            yield self.zip_file_path
+        except Exception as error:
+            logging.error(f"Error while processing kicad pcb file ,detail :  {error}")
