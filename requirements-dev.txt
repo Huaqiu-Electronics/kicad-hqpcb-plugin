@@ -1,4 +1,0 @@
-python-gettext
-pytest
-requests
-pre-commit

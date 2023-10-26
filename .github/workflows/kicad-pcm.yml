@@ -2,8 +2,8 @@
 # This is a workflow to generate the zip file and metadata.json for KiCAD PCM
 # https://gitlab.com/kicad/addons/metadata/-/merge_requests/14
 
-name: KiCAD PCM packaging and trigger kicad-addone
-on: # yamllint disable-line rule:truthy
+name: KiCAD PCM packaging
+on:  # yamllint disable-line rule:truthy
   release:
     branches: [main]
     types:
@@ -23,12 +23,6 @@ jobs:
 
       - name: Checkout repo
         uses: actions/checkout@v3
-
-      - name: Setup env
-        run: pip3 install -r ./requirements-dev.txt
-
-      - name: Unittest
-        run: pytest
 
       - name: Create archive
         run: sh ./PCM/create_pcm_archive.sh ${{ steps.latest-release.outputs.tag }}
