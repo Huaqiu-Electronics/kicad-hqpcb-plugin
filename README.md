@@ -9,7 +9,7 @@ HQ NextPCB's Active manufacturing plugin will help you:
 - Generate Gerber files and upload them to NextPCB along with your personal board settings
 
 Once the upload is complete, you can use the HQDFM Gerber Viewer to double check your manufacturing files, adjust board parameters then add it to your NextPCB cart directly.
-![NextPCB Plugin](https://github.com/HubertHQH/HQ-NextPCB/assets/125419974/b7002006-7fc4-4a02-be14-cd5ab3bb0774)
+![NextPCB Plugin](https://github.com/SYSUeric66/kicad-amf-plugin/blob/8318782634b7f8237bd4a650c37e4031e876e3a0/docs/amf.gif)
 
 ## Features
 

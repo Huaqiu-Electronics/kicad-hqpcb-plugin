@@ -301,7 +301,13 @@ class ProcessInfoView(UiProcessInfo, FormPanelBase):
                     continue
                 minHoleSize = min(minHoleSize, i.GetDrillValue())
 
+        if minTraceWidth is None:
+            minTraceWidth = 0
+        if minTraceClearance is None:
+            minTraceClearance = 0
         self.set_min_trace(
             pcbnew.ToMils(minTraceWidth), pcbnew.ToMils(minTraceClearance)
         )
+        if minHoleSize is None:
+            minHoleSize = 0
         self.set_min_hole(pcbnew.ToMM(minHoleSize))
