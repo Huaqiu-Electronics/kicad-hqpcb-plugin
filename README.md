@@ -33,11 +33,17 @@ You can modify other parameters (E.g. solder mask color, board quantity, etc.) a
 
 _Note: Some combinations are restricted (E.g. white silkscreen cannot be chosen with white solder mask)._
 
-### One-click Gerber generation and sync to the [HQ NextPCB PCB order page](https://www.nextpcb.com/pcb-quote)
+### One-click Gerber generation and sync to the order page
 
 Click the "Place Order" button to generate Gerber and NC drill files and upload them straight to NextPCB's order page along with your board parameters.
 
 Everything is in sync, so no additional adjustments are required. Of course, you are free to change the settings on the website and then proceed to order.
+
+The following regions are supported:
+
+- Europe and the U.S.A : [NextPCB](https://www.nextpcb.com/pcb-quote)
+- China mainland [HQPCB](https://www.hqpcb.com/quote/)
+- Japan:[JP.NextPCB](https://jp.nextpcb.com/pcb-quote#/pcb-quote/)
 
 ## Installation
 
