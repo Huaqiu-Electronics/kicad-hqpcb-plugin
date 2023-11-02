@@ -273,7 +273,6 @@ class ProcessInfoView(UiProcessInfo, FormPanelBase):
         pass
 
     def setup_trace_and_via(self):
-
         designSettings = self.board_manager.board.GetDesignSettings()
         minTraceWidth = (
             designSettings.m_TrackMinWidth

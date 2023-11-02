@@ -84,7 +84,6 @@ class MainFrame(wx.Frame):
         self.init_ui()
 
     def init_ui(self):
-        wx.SizerFlags.DisableConsistencyChecks()
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
 

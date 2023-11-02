@@ -13,21 +13,34 @@ CODE_TO_NAME = {"en": "English", "ja": "Japanese", "zh_CN": "Chinese"}
 def get_supported_language():
     import wx
 
-    return (
-        wx.LANGUAGE_ENGLISH,
-        wx.LANGUAGE_JAPANESE_JAPAN,
-        wx.LANGUAGE_CHINESE_SIMPLIFIED,
-    )
+    try:
+        # NOTE - LANGUAGE_JAPANESE_JAPAN is not available until Kicad 6.0
+        return (
+            wx.LANGUAGE_ENGLISH,
+            wx.LANGUAGE_JAPANESE_JAPAN,
+            wx.LANGUAGE_CHINESE_SIMPLIFIED,
+        )
+    except:
+        return (
+            wx.LANGUAGE_ENGLISH,
+            wx.LANGUAGE_CHINESE_SIMPLIFIED,
+        )
 
 
 def code_to_wx():
     import wx
 
-    return {
-        "en": wx.LANGUAGE_ENGLISH,
-        "ja": wx.LANGUAGE_JAPANESE_JAPAN,
-        "zh_CN": wx.LANGUAGE_CHINESE_SIMPLIFIED,
-    }
+    try:
+        return {
+            "en": wx.LANGUAGE_ENGLISH,
+            "ja": wx.LANGUAGE_JAPANESE_JAPAN,
+            "zh_CN": wx.LANGUAGE_CHINESE_SIMPLIFIED,
+        }
+    except:
+        return {
+            "en": wx.LANGUAGE_ENGLISH,
+            "zh_CN": wx.LANGUAGE_CHINESE_SIMPLIFIED,
+        }
 
 
 def fool_translation():

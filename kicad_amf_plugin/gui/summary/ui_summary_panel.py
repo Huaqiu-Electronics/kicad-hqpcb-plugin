@@ -17,6 +17,9 @@ from kicad_amf_plugin.utils.platebtn import (
     PB_STYLE_SQUARE,
 )
 
+import gettext
+
+_ = gettext.gettext
 
 ###########################################################################
 ## Class UiSummaryPanel
@@ -68,9 +71,9 @@ class UiSummaryPanel(wx.Panel):
         )
         sbSizer4.Add(self.btn_set_language, 0, wx.ALL, 5)
 
-        bSizer3.Add(sbSizer4, 1, wx.ALIGN_CENTER | wx.EXPAND, 5)
+        bSizer3.Add(sbSizer4, 1, wx.EXPAND, 5)
 
-        bSizer1.Add(bSizer3, 0, wx.ALIGN_CENTER | wx.EXPAND, 5)
+        bSizer1.Add(bSizer3, 0, wx.EXPAND, 5)
 
         sbSizer1 = wx.StaticBoxSizer(
             wx.StaticBox(self, wx.ID_ANY, _("Cost detail")), wx.VERTICAL
@@ -110,7 +113,7 @@ class UiSummaryPanel(wx.Panel):
             style=PB_STYLE_GRADIENT,
             label=_("Update Price"),
         )
-        bSizer31.Add(self.btn_update_price, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
+        bSizer31.Add(self.btn_update_price, 1, wx.ALL | wx.EXPAND, 5)
 
         self.btn_place_order = PlateButton(
             self,
@@ -118,14 +121,9 @@ class UiSummaryPanel(wx.Panel):
             style=PB_STYLE_GRADIENT,
             label=_("Add to Cart"),
         )
-        bSizer31.Add(self.btn_place_order, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
+        bSizer31.Add(self.btn_place_order, 1, wx.ALL | wx.EXPAND, 5)
 
-        bSizer1.Add(
-            bSizer31,
-            0,
-            wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL | wx.EXPAND,
-            5,
-        )
+        bSizer1.Add(bSizer31, 0, wx.EXPAND, 5)
 
         self.SetSizer(bSizer1)
         self.Layout()
