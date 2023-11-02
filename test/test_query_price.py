@@ -4,8 +4,6 @@ from kicad_amf_plugin.utils.request_helper import RequestHelper
 from kicad_amf_plugin.order.supported_region import SupportedRegion
 from kicad_amf_plugin.order.order_region import OrderRegion, URL_KIND
 
-import requests
-
 import urllib
 import os
 import json
