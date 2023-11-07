@@ -32,9 +32,11 @@ for code in CODE_TO_NAME:
 appFolder = os.path.abspath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 )
+import platform
 
-# if False:
-if os.name == "nt":
+m ,s , _ = platform.python_version_tuple()
+
+if os.name == "nt" and m == '3' and s == '8' :
     # setup some stuff to get at Python I18N tools/utilities
     pyExe = sys.executable
     pyFolder = os.path.split(pyExe)[0]

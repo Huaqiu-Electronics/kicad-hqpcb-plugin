@@ -17,6 +17,11 @@ WIDTH = "width"
 
 HEIGHT = "height"
 
+SASH_POS = "sash_pos"
+
+
+DEFAULT_WIDTH = 660
+
 PRICE_UNIT = {0: "¥", 1: "$"}
 
 TRANSLATED_PRICE_UNIT = {"¥": "元", "$": "美元"}
@@ -47,7 +52,7 @@ class _SettingManager(wx.EvtHandler):
             self.set_language(KiCadSetting.read_lang_setting())
             self.app_conf.Flush()
         if not self.app_conf.HasEntry(WIDTH) or not self.app_conf.HasEntry(HEIGHT):
-            self.set_window_size((660, 700))
+            self.set_window_size((DEFAULT_WIDTH, 700))
         if not self.app_conf.HasEntry(ORDER_REGION):
             location = "China"
             try:
@@ -75,12 +80,20 @@ class _SettingManager(wx.EvtHandler):
             self.app_conf.Flush()
             wx.PostEvent(self.app, evt)
 
+    def get_sash_position(self):
+        return self.app_conf.ReadInt(SASH_POS, DEFAULT_WIDTH * 4 / 7)
+
+    def set_sash_pos(self, pos: int):
+        self.app_conf.WriteInt(SASH_POS, pos)
+        self.app_conf.Flush()
+
     @property
     def language(self):
         return self.app_conf.ReadInt(LANGUAGE)
 
     def set_order_region(self, region: int):
         self.app_conf.WriteInt(key=ORDER_REGION, value=region)
+        self.app_conf.Flush()
 
     @property
     def order_region(self):

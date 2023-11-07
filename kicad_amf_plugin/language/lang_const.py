@@ -10,6 +10,12 @@ DEFAULT_LANG = ENGLISH
 CODE_TO_NAME = {"en": "English", "ja": "Japanese", "zh_CN": "Chinese"}
 
 
+try:
+    from wx import LANGUAGE_JAPANESE_JAPAN
+except:
+    CODE_TO_NAME = {"en": "English", "zh_CN": "Chinese"}
+
+
 def get_supported_language():
     import wx
 

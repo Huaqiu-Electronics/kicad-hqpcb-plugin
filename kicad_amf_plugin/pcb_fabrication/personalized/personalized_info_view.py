@@ -93,6 +93,7 @@ class PersonalizedInfoView(UiPersonalizedService, FormPanelBase):
         for comb in map:
             comb.Append([i.DisplayRole for i in map[comb]])
             comb.SetSelection(0)
+        self.on_region_changed()
 
     @fitter_and_map_form_value
     def get_from(self, kind: FormKind) -> "dict":

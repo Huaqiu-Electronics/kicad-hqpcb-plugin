@@ -256,12 +256,9 @@ class FabricationDataGenerator:
 
     @contextlib.contextmanager
     def create_kicad_pcb_file(self):
-        try:
-            self.create_folders()
-            self.fill_zones()
-            self.generate_geber(None)
-            self.generate_excellon()
-            self.zip_gerber_excellon()
-            yield self.zip_file_path
-        except Exception as error:
-            logging.error(f"Error while processing kicad pcb file ,detail :  {error}")
+        self.create_folders()
+        self.fill_zones()
+        self.generate_geber(None)
+        self.generate_excellon()
+        self.zip_gerber_excellon()
+        yield self.zip_file_path

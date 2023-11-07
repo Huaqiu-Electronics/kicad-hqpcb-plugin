@@ -1,4 +1,3 @@
-from wx.lib.mixins.inspection import InspectionMixin
 from kicad_amf_plugin.language.lang_const import get_supported_language
 from kicad_amf_plugin.language.lang_const import LANG_DOMAIN
 from kicad_amf_plugin.settings.supported_layer_count import AVAILABLE_LAYER_COUNTS
@@ -21,30 +20,25 @@ def _displayHook(obj):
         print(repr(obj))
 
 
-class BaseApp(wx.App, InspectionMixin):
-    def __init__(
-        self, redirect=False, filename=None, useBestVisual=False, clearSigInt=True
-    ):
-        super().__init__(redirect, filename, useBestVisual, clearSigInt)
+class BaseApp(wx.EvtHandler):
+    def __init__(self):
+        super().__init__()
         self.Bind(EVT_LOCALE_CHANGE, self.on_locale_changed)
-
-    def OnInit(self):
-        self.Init()  # InspectionMixin
         # work around for Python stealing "_"
         sys.displayhook = _displayHook
         self.locale = None
         wx.Locale.AddCatalogLookupPathPrefix(
             os.path.join(PLUGIN_ROOT, "language", "locale")
         )
-        from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
 
+    def load_success(self):
+        from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
         self.update_language(SETTING_MANAGER.language)
         SETTING_MANAGER.register_app(self)
         self.board_manager = load_board_manager()
         if self.board_manager.board.GetCopperLayerCount() not in AVAILABLE_LAYER_COUNTS:
             wx.MessageBox(_("Unsupported layer count!"))
             return False
-        self.startup_dialog()
         return True
 
     def on_locale_changed(self, evt):
@@ -68,6 +62,7 @@ class BaseApp(wx.App, InspectionMixin):
         if lang in get_supported_language():
             selLang = lang
         else:
+            wx.MessageBox(f"Unexpected language id {lang}")
             selLang = wx.LANGUAGE_ENGLISH
         if self.locale:
             assert sys.getrefcount(self.locale) <= 2
@@ -77,6 +72,7 @@ class BaseApp(wx.App, InspectionMixin):
         if self.locale.IsOk():
             self.locale.AddCatalog(LANG_DOMAIN)
         else:
+            wx.MessageBox(self.locale.GetLocale() +  _(" is not supported"))
             self.locale = None
 
     def startup_dialog(self):
