@@ -1,14 +1,4 @@
-# language domain
-LANG_DOMAIN = "kicad_amf_plugin"
-
-
-ENGLISH = "English"
-
-DEFAULT_LANG = ENGLISH
-
-
-CODE_TO_NAME = {"en": "English", "ja": "Japanese", "zh_CN": "Chinese"}
-
+from .constraint import CODE_TO_NAME, ENGLISH, DEFAULT_LANG, LANG_DOMAIN
 
 try:
     from wx import LANGUAGE_JAPANESE_JAPAN

@@ -9,8 +9,8 @@
 
 import wx
 import wx.xrc
-from kicad_amf_plugin.utils.platebtn import PlateButton, PB_STYLE_GRADIENT
 import wx.dataview
+from kicad_amf_plugin.utils.platebtn import PlateButton, PB_STYLE_GRADIENT
 from kicad_amf_plugin.utils.platebtn import (
     PlateButton,
     PB_STYLE_GRADIENT,
@@ -48,7 +48,7 @@ class UiSummaryPanel(wx.Panel):
         self.m_staticText1 = wx.StaticText(
             sbSizer4.GetStaticBox(),
             wx.ID_ANY,
-            _("Shipping address"),
+            _("Website"),
             wx.DefaultPosition,
             wx.DefaultSize,
             0,
@@ -71,28 +71,26 @@ class UiSummaryPanel(wx.Panel):
 
         sbSizer4.Add((0, 0), 1, wx.EXPAND, 5)
 
-        self.m_staticline1 = wx.StaticLine(
-            sbSizer4.GetStaticBox(),
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.LI_VERTICAL,
-        )
-        sbSizer4.Add(self.m_staticline1, 0, wx.EXPAND | wx.ALL, 5)
-
-        self.btn_set_language = PlateButton(
-            self,
-            bmp=wx.Bitmap(self.GetImagePath("language.png"), wx.BITMAP_TYPE_ANY),
-            style=PB_STYLE_GRADIENT,
-        )
-        sbSizer4.Add(self.btn_set_language, 0, wx.ALL, 5)
-
         bSizer3.Add(sbSizer4, 1, wx.EXPAND, 5)
 
         bSizer1.Add(bSizer3, 0, wx.EXPAND, 5)
 
+        self.splitter_detail_summary = wx.SplitterWindow(
+            self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_LIVE_UPDATE
+        )
+        self.splitter_detail_summary.Bind(
+            wx.EVT_IDLE, self.splitter_detail_summaryOnIdle
+        )
+
+        self.m_panel1 = wx.Panel(
+            self.splitter_detail_summary,
+            wx.ID_ANY,
+            wx.DefaultPosition,
+            wx.DefaultSize,
+            wx.TAB_TRAVERSAL,
+        )
         sbSizer1 = wx.StaticBoxSizer(
-            wx.StaticBox(self, wx.ID_ANY, _("Cost detail")), wx.VERTICAL
+            wx.StaticBox(self.m_panel1, wx.ID_ANY, _("Cost detail")), wx.VERTICAL
         )
 
         self.list_price_detail = wx.dataview.DataViewCtrl(
@@ -104,10 +102,18 @@ class UiSummaryPanel(wx.Panel):
         )
         sbSizer1.Add(self.list_price_detail, 1, wx.ALL | wx.EXPAND, 5)
 
-        bSizer1.Add(sbSizer1, 1, wx.EXPAND, 5)
-
+        self.m_panel1.SetSizer(sbSizer1)
+        self.m_panel1.Layout()
+        sbSizer1.Fit(self.m_panel1)
+        self.m_panel2 = wx.Panel(
+            self.splitter_detail_summary,
+            wx.ID_ANY,
+            wx.DefaultPosition,
+            wx.DefaultSize,
+            wx.TAB_TRAVERSAL,
+        )
         sbSizer41 = wx.StaticBoxSizer(
-            wx.StaticBox(self, wx.ID_ANY, _("Order Summary")), wx.VERTICAL
+            wx.StaticBox(self.m_panel2, wx.ID_ANY, _("Order Summary")), wx.VERTICAL
         )
 
         self.list_order_summary = wx.dataview.DataViewCtrl(
@@ -119,7 +125,11 @@ class UiSummaryPanel(wx.Panel):
         )
         sbSizer41.Add(self.list_order_summary, 1, wx.ALL | wx.EXPAND, 5)
 
-        bSizer1.Add(sbSizer41, 0, wx.EXPAND | wx.FIXED_MINSIZE, 5)
+        self.m_panel2.SetSizer(sbSizer41)
+        self.m_panel2.Layout()
+        sbSizer41.Fit(self.m_panel2)
+        self.splitter_detail_summary.SplitHorizontally(self.m_panel1, self.m_panel2, 0)
+        bSizer1.Add(self.splitter_detail_summary, 1, wx.EXPAND, 5)
 
         bSizer31 = wx.BoxSizer(wx.VERTICAL)
 
@@ -147,6 +157,10 @@ class UiSummaryPanel(wx.Panel):
 
     def __del__(self):
         pass
+
+    def splitter_detail_summaryOnIdle(self, event):
+        self.splitter_detail_summary.SetSashPosition(0)
+        self.splitter_detail_summary.Unbind(wx.EVT_IDLE)
 
     # Virtual image path resolution method. Override this in your derived class.
     def GetImagePath(self, bitmap_path):

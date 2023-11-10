@@ -31,7 +31,6 @@ from pcbnew import (
     In2_Cu,
     In3_Cu,
     In4_Cu,
-    Refresh,
     ToMM,
 )
 
@@ -53,10 +52,6 @@ class FabricationDataGenerator:
     def output_dir(self):
         return os.path.join(self.nextpcb_root, "output_files")
 
-    def __del__(self):
-        if os.path.exists(self.output_dir):
-            os.remove(self.output_dir)
-
     def create_folders(self):
         """Create output folders if they not already exist."""
         Path(self.output_dir).mkdir(parents=True, exist_ok=True)
@@ -69,7 +64,6 @@ class FabricationDataGenerator:
         filler = ZONE_FILLER(self.board)
         zones = self.board.Zones()
         filler.Fill(zones)
-        Refresh()
 
     def get_position(self, footprint):
         """Calculate position based on center of bounding box"""

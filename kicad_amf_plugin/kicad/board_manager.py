@@ -2,10 +2,10 @@ from pcbnew import GetBoard, LoadBoard
 import wx
 import os
 
+
 class EmptyBoardException(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
-
 
 
 class BoardManager:

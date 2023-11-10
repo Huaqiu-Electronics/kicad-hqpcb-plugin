@@ -17,10 +17,11 @@ file or to use the .pot to merge new translations into an existing language
 catalog.
 
 """
+import platform
 import subprocess
 import sys
 import os
-from lang_const import CODE_TO_NAME, LANG_DOMAIN, DEFAULT_LANG
+from constraint import CODE_TO_NAME, LANG_DOMAIN, DEFAULT_LANG
 
 # we remove English as source code strings are in English
 supportedLang = []
@@ -32,11 +33,10 @@ for code in CODE_TO_NAME:
 appFolder = os.path.abspath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 )
-import platform
 
-m ,s , _ = platform.python_version_tuple()
+m, s, _ = platform.python_version_tuple()
 
-if os.name == "nt" and m == '3' and s == '8' :
+if os.name == "nt" and m == "3" and s == "8":
     # setup some stuff to get at Python I18N tools/utilities
     pyExe = sys.executable
     pyFolder = os.path.split(pyExe)[0]

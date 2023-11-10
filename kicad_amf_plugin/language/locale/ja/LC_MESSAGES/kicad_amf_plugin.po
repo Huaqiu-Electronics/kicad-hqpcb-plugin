@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-11-06 16:25+0800\n"
-"PO-Revision-Date: 2023-11-06 16:34+0800\n"
+"POT-Creation-Date: 2023-11-08 23:31+0800\n"
+"PO-Revision-Date: 2023-11-08 23:34+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ja\n"
@@ -14,41 +14,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-"X-Generator: Poedit 3.4.1\n"
+"X-Generator: Poedit 3.4\n"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\app_base.py:40
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\app_base.py:37
 msgid "Unsupported layer count!"
 msgstr "ボードレイヤーの数はサポートされていません!"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\app_base.py:48
-msgid ""
-"Restart the plugin to apply the new locale ?\n"
-"For full translation(including the options), restarting KiCad is required"
-msgstr ""
-"プラグインを再起動して新しい言語設定を適用しますか?\n"
-"完全な翻訳 (オプションを含む) が必要な場合は、KiCad を再起動してください"
-
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\app_base.py:51
-msgid "Tip"
-msgstr "先端"
-
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\app_base.py:75
-msgid " is not supported"
-msgstr "がサポートされていない"
-
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\main_frame.py:75
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\main_frame.py:81
 msgid "HQ NextPCB Active Manufacturing"
 msgstr "HQネクストPCBアクティブ製造"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\main_frame.py:219
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\main_frame.py:100
+msgid "Preparing for your order"
+msgstr "ご注文の準備中"
+
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\main_frame.py:101
+msgid "The browser will be launched automatically while ready"
+msgstr "準備が整うとブラウザが自動的に起動します"
+
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\main_frame.py:281
 msgid "No available url for querying price in current region"
 msgstr "現在の地域の価格を照会するための使用可能なURLがありません"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\main_frame.py:239
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\main_frame.py:301
 msgid "Incorrect form parameter: "
 msgstr "フォームパラメータが正しくありません: "
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\main_frame.py:252
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\main_frame.py:312
 msgid "No available url for placing order in current region"
 msgstr "現在の地域で注文するための利用可能なURLがありません"
 
@@ -208,32 +200,32 @@ msgstr "ロチェンマークアップ"
 msgid "SMT"
 msgstr "SMT"
 
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:20
+msgid "Mainland China"
+msgstr "中国本土"
+
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:21
+msgid "Worldwide (English)"
+msgstr "グローバル（英語）"
+
 #: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:22
-msgid "CN"
-msgstr "CN"
+msgid "Worldwide (Japanese)"
+msgstr "グローバル（日本語）"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:23
-msgid "JP"
-msgstr "JP"
-
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:24
-msgid "EU/USA"
-msgstr "EU/USA"
-
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:41
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:42
 msgid "Build Time"
 msgstr "納期"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:48
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:49
 msgid "Qty"
 msgstr "量"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:55
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:76
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:56
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:77
 msgid "Price"
 msgstr "価格"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:69
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:70
 msgid "Item"
 msgstr "アイテム"
 
@@ -242,34 +234,58 @@ msgid "Preference"
 msgstr "好み"
 
 #: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:31
-msgid "Shipping address"
-msgstr "注文地域"
+msgid "Website"
+msgstr "注文サイト"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:53
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:54
 msgid "Cost detail"
 msgstr "費用の詳細"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:61
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:64
 msgid "Order Summary"
 msgstr "注文の概要"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:71
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:78
 msgid "Update Price"
 msgstr "価格を更新する"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:74
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:81
 msgid "Add to Cart"
 msgstr "カートに追加"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\language\lang_const.py:51
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\kicad\fabrication_data_generator_thread.py:31
+msgid "Create fabrication data folder"
+msgstr "製作データフォルダーの作成"
+
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\kicad\fabrication_data_generator_thread.py:34
+msgid "Fill zones"
+msgstr "フィルゾーン"
+
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\kicad\fabrication_data_generator_thread.py:35
+msgid "Generate gerber"
+msgstr "ガーバーを生成する"
+
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\kicad\fabrication_data_generator_thread.py:37
+msgid "Generate excellon"
+msgstr "エクセロンの生成"
+
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\kicad\fabrication_data_generator_thread.py:41
+msgid "Zip gerber and excellon file"
+msgstr "ガーバーおよび Excellon ファイルを ZIP 化する"
+
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\kicad\fabrication_data_generator_thread.py:67
+msgid "Sending order request"
+msgstr "注文リクエストの送信"
+
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\language\lang_const.py:47
 msgid "Chinese"
 msgstr "簡体字中国語"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\language\lang_const.py:51
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\language\lang_const.py:47
 msgid "English"
 msgstr "英語"
 
-#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\language\lang_const.py:51
+#: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\language\lang_const.py:47
 msgid "Japanese"
 msgstr "日本語"
 
@@ -714,7 +730,44 @@ msgstr "積み重ねる"
 
 #: C:\Users\yihuo\Documents\KiCad\7.0\scripting\plugins\kicad-amf-plugin\kicad_amf_plugin\pcb_fabrication\special_process\ui_special_process.py:213
 msgid "Metallized Sides Count"
-msgstr ""
+msgstr "金属化された側面の数"
+
+#~ msgid ""
+#~ "Restart the plugin to apply the new locale ?\n"
+#~ "For full translation(including the options), restarting KiCad is required"
+#~ msgstr ""
+#~ "プラグインを再起動して新しい言語設定を適用しますか?\n"
+#~ "完全な翻訳 (オプションを含む) が必要な場合は、KiCad を再起動してください"
+
+#~ msgid "Tip"
+#~ msgstr "先端"
+
+#~ msgid " is not supported"
+#~ msgstr " がサポートされていない"
+
+#~ msgid "China"
+#~ msgstr "中国"
+
+#~ msgid "Japan"
+#~ msgstr "日本"
+
+#~ msgid "Others"
+#~ msgstr "其它"
+
+#~ msgid "Shipping address"
+#~ msgstr "注文地域"
+
+#~ msgid "Other countries/areas"
+#~ msgstr "その他の国・地域"
+
+#~ msgid "CN"
+#~ msgstr "CN"
+
+#~ msgid "JP"
+#~ msgstr "JP"
+
+#~ msgid "EU/USA"
+#~ msgstr "EU/USA"
 
 #~ msgid "Order Region"
 #~ msgstr "注文地域"

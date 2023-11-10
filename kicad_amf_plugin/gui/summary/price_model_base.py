@@ -1,10 +1,9 @@
 from dataclasses import dataclass
-from enum import Enum
 import abc
 import json
 
 
-class PriceModelCol(Enum):
+class PriceModelCol:
     DESC = 0
     VALUE = DESC + 1
     COL_COUNT = VALUE + 1
