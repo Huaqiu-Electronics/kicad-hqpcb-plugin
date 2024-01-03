@@ -45,6 +45,8 @@ from kicad_amf_plugin.order.order_region import OrderRegion, URL_KIND
 from kicad_amf_plugin.kicad.fabrication_data_generator_thread import DataGenThread
 from enum import Enum
 
+# smt import
+from kicad_amf_plugin.nextpcb_smt.main_gui.smt_main_panel import SMTMainPanel
 
 class PCBFormPart(Enum):
     BASE_INFO = 0
@@ -86,11 +88,54 @@ class MainFrame(wx.Frame):
         self._board_manager = board_manager
         self._fabrication_data_gen = None
         self._fabrication_data_gen_thread = None
-        self._pcb_form_parts: "dict[PCBFormPart, FormPanelBase]" = {}
+        self._pcb_form_parts: "dict[PCBFormPart, FormPanelBase]" = {}        
         self._data_gen_progress: wx.ProgressDialog = None
         self._dataGenThread: DataGenThread = None
         SINGLE_PLUGIN.register_main_wind(self)
-        self.init_ui()
+
+        # ---------------------------------------------------------------------
+        # ---------------------------- amf panel ------------------------------
+        # ---------------------------------------------------------------------
+        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+        main_sizer = wx.BoxSizer( wx.VERTICAL )
+        self.main_notebook = wx.Notebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.main_notebook.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BTNFACE ) )
+        self.active_manufacturing = wx.Panel( self.main_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        self.active_manufacturing.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BTNFACE ) )
+        amf_sizer = wx.BoxSizer( wx.HORIZONTAL )
+        
+        self.init_amf_ui()
+
+        amf_sizer.Add(self.main_splitter, 1, wx.EXPAND, 0)
+        self.active_manufacturing.SetSizer( amf_sizer )
+        self.active_manufacturing.Layout()
+        amf_sizer.Fit( self.active_manufacturing )
+        self.main_notebook.AddPage( self.active_manufacturing, u"   Active Manufacturing   ", True )
+        
+
+        
+        # ---------------------------------------------------------------------
+        # ---------------------------- smt panel ------------------------------
+        # ---------------------------------------------------------------------
+        self.surface_mount_technology = wx.Panel( self.main_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        self.surface_mount_technology.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BTNFACE ) )
+        smt_sizer = wx.BoxSizer( wx.HORIZONTAL )
+        
+        self.smt_main_panel = SMTMainPanel(self.surface_mount_technology)
+
+        smt_sizer.Add( self.smt_main_panel, 1, wx.EXPAND |wx.ALL, 0 )
+        self.surface_mount_technology.SetSizer( smt_sizer )
+        self.surface_mount_technology.Layout()
+        smt_sizer.Fit( self.surface_mount_technology )
+        self.main_notebook.AddPage( self.surface_mount_technology, u"   Surface Mount Technology   ", False )
+        
+        bold_font = wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "Arial")
+        self.main_notebook.SetFont(bold_font)
+        main_sizer.Add( self.main_notebook, 1, wx.ALL|wx.EXPAND, 0 )
+        self.SetSizer( main_sizer )
+        self.Layout()
+        self.Centre( wx.BOTH )        
+        
 
     def show_data_gen_progress_dialog(self):
         if self._data_gen_progress is not None:
@@ -104,10 +149,10 @@ class MainFrame(wx.Frame):
             style=0 | wx.PD_APP_MODAL,
         )
 
-    def init_ui(self):
-        self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
+    def init_amf_ui(self):
+        
         left_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.main_splitter = wx.SplitterWindow(self, style=wx.SP_LIVE_UPDATE)
+        self.main_splitter = wx.SplitterWindow(self.active_manufacturing, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
         self.left_panel_container = wx.Panel(self.main_splitter)
 
         pcb_fab_scroll_wind = wx.ScrolledWindow(
@@ -133,7 +178,7 @@ class MainFrame(wx.Frame):
         self.left_panel_container.Layout()
         left_sizer.Fit(self.left_panel_container)
         self.main_splitter.SplitVertically(
-            self.left_panel_container, self.summary_view, 400
+            self.left_panel_container, self.summary_view, 0
         )
 
         self.Bind(
@@ -164,12 +209,8 @@ class MainFrame(wx.Frame):
         for i in self._pcb_form_parts.values():
             i.init()
             i.on_region_changed()
+        
 
-        main_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        main_sizer.Add(self.main_splitter, 1, wx.EXPAND, 5)
-        self.SetSizer(main_sizer)
-        self.Layout()
-        self.Centre(wx.BOTH)
 
     def on_fabrication_data_gen_progress(self, evt: FabricationDataGenEvent):
         if self._data_gen_progress is not None:
