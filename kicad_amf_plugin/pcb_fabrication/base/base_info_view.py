@@ -4,7 +4,8 @@ from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
 from kicad_amf_plugin.settings.single_plugin import SINGLE_PLUGIN
 from kicad_amf_plugin.utils.form_panel_base import FormKind, FormPanelBase
 from .base_info_model import BaseInfoModel
-from kicad_amf_plugin.gui.event.pcb_fabrication_evt_list import LayerCountChange
+from kicad_amf_plugin.gui.event.pcb_fabrication_evt_list import (
+    LayerCountChange, boardCount,EVT_BOARD_COUNT )
 from .ui_base_info import (
     UiBaseInfo,
     BOX_SIZE_SETTING,
@@ -106,6 +107,7 @@ class BaseInfoView(UiBaseInfo, FormPanelBase):
         self.combo_pcb_package_kind.Bind(wx.EVT_CHOICE, self.on_pcb_packaging_changed)
         self.comb_margin_mode.Bind(wx.EVT_CHOICE, self.on_margin_mode_changed)
         self.combo_layer_count.Bind(wx.EVT_CHOICE, self.on_layer_count_changed)
+        self.combo_quantity.Bind(wx.EVT_CHOICE, self.on_choice)
         for editor in self.edit_panel_x, self.edit_panel_y:
             editor.SetValidator(NumericTextCtrlValidator())
         self.edit_margin_size.SetValidator(FloatTextCtrlValidator())
@@ -260,6 +262,11 @@ class BaseInfoView(UiBaseInfo, FormPanelBase):
             data.sidewidth = self.edit_margin_size.GetValue()
 
         return vars(data)
+
+    def on_choice(self,evt):
+        bcount=self.combo_quantity.GetStringSelection()
+        board_event  =boardCount(id = -1,count = bcount )
+        wx.PostEvent(self.Parent, board_event )
 
     def order_region_is_cn_and_package_by_customer(self):
         return (

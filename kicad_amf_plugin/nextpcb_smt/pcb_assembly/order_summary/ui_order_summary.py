@@ -34,8 +34,8 @@ class UiOrderPanel ( wx.Panel ):
 
 		bSizer9.Add( self.m_staticText2, 0, wx.ALL, 10 )
 
-		self.m_textCtrl1 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer9.Add( self.m_textCtrl1, 1, wx.ALL, 5 )
+		self.pcba_quantity = wx.TextCtrl( self, wx.ID_ANY, _(u"5"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer9.Add( self.pcba_quantity, 1, wx.ALL, 5 )
 
 
 		bSizer1.Add( bSizer9, 0, wx.EXPAND, 5 )
@@ -43,8 +43,8 @@ class UiOrderPanel ( wx.Panel ):
 		self.m_panel1 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		sbSizer1 = wx.StaticBoxSizer( wx.StaticBox( self.m_panel1, wx.ID_ANY, _(u"BOM view") ), wx.VERTICAL )
 
-		self.list_bom_template = wx.dataview.DataViewCtrl( sbSizer1.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.dataview.DV_ROW_LINES|wx.dataview.DV_VERT_RULES )
-		sbSizer1.Add( self.list_bom_template, 3, wx.ALL|wx.EXPAND, 0 )
+		self.list_bom_view = wx.dataview.DataViewListCtrl( sbSizer1.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.dataview.DV_ROW_LINES|wx.dataview.DV_VERT_RULES )
+		sbSizer1.Add( self.list_bom_view, 1, wx.ALL|wx.EXPAND, 0 )
 
 
 		self.m_panel1.SetSizer( sbSizer1 )

@@ -10,7 +10,15 @@ from enum import Enum
 
 from kicad_amf_plugin.kicad.board_manager import BoardManager
 from kicad_amf_plugin.utils.form_panel_base import FormKind, FormPanelBase
-
+from kicad_amf_plugin.pcb_fabrication.base.base_info_view import BaseInfoView
+from kicad_amf_plugin.pcb_fabrication.process.process_info_view import ProcessInfoView
+from kicad_amf_plugin.pcb_fabrication.special_process.special_process_view import (
+    SpecialProcessView,
+)
+from kicad_amf_plugin.pcb_fabrication.personalized.personalized_info_view import (
+    PersonalizedInfoView,
+)
+from kicad_amf_plugin.gui.event.pcb_fabrication_evt_list import EVT_BOARD_COUNT
 
 class PCBFormPart(Enum):
     BASE_INFO = 0
@@ -19,19 +27,24 @@ class PCBFormPart(Enum):
     PERSONALIZED = 3
 
 
+# PCB_PANEL_CTORS = {
+#     PCBFormPart.BASE_INFO: BaseSmtView,
+#     PCBFormPart.PROCESS_INFO: ProcessSmtView,
+#     PCBFormPart.SPECIAL_PROCESS: SpecialProcessSmtView,
+#     PCBFormPart.PERSONALIZED: PersonalizedSmtView,
+# }
 PCB_PANEL_CTORS = {
-    PCBFormPart.BASE_INFO: BaseSmtView,
-    PCBFormPart.PROCESS_INFO: ProcessSmtView,
-    PCBFormPart.SPECIAL_PROCESS: SpecialProcessSmtView,
-    PCBFormPart.PERSONALIZED: PersonalizedSmtView,
+    PCBFormPart.BASE_INFO: BaseInfoView,
+    PCBFormPart.PROCESS_INFO: ProcessInfoView,
+    PCBFormPart.SPECIAL_PROCESS: SpecialProcessView,
+    PCBFormPart.PERSONALIZED: PersonalizedInfoView,
 }
 
-
 class SMTMainPanel(wx.Panel):
-    def __init__(self, parent):
+    def __init__(self, parent, board_manager: BoardManager):
         wx.Panel.__init__(self, parent, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
 
-        self._board_manager = BoardManager
+        self._board_manager = board_manager
         self._pcb_form_parts: "dict[PCBFormPart, FormPanelBase]" = {} 
 
         # ---------------------------------------------------------------------
@@ -41,9 +54,10 @@ class SMTMainPanel(wx.Panel):
         main_sizer = wx.BoxSizer( wx.HORIZONTAL )
 
         self.smt_splitter = wx.SplitterWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
+        
         self.smt_splitter.Bind( wx.EVT_IDLE, self.smt_splitterOnIdle )
         self.smt_scrolledWindow = wx.ScrolledWindow( self.smt_splitter, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
-        self.smt_scrolledWindow.SetScrollRate( 5, 5 )
+        self.smt_scrolledWindow.SetScrollRate( 10, 10 )
         
         lay_pcb_fab_panel = wx.BoxSizer(wx.VERTICAL)
         for i in PCB_PANEL_CTORS:
@@ -60,10 +74,10 @@ class SMTMainPanel(wx.Panel):
         self.smt_right_panel = wx.Panel( self.smt_splitter, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         right_sizer = wx.BoxSizer( wx.VERTICAL )
         region_select_view = RegionSelectView( self.smt_right_panel )
-        order_summary_view = OrderSummaryView( self.smt_right_panel )
+        self.order_summary_view = OrderSummaryView( self.smt_right_panel ,self._board_manager )
         
         right_sizer.Add(region_select_view, 0, wx.EXPAND | wx.ALL, 0)
-        right_sizer.Add(order_summary_view, 2, wx.EXPAND | wx.ALL, 0)
+        right_sizer.Add(self.order_summary_view, 2, wx.EXPAND | wx.ALL, 0)
         
         self.smt_right_panel.SetSizer( right_sizer )
         self.smt_splitter.SplitVertically( self.smt_scrolledWindow, self.smt_right_panel, 0 )
@@ -72,6 +86,19 @@ class SMTMainPanel(wx.Panel):
         self.SetSizer( main_sizer )
         self.Layout()
         self.Centre( wx.BOTH )
+        self.init_ui()
+        
+        # ---------------------------------------------------------------------
+        # ---------------------------- Bind -----------------------------------
+        # ---------------------------------------------------------------------
+         
+        self.Bind(EVT_BOARD_COUNT, self.set_pcba_count )
+    
+    
+    def init_ui(self):
+        for i in self._pcb_form_parts.values():
+            i.init()
+            i.on_region_changed()
 
 
     def __del__( self ):
@@ -80,4 +107,21 @@ class SMTMainPanel(wx.Panel):
     def smt_splitterOnIdle( self, event ):
         self.smt_splitter.SetSashPosition( 0 )
         self.smt_splitter.Unbind( wx.EVT_IDLE )
+        
+        
+    def adjust_size(self):
+        for i in self._pcb_form_parts.values():
+            i.Layout()
+        self.smt_scrolledWindow.Layout()
+        self.Layout()
+
+    def on_order_region_changed(self, ev):
+        for i in self._pcb_form_parts.values():
+            i.on_region_changed()
+        self.adjust_size()
+        
+        
+    def set_pcba_count(self, evt):
+        board_count = evt.count
+        self.order_summary_view.set_pcba_count(board_count)
         

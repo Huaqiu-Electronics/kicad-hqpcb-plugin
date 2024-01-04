@@ -9,7 +9,7 @@ from kicad_amf_plugin.icon import ICON_ROOT
 
 class KiCadAmfActionPlugin(pcbnew.ActionPlugin):
     def __init__(self):
-        self.name = "HQ NextPCB Active Manufacturing"
+        self.name = "HQ NextPCB"
         self.category = "Manufacturing"
         self.description = "Quote and place order with one button click."
         self.pcbnew_icon_support = hasattr(self, "show_toolbar_button")

@@ -41,6 +41,10 @@ class DataGenThread(Thread):
                     _("Zip gerber and excellon file"),
                     self.fabrication_data_generator.zip_gerber_excellon,
                 ),
+                (
+                    _("CPL zip file"),
+                    self.fabrication_data_generator.generate_cpl,
+                ),
             )
 
             for idx_step in enumerate(steps):

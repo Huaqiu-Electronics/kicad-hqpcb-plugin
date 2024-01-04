@@ -121,7 +121,7 @@ class MainFrame(wx.Frame):
         self.surface_mount_technology.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BTNFACE ) )
         smt_sizer = wx.BoxSizer( wx.HORIZONTAL )
         
-        self.smt_main_panel = SMTMainPanel(self.surface_mount_technology)
+        self.smt_main_panel = SMTMainPanel(self.surface_mount_technology,self._board_manager)
 
         smt_sizer.Add( self.smt_main_panel, 1, wx.EXPAND |wx.ALL, 0 )
         self.surface_mount_technology.SetSizer( smt_sizer )
@@ -134,7 +134,7 @@ class MainFrame(wx.Frame):
         main_sizer.Add( self.main_notebook, 1, wx.ALL|wx.EXPAND, 0 )
         self.SetSizer( main_sizer )
         self.Layout()
-        self.Centre( wx.BOTH )        
+        self.Centre( wx.BOTH )
         
 
     def show_data_gen_progress_dialog(self):
@@ -150,7 +150,6 @@ class MainFrame(wx.Frame):
         )
 
     def init_amf_ui(self):
-        
         left_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.main_splitter = wx.SplitterWindow(self.active_manufacturing, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
         self.left_panel_container = wx.Panel(self.main_splitter)
@@ -199,13 +198,10 @@ class MainFrame(wx.Frame):
             self.on_sash_pos_changed,
             self.main_splitter,
         )
-
         self.main_splitter.Bind(wx.EVT_IDLE, self.main_splitter_on_idle)
-
         self.Bind(
             EVT_BUTTON_FABRICATION_DATA_GEN_RES, self.on_fabrication_data_gen_progress
         )
-
         for i in self._pcb_form_parts.values():
             i.init()
             i.on_region_changed()
