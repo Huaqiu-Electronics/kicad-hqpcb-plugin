@@ -24,6 +24,7 @@ class FormPanelBase:
     def on_region_changed(self):
         pass
 
+
     @staticmethod
     @number_round()
     def convert_geometry(form_kind: FormKind, region: SupportedRegion, geometry: float):

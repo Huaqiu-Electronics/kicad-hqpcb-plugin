@@ -98,6 +98,8 @@ class _SettingManager(wx.EvtHandler):
 
     @property
     def order_region(self):
+        # order_region_value = self.app_conf.ReadInt(ORDER_REGION)
+        # print(f"Order Region: {order_region_value}")
         return self.app_conf.ReadInt(ORDER_REGION)
 
     def get_price_unit(self, translated=False):

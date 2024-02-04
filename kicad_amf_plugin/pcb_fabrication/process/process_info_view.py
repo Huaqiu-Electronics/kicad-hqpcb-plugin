@@ -271,7 +271,7 @@ class ProcessInfoView(UiProcessInfo, FormPanelBase):
 
     def on_region_changed(self):
         pass
-
+    
     def setup_trace_and_via(self):
         designSettings = self.board_manager.board.GetDesignSettings()
         minTraceWidth = (

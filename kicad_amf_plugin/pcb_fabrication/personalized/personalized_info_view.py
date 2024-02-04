@@ -155,3 +155,7 @@ class PersonalizedInfoView(UiPersonalizedService, FormPanelBase):
         for i in self.combo_hq_pack, self.label_hq_pack:
             i.Show(SETTING_MANAGER.order_region == SupportedRegion.CHINA_MAINLAND)
         self.sp_box.Show(SETTING_MANAGER.order_region != SupportedRegion.CHINA_MAINLAND)
+
+
+        
+        

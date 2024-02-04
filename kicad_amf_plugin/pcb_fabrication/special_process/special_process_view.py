@@ -102,3 +102,4 @@ class SpecialProcessView(UiSpecialProcess, FormPanelBase):
     def on_region_changed(self):
         for i in self.label_stackup, self.combo_stackup:
             i.Show(SETTING_MANAGER.order_region != SupportedRegion.CHINA_MAINLAND)
+

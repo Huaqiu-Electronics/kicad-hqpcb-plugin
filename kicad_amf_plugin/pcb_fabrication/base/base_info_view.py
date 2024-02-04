@@ -375,3 +375,4 @@ class BaseInfoView(UiBaseInfo, FormPanelBase):
 
     def on_region_changed(self):
         self.on_pcb_packaging_changed(None)
+
