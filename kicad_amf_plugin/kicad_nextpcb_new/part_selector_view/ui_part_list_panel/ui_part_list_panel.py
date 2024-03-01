@@ -11,6 +11,7 @@ import wx
 import wx.xrc
 import wx.dataview
 
+
 ###########################################################################
 ## Class UiPartListPanel
 ###########################################################################
@@ -24,7 +25,7 @@ class UiPartListPanel ( wx.Panel ):
 
 		bSizer4 = wx.BoxSizer( wx.HORIZONTAL )
 
-		self.result_count = wx.StaticText( self, wx.ID_ANY, u"0 Results", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.result_count = wx.StaticText( self, wx.ID_ANY, _("0 Results"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.result_count.Wrap( -1 )
 
 		bSizer4.Add( self.result_count, 0, wx.ALL|wx.LEFT, 5 )
@@ -45,12 +46,12 @@ class UiPartListPanel ( wx.Panel ):
 
 		bSizer1.Add( ( 0, 0), 1, wx.EXPAND, 5 )
 
-		self.prev_button = wx.Button( self, wx.ID_ANY, u"Previous", wx.DefaultPosition, wx.Size( 70,26 ), 0 )
+		self.prev_button = wx.Button( self, wx.ID_ANY, _("Previous"), wx.DefaultPosition, wx.Size( 70,26 ), 0 )
 		bSizer1.Add( self.prev_button, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
 		bSizer5 = wx.BoxSizer( wx.HORIZONTAL )
 
-		self.page_label = wx.StaticText( self, wx.ID_ANY, u"0/100", wx.DefaultPosition, wx.Size( -1,-1 ), 0 )
+		self.page_label = wx.StaticText( self, wx.ID_ANY, _("0/100"), wx.DefaultPosition, wx.Size( -1,-1 ), 0 )
 		self.page_label.Wrap( -1 )
 
 		self.page_label.SetFont( wx.Font( 14, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "宋体" ) )
@@ -60,13 +61,13 @@ class UiPartListPanel ( wx.Panel ):
 
 		bSizer1.Add( bSizer5, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-		self.next_button = wx.Button( self, wx.ID_ANY, u"Next", wx.DefaultPosition, wx.Size( 70,26 ), 0 )
+		self.next_button = wx.Button( self, wx.ID_ANY, _("Next"), wx.DefaultPosition, wx.Size( 70,26 ), 0 )
 		bSizer1.Add( self.next_button, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
 
 		bSizer1.Add( ( 0, 0), 1, wx.EXPAND, 5 )
 
-		self.select_part_button = wx.Button( self, wx.ID_ANY, u"Select part", wx.DefaultPosition, wx.Size( 120,40 ), 0 )
+		self.select_part_button = wx.Button( self, wx.ID_ANY, _("Select part"), wx.DefaultPosition, wx.Size( 120,40 ), 0 )
 		bSizer1.Add( self.select_part_button, 0, wx.ALL, 5 )
 
 

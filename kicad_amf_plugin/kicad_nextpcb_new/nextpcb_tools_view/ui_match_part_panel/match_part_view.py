@@ -14,4 +14,4 @@ class MatchPartView(UiMatchPartPanel):
         self.remove_part_button.SetDefault()
         self.remove_part_button.SetId(ID_REMOVE_PART)
         self.export_csv.SetId(ID_EXPORT)
-        self.export_csv.SetToolTip(wx.ToolTip('Export BOM file to the project folder'))
+        self.export_csv.SetToolTip(wx.ToolTip(_('Export BOM file to the project folder')))

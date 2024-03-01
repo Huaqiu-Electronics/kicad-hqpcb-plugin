@@ -6,8 +6,8 @@ from kicad_amf_plugin.utils.form_panel_base import FormKind, FormPanelBase
 from .base_info_model import BaseInfoModel
 from kicad_amf_plugin.gui.event.pcb_fabrication_evt_list import (
     LayerCountChange, boardCount,EVT_BOARD_COUNT )
-from .ui_base_info import (
-    UiBaseInfo,
+from .ui_smt_base_info import (
+    UiSmtBaseInfo,
     BOX_SIZE_SETTING,
     # BOX_PANEL_SETTING,
     # BOX_BREAK_AWAY,
@@ -48,6 +48,16 @@ PCB_SOFT_BOARD = [
 SINGLE_DOUBLE_TECHNIQUE = [
     EditDisplayRole(1, _("Single Side")),
     EditDisplayRole(2, _("Double Side")),
+]
+
+CUSTOM_PCB_BOARD = [
+    EditDisplayRole(1, _("Order Together")),
+    EditDisplayRole(3, _("Oneself Provide")),
+]
+
+BOM_PURCHASE = [
+    EditDisplayRole(1, _("Huaqiu Agent Purchasing")),
+    EditDisplayRole(2, _("Oneself Provide")),
 ]
 
 AVAILABLE_QUANTITY = [
@@ -93,20 +103,12 @@ AVAILABLE_QUANTITY = [
     10000,
 ]
  
-class SmtBaseInfoView(UiBaseInfo, FormPanelBase):
+class SmtBaseInfoView(UiSmtBaseInfo, FormPanelBase):
     def __init__(self, parent, board_manager: BoardManager):
         super().__init__(parent)
         self.board_manager = board_manager
         
         self.combo_number.Bind(wx.EVT_TEXT, self.on_combo_number_change)
-
-        # self.combo_pcb_package_kind.Bind(wx.EVT_CHOICE, self.on_pcb_packaging_changed)
-        # self.comb_margin_mode.Bind(wx.EVT_CHOICE, self.on_margin_mode_changed)
-        # self.combo_layer_count.Bind(wx.EVT_CHOICE, self.on_layer_count_changed)
-        # self.combo_number.Bind(wx.EVT_CHOICE, self.on_choice)
-        # for editor in self.edit_panel_x, self.edit_panel_y:
-        #     editor.SetValidator(NumericTextCtrlValidator())
-        # self.edit_margin_size.SetValidator(FloatTextCtrlValidator())
 
 
     @property
@@ -136,11 +138,13 @@ class SmtBaseInfoView(UiBaseInfo, FormPanelBase):
     @fitter_and_map_form_value
     def get_from(self, kind: FormKind) -> "dict":
         data = BaseInfoModel(
-            
-            application_sphere =AVAILABLE_MATERIAL_TYPES[ self.application_sphere.GetSelection() ].EditRole,
+
+            application_sphere = AVAILABLE_MATERIAL_TYPES[ self.application_sphere.GetSelection() ].EditRole,
             is_pcb_soft_board= PCB_SOFT_BOARD[ self.is_pcb_soft_board.GetSelection() ].EditRole,
             single_or_double_technique= SINGLE_DOUBLE_TECHNIQUE[ self.single_or_double_technique.GetSelection() ].EditRole,
-            number=self.combo_number.GetValue(),
+            custom_pcb_ban = CUSTOM_PCB_BOARD[ self.custom_pcb_board.GetSelection() ].EditRole,
+            bom_purchase =  BOM_PURCHASE[ self.bom_purchase.GetSelection() ].EditRole,
+            number= self.combo_number.GetValue(),
             pcb_ban_height=str(
                 FormPanelBase.convert_geometry(
                     kind, SETTING_MANAGER.order_region, self.get_pcb_length()
@@ -172,6 +176,12 @@ class SmtBaseInfoView(UiBaseInfo, FormPanelBase):
         self.single_or_double_technique.Append([i.DisplayRole for i in SINGLE_DOUBLE_TECHNIQUE])
         self.single_or_double_technique.SetSelection(1)
         
+        self.custom_pcb_board.Append([i.DisplayRole for i in CUSTOM_PCB_BOARD])
+        self.custom_pcb_board.SetSelection(0)
+        
+        self.bom_purchase.Append([i.DisplayRole for i in BOM_PURCHASE])
+        self.bom_purchase.SetSelection(0)
+        
         self.combo_number.SetValue("5")        
         for i in self.edit_size_x, self.edit_size_y:
             i.SetEditable(False)
@@ -194,8 +204,10 @@ class SmtBaseInfoView(UiBaseInfo, FormPanelBase):
 
     def on_region_changed(self):
         # pass
-        for i in [self.application_sphere , self.application_sphere_label,   
-                self.is_pcb_soft_board ,self.is_pcb_soft_board_label
+        for i in [self.application_sphere, self.application_sphere_label,   
+                self.is_pcb_soft_board, self.is_pcb_soft_board_label,
+                self.custom_pcb_board, self.custom_pcb_board_label,
+                self.bom_purchase, self.bom_purchase_label,
                 ]:
             i.Show(SETTING_MANAGER.order_region == SupportedRegion.CHINA_MAINLAND)
         self.Layout()

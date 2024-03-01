@@ -11,16 +11,16 @@ import wx.dataview as dv
 from kicad_amf_plugin.kicad_nextpcb_new.helpers import loadBitmapScaled
 
 parameters = {
-    "mpn": "MPN",
-    "manufacturer": "Manufacturer",
-    "package": "Package / Footprint",
-    "category": "Category",
-    "part_desc": "Description",
+    "mpn": _("MPN"),
+    "manufacturer": _("Manufacturer"),
+    "package": _("Package / Footprint"),
+    "category": _("Category"),
+    "part_desc": _("Description"),
 }
 attribute_para = {
-    "sku": "SKU",
-    "vendor": "Supplier",
-    "quantity": "Stock",
+    "sku": _("SKU"),
+    "vendor": _("Supplier"),
+    "quantity": _("Stock"),
 }
 
 
@@ -40,13 +40,13 @@ class AssignedPartView(UiAssignedPartPanel):
         # ----------------------- Properties List -----------------------------
         # ---------------------------------------------------------------------
         self.property = self.data_list.AppendTextColumn(
-            "Property",
+            _("Property"),
             width=160,
             mode=dv.DATAVIEW_CELL_ACTIVATABLE,
             align=wx.ALIGN_LEFT,
         )
         self.value = self.data_list.AppendTextColumn(
-            "Value", width=-1, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_LEFT
+            _("Value"), width=-1, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_LEFT
         )
         self.initialize_data()
 
@@ -59,8 +59,8 @@ class AssignedPartView(UiAssignedPartPanel):
             self.data_list.AppendItem([v, " "])
         for k, v in attribute_para.items():
             self.data_list.AppendItem([v, " "])
-        self.data_list.AppendItem(["Price", " "])
-        self.data_list.AppendItem(["Datasheet", " "])
+        self.data_list.AppendItem([_("Price"), " "])
+        self.data_list.AppendItem([_("Datasheet"), " "])
         # update layout
         self.Layout()
 
@@ -88,7 +88,7 @@ class AssignedPartView(UiAssignedPartPanel):
         """fetch part data from NextPCB API and parse it into the table, set picture and PDF link"""
         if selected_part == "":
             self.report_part_data_fetch_error(
-                "returned data does not have expected part details"
+                _("returned data does not have expected part details")
             )
         self.info = selected_part.get("part_info", {})
         self.supplier = selected_part.get("supplier_chain", {})
@@ -113,7 +113,7 @@ class AssignedPartView(UiAssignedPartPanel):
 
             prices_stair = self.supplier.get("price", [])
             if prices_stair == None:
-                self.data_list.AppendItem(["Price", "-"])
+                self.data_list.AppendItem([_("Price"), "-"])
             else:
                 # Populate price_echelon based on prices_stair data
                 price_echelon = {}
@@ -133,7 +133,7 @@ class AssignedPartView(UiAssignedPartPanel):
         self.pdfurl = "-" if self.pdfurl == "" else self.pdfurl
         self.data_list.AppendItem(
             [
-                "Datasheet",
+                _("Datasheet"),
                 self.pdfurl,
             ]
         )
@@ -151,8 +151,8 @@ class AssignedPartView(UiAssignedPartPanel):
 
     def report_part_data_fetch_error(self, reason):
         wx.MessageBox(
-            f"Failed to download part detail from the NextPCB API ({reason})\r\n"
-            "Error",
+            _(f"Failed to download part detail from the NextPCB API ({reason})\r\n"),
+            _("Error"),
             style=wx.ICON_ERROR,
         )
         self.Destroy()

@@ -82,15 +82,9 @@ def natural_sort_collation(a, b):
 
 
 
-# def get_lcsc_value(fp):
-#     """Get the first lcsc number (C123456 for example) from the properties of the footprint."""
-#     for value in fp.GetProperties().values():
-#         if re.match(r"^C\d+$", value):
-#             return value
-#     return ""
 
-def get_lcsc_value(fp):
-    """Get the first lcsc number (C123456 for example) from the properties of the footprint."""
+def get_pcb_value(fp):
+    """Get the first number (C123456 for example) from the properties of the footprint."""
     try:
         properties = fp.GetProperties()
         for value in properties.values():

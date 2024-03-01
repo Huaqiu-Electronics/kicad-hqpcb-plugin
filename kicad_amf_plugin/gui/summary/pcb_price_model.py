@@ -102,6 +102,7 @@ class PCBPriceModel(PriceModelBase):
         num = 0
         for i in self.prices_item:
             num = num + i.value
+        num = round(num, 2)
         return num
 
     def get_items(self) -> "list[PriceItem]":

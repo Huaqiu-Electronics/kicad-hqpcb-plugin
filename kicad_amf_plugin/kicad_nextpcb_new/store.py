@@ -6,11 +6,12 @@ import sqlite3
 from pathlib import Path
 import json
 import wx
+import tempfile
 
 from .helpers import (
     get_exclude_from_bom,
     get_exclude_from_pos,
-    get_lcsc_value,
+    get_pcb_value,
     get_valid_footprints,
     natural_sort_collation,
 )
@@ -28,15 +29,18 @@ PART_POSCHECK = 5
 class Store:
     """A storage class to get data from a sqlite database and write it back"""
 
-    def __init__(self, parent, project_path, board):
+    def __init__(self, parent, file_path, board):
         self.logger = logging.getLogger(__name__)
         self.parent = parent
-        self.project_path = project_path
-        self.datadir = os.path.join(self.project_path, "database")
-        self.dbfile = os.path.join(self.datadir, "project.db")
+        self.file_path = file_path
+
+        
+        self.datadir = os.path.join(self.file_path, "database")    
+        self.dbfile = os.path.join(self.datadir, "project.db") 
         self.order_by = "reference"
         self.order_dir = "ASC"
         self.board = board
+        
         try:
             self.setup()
         except sqlite3.Error as e:
@@ -351,7 +355,7 @@ class Store:
                 fp.GetReference(),
                 fp.GetValue(),
                 str(fp.GetFPID().GetLibItemName()),
-                get_lcsc_value(fp),
+                get_pcb_value(fp),
                 int(not get_exclude_from_bom(fp)),
                 int(not get_exclude_from_pos(fp)),
                 fp.GetLayer(),
@@ -364,7 +368,7 @@ class Store:
                 )
                 self.create_part(part)
             else:
-                # if the board part matches the dbpart except for the LCSC and the stock value,
+                # if the board part matches the dbpart except for the and the stock value,
                 if part[PART_REFERENCE:PART_FOOTPRINT] == list(dbpart[0:2]) and part[
                     PART_BOMCHECK:PART_POSCHECK
                 ] == [bool(x) for x in dbpart[9:10]]:

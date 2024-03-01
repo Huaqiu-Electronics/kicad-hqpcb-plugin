@@ -72,47 +72,6 @@ PACKING_TYPE = {
 }
 
 
-# REVIEW_FILE_OPTION = [
-#     EditDisplayRole(0, _("Need")),
-#     EditDisplayRole(1, _("Need & Auto Confirm")),
-#     EditDisplayRole(2, _("Need & Manual Confirm")),
-# ]
-
-# CROSS_BOARD = [
-#     EditDisplayRole(1, _("Accept")),
-#     EditDisplayRole(2, _("Reject")),
-# ]
-
-
-# PAPER = [
-#     EditDisplayRole(1, _("Need")),
-#     EditDisplayRole(2, _("No need")),
-# ]
-
-# USER_STAMP = [
-#     EditDisplayRole(1, _("Add customer stamp")),
-#     EditDisplayRole(2, _("Add it to specified location")),
-#     EditDisplayRole(3, _("Don't add customer stamp")),
-# ]
-
-# HQ_PACK = [
-#     EditDisplayRole(1, _("Yes")),
-#     EditDisplayRole(0, _("No")),
-# ]
-
-
-# TEST_METHOD_CHOICE = {
-#     _("Sample Test Free"): "Sample Test Free",
-#     _("AOI+Flying Test"): "Batch Flying Probe Test",
-#     _("AOI+Fixture"): "Batch Fixture Test",
-# }
-
-
-# REPORT_FORMAT_CHOICE = [_("Paper"), _("Electronic")]
-
-# UL_MARK_CHOICE = [_("No"), _("UL+Week/Year"), _("UL+Year/Week")]
-
-
 class SmtPersonalizedInfoView(UiPersonalizedService, FormPanelBase):
     def __init__(self, parent, _):
         super().__init__(parent)
@@ -121,7 +80,7 @@ class SmtPersonalizedInfoView(UiPersonalizedService, FormPanelBase):
 
     def initUI(self):
         # NOTE It seems that all tests are free now
-        self.solder_paste_type.Append( _("lead-free technology") )
+        self.solder_paste_type.Append( _("Lead-free Technology") )
         self.solder_paste_type.SetSelection(0)
         self.is_assembly_weld.Append( [i for i in ASSEMBLY_WELD] )
         self.is_assembly_weld.SetSelection(0)
@@ -151,43 +110,7 @@ class SmtPersonalizedInfoView(UiPersonalizedService, FormPanelBase):
         self.x_ray_number.SetValue("1")
         self.x_ray_unit_number.SetValue("1")
         
-        # self.comb_test_method.Append([i for i in TEST_METHOD_CHOICE])
-        # self.comb_test_method.SetSelection(0)
-
-        # for ctrl in (
-        #     self.combo_microsection_report,
-        #     self.comb_film,
-        #     self.comb_delivery_report,
-        # ):
-        #     for i in BOOLEAN_CHOICE:
-        #         ctrl.Append(_(i))
-        #     ctrl.SetSelection(0)
-
-        # self.comb_report_format.Append(REPORT_FORMAT_CHOICE)
-        # self.comb_report_format.SetSelection(1)
-
-        # self.comb_ul_mark.Append(UL_MARK_CHOICE)
-        # self.comb_ul_mark.SetSelection(0)
-
-        # map = {
-        #     self.comb_approve_gerber: REVIEW_FILE_OPTION,
-        #     self.combo_cross_board: CROSS_BOARD,
-        #     self.combo_paper: PAPER,
-        #     self.combo_user_stamp: USER_STAMP,
-        #     self.combo_hq_pack: HQ_PACK,
-        # }
-        # map = {
-        #     self.comb_approve_gerber: REVIEW_FILE_OPTION,
-        #     self.combo_cross_board: CROSS_BOARD,
-        #     self.combo_paper: PAPER,
-        #     self.combo_user_stamp: USER_STAMP,
-        #     self.combo_hq_pack: HQ_PACK,
-        # }
-        # for comb in map:
-        #     comb.Append([i.DisplayRole for i in map[comb]])
-        #     comb.SetSelection(0)
         self.on_region_changed()
-        # self.smt_on_region_changed()
 
     @fitter_and_map_form_value
     def get_from(self, kind: FormKind) -> "dict":

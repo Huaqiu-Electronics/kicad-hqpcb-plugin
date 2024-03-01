@@ -21,98 +21,98 @@ class FootPrintList(wx.dataview.DataViewListCtrl):
 
         self.SetMinSize(HighResWxSize(mainwindows.window, wx.Size(900, 400)))
         self.idx = self.AppendTextColumn(
-            "index",
+            _("index"),
             mode=wx.dataview.DATAVIEW_CELL_INERT,
             width=int(mainwindows.scale_factor * 50),
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
         self.reference = self.AppendTextColumn(
-            "Reference",
+            _("Reference"),
             mode=wx.dataview.DATAVIEW_CELL_INERT,
             width=int(mainwindows.scale_factor * 80),
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
         self.value = self.AppendTextColumn(
-            "Value",
+            _("Value"),
             mode=wx.dataview.DATAVIEW_CELL_INERT,
             width=int(mainwindows.scale_factor * 100),
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
         self.footprint = self.AppendTextColumn(
-            "Footprint",
+            _("Footprint"),
             mode=wx.dataview.DATAVIEW_CELL_INERT,
             width=int(mainwindows.scale_factor * 300),
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
-        self.lcsc = self.AppendTextColumn(
-            "MPN",
+        self.colu_mpn = self.AppendTextColumn(
+            _("MPN"),
             mode=wx.dataview.DATAVIEW_CELL_INERT,
             width=int(mainwindows.scale_factor * 200),
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
-        self.type_column = self.AppendTextColumn(
-            "Manufacturer",
+        self.colu_manufact = self.AppendTextColumn(
+            _("Manufacturer"),
             mode=wx.dataview.DATAVIEW_CELL_INERT,
             width=int(mainwindows.scale_factor * 200),
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
-        self.stock = self.AppendTextColumn(
-            "Category",
+        self.colu_category = self.AppendTextColumn(
+            _("Category"),
             mode=wx.dataview.DATAVIEW_CELL_INERT,
             width=int(mainwindows.scale_factor * 200),
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
-        self.stock = self.AppendTextColumn(
-            "SKU",
+        self.colu_sku = self.AppendTextColumn(
+            _("SKU"),
             mode=wx.dataview.DATAVIEW_CELL_INERT,
             width=int(mainwindows.scale_factor * 150),
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
-        self.stock = self.AppendTextColumn(
-            "Supplier",
+        self.colu_supplier = self.AppendTextColumn(
+            _("Supplier"),
             mode=wx.dataview.DATAVIEW_CELL_INERT,
             width=int(mainwindows.scale_factor * 150),
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
-        self.stock = self.AppendTextColumn(
-            "Quantity",
+        self.colu_quantity = self.AppendTextColumn(
+            _("Quantity"),
             mode=wx.dataview.DATAVIEW_CELL_INERT,
             width=int(mainwindows.scale_factor * 80),
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
         self.bom = self.AppendToggleColumn(
-            "BOM",
+            _("BOM"),
             mode=wx.dataview.DATAVIEW_CELL_ACTIVATABLE,
             width=int(mainwindows.scale_factor * 60),
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
         self.pos = self.AppendToggleColumn(
-            "POS",
+            _("POS"),
             mode=wx.dataview.DATAVIEW_CELL_ACTIVATABLE,
             width=int(mainwindows.scale_factor * 60),
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
         self.rot = self.AppendTextColumn(
-            "Rotation",
+            _("Rotation"),
             mode=wx.dataview.DATAVIEW_CELL_INERT,
             width=int(mainwindows.scale_factor * 80),
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
         self.side = self.AppendTextColumn(
-            "Side",
+            _("Side"),
             mode=wx.dataview.DATAVIEW_CELL_INERT,
             width=int(mainwindows.scale_factor * 50),
             align=wx.ALIGN_CENTER,

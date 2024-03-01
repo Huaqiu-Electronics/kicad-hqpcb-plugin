@@ -10,6 +10,7 @@
 import wx
 import wx.xrc
 
+
 ###########################################################################
 ## Class UiMatchPartPanel
 ###########################################################################
@@ -23,18 +24,18 @@ class UiMatchPartPanel ( wx.Panel ):
 
 		bSizer1 = wx.BoxSizer( wx.HORIZONTAL )
 
-		self.select_part_button = wx.Button( self, wx.ID_ANY, u" Manual Match ", wx.Point( 0,0 ), wx.DefaultSize, 0 )
+		self.select_part_button = wx.Button( self, wx.ID_ANY, _(" Manual Match "), wx.Point( 0,0 ), wx.DefaultSize, 0 )
 		bSizer1.Add( self.select_part_button, 0, wx.ALL, 5 )
 
-		self.remove_part_button = wx.Button( self, wx.ID_ANY, u" Remove Assigned MPN ", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.remove_part_button.SetToolTip( u"Remove Assigned MPN " )
+		self.remove_part_button = wx.Button( self, wx.ID_ANY, _(" Remove Assigned MPN ") , wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.remove_part_button.SetToolTip( _("Remove Assigned MPN ") )
 
 		bSizer1.Add( self.remove_part_button, 0, wx.ALL, 5 )
 
 
 		bSizer1.Add( ( 0, 0), 2, wx.EXPAND, 5 )
 
-		self.export_csv = wx.Button( self, wx.ID_ANY, u" Epxort... ", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.export_csv = wx.Button( self, wx.ID_ANY, _(" Epxort... "), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer1.Add( self.export_csv, 0, wx.ALL, 5 )
 
 		bSizer2 = wx.BoxSizer( wx.VERTICAL )

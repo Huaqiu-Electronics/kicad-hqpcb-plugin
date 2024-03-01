@@ -15,7 +15,7 @@ class OrderRegion:
             URL_KIND.PLACE_ORDER: "https://www.hqpcb.com/External/fileQuote",
             URL_KIND.QUERY_PRICE: "https://www.hqpcb.com/public/ajax_valuation",
             URL_KIND.SMT_QUERY_PRICE: "https://uat-smt.hqchip.com/smtservice/app/price/pricing",
-            URL_KIND.SMT_PLACE_ORDER: "https://uat-smt.hqchip.com/userCenterApi/DfmOrder/saveSmtTmpOrder",
+            URL_KIND.SMT_PLACE_ORDER: "https://uat-smt.hqchip.com/userCenterApi/DfmOrder/saveDfmSmtTmpOrder",
         },
         SupportedRegion.EUROPE_USA: {
             URL_KIND.PLACE_ORDER: "https://www.nextpcb.com/Upfile/kiCadUpFile",

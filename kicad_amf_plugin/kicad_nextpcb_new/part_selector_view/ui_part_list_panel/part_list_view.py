@@ -18,44 +18,44 @@ class PartListView(UiPartListPanel):
         super().__init__(parent, id=id, pos=pos, size=size, style=style, name=name)
 
         self.part_list.AppendTextColumn(
-            "index", width=60, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
+            _("index"), width=60, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
         )
         self.part_list.AppendTextColumn(
-            "MPN", width=150, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
+            _("MPN"), width=150, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
         )
         self.part_list.AppendTextColumn(
-            "Manufacturer",
+            _("Manufacturer"),
             width=250,
             mode=dv.DATAVIEW_CELL_ACTIVATABLE,
             align=wx.ALIGN_CENTER,
         )
         self.part_list.AppendTextColumn(
-            "Package/Footprint",
+            _("Package/Footprint"),
             width=250,
             mode=dv.DATAVIEW_CELL_ACTIVATABLE,
             align=wx.ALIGN_CENTER,
         )
         self.part_list.AppendTextColumn(
-            "Category",
+            _("Category"),
             width=150,
             mode=dv.DATAVIEW_CELL_ACTIVATABLE,
             align=wx.ALIGN_CENTER,
         )
         self.part_list.AppendTextColumn(
-            "SKU", width=150, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
+            _("SKU"), width=150, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
         )
         self.part_list.AppendTextColumn(
-            "Supplier",
+            _("Supplier"),
             width=150,
             mode=dv.DATAVIEW_CELL_ACTIVATABLE,
             align=wx.ALIGN_CENTER,
         )
         self.part_list.AppendTextColumn(
-            "Price(￥)",
+            _("Price")+ "(￥)",
             width=150,
             mode=dv.DATAVIEW_CELL_ACTIVATABLE,
             align=wx.ALIGN_CENTER,
         )
         self.part_list.AppendTextColumn(
-            "Stock", width=60, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
+            _("Stock"), width=60, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
         )

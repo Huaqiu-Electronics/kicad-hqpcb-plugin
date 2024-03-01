@@ -33,6 +33,9 @@ from .events import (
     EVT_UPDATE_SETTING,
 )
 
+from pathlib import Path
+import tempfile
+
 from kicad_amf_plugin.kicad_nextpcb_new.nextpcb_tools_view.ui_assigned_part_panel.assigned_part_view import (
     AssignedPartView,
 )
@@ -54,8 +57,6 @@ from .button_id import (
     ID_COPY_MPN,
     ID_PASTE_MPN,
 )
-from .board_manager import load_board_manager
-from kicad_amf_plugin.kicad_nextpcb_new.import_BOM_view.import_BOM_dailog import ImportBOMDailog
 
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
@@ -80,7 +81,7 @@ class NextPCBTools(wx.Dialog):
             self,
             parent,
             id=wx.ID_ANY,
-            title=f"NextPCB Tools [ {getVersion()} ]",
+            title=_("NextPCB Tools"),
             pos=wx.DefaultPosition,
             size=wx.Size(1200, 800),
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX,
@@ -88,7 +89,6 @@ class NextPCBTools(wx.Dialog):
         
         self.BOARD_LOADED = board_manager.board
 
-        # self.BOARD_LOADED = load_board_manager()
         self.KicadBuildVersion = GetBuildVersion()
         self.window = wx.GetTopLevelParent(self)
         self.SetSize(HighResWxSize(self.window, wx.Size(1200, 800)))
@@ -152,7 +152,7 @@ class NextPCBTools(wx.Dialog):
         )
         self.upper_toolbar.SetToolBitmapSize((24, 24))
         self.group_label = wx.StaticText(
-            self.upper_toolbar, wx.ID_ANY, label=" Group by: "
+            self.upper_toolbar, wx.ID_ANY, label=_(" Group by: ")
         )
 
         self.group_label.Wrap(-1)
@@ -160,12 +160,12 @@ class NextPCBTools(wx.Dialog):
 
         self.upper_toolbar.AddSeparator()
 
-        group_strategy_value = [" No Group ", " Value & Footprint "]
+        group_strategy_value = [_(" No Group "), _(" Value & Footprint ")]
 
         self.cb_group_strategy = wx.ComboBox(
             self.upper_toolbar,
             ID_GROUP,
-            "No Group",
+            _("No Group"),
             wx.DefaultPosition,
             wx.DefaultSize,
             group_strategy_value,
@@ -180,73 +180,42 @@ class NextPCBTools(wx.Dialog):
 
         self.auto_match_button = self.upper_toolbar.AddTool(
             ID_AUTO_MATCH,
-            "Auto Match ",
+            _("Auto Match "),
             loadBitmapScaled("nextpcb-automatch.png", 1.2),
-            "Auto Match MPN number to parts",
+            _("Auto Match MPN number to parts"),
         )
         self.upper_toolbar.AddStretchableSpace()
 
-        # self.import_mapping_button = wx.Button(
-        #     self.upper_toolbar,
-        #     ID_IMPORT_MAPPING,
-        #     " Import BOM",
-        #     wx.DefaultPosition,
-        #     wx.DefaultSize,
-        #     0,
-        # )
-        # self.upper_toolbar.AddControl(self.import_mapping_button)
-
-        # self.generate_button = wx.Button(
-        #     self.upper_toolbar,
-        #     ID_GENERATE,
-        #     " Generate ",
-        #     wx.DefaultPosition,
-        #     wx.DefaultSize,
-        #     0,
-        # )
-        # self.generate_button.SetToolTip(
-        #     wx.ToolTip("Generate gerber to the project folder")
-        # )
-        # self.upper_toolbar.AddControl(self.generate_button)
-        # self.upper_toolbar.SetToolLongHelp(
-        #     ID_GENERATE, "Generate files and Place Order"
-        # )
-
-        self.generate_place_order_button = wx.Button(
+        self.generate_button = wx.Button(
             self.upper_toolbar,
-            ID_GENERATE_AND_PLACE_ORDER,
-            " Generate and Place Order ",
+            ID_GENERATE,
+            _(" Generate "),
             wx.DefaultPosition,
             wx.DefaultSize,
             0,
         )
-        self.generate_place_order_button.SetToolTip(
-            wx.ToolTip("Generate gerber files and Place Order")
+        self.generate_button.SetToolTip(
+            wx.ToolTip( _("Generate fabrication files to the project folder") )
         )
-        self.upper_toolbar.AddControl(self.generate_place_order_button)
+        self.upper_toolbar.AddControl(self.generate_button)
         self.upper_toolbar.SetToolLongHelp(
-            ID_GENERATE_AND_PLACE_ORDER, "Generate files and Place Order"
+            ID_GENERATE, _("Generate fabrication files")
         )
+
 
         self.settings_button = self.upper_toolbar.AddTool(
             ID_SETTINGS,
             "",
             loadBitmapScaled("nextpcb-setting.png", self.scale_factor),
-            "Settings",
+            _("Settings"),
         )
 
         self.upper_toolbar.Realize()
 
         self.Bind(wx.EVT_COMBOBOX, self.group_parts, self.cb_group_strategy)
         self.Bind(wx.EVT_TOOL, self.auto_match_parts, self.auto_match_button)
-        # self.Bind(wx.EVT_BUTTON, self.generate_fabrication_data, self.generate_button)
-        self.Bind(
-            wx.EVT_BUTTON,
-            self.generate_data_place_order,
-            self.generate_place_order_button,
-        )
+        self.Bind(wx.EVT_BUTTON, self.generate_fabrication_data, self.generate_button)
         self.Bind(wx.EVT_TOOL, self.manage_settings, self.settings_button)
-        # self.Bind(wx.EVT_BUTTON, self.import_mappings, self.import_mapping_button)
 
         # ---------------------------------------------------------------------
         # ------------------ down toolbar List --------------------------
@@ -276,7 +245,7 @@ class NextPCBTools(wx.Dialog):
             wx.TAB_TRAVERSAL,
         )
         self.first_panel.Layout()
-        self.notebook.AddPage(self.first_panel, "   All   ", True)
+        self.notebook.AddPage(self.first_panel, _("   All   "), True)
         grid_sizer1 = wx.GridSizer(0, 1, 0, 0)
         self.first_panel.SetSizer(grid_sizer1)
         grid_sizer1.Fit(self.first_panel)
@@ -292,7 +261,7 @@ class NextPCBTools(wx.Dialog):
             wx.TAB_TRAVERSAL,
         )
         self.second_panel.Layout()
-        self.notebook.AddPage(self.second_panel, "Unmanaged", False)
+        self.notebook.AddPage(self.second_panel,_("Unmanaged"), False)
         grid_sizer2 = wx.GridSizer(0, 1, 0, 0)
         grid_sizer2.Fit(self.second_panel)
         self.second_panel.SetSizer(grid_sizer2)
@@ -347,6 +316,16 @@ class NextPCBTools(wx.Dialog):
         self.init_fabrication()
         self.init_store()
 
+    @property
+    def file_path(self):
+        file_path = os.path.join(self.project_path, "nextpcb")
+        try:
+            Path(file_path).mkdir(parents=True, exist_ok=True)
+        except PermissionError as e:
+            return os.path.join(tempfile.gettempdir())
+        return os.path.join(self.project_path)
+
+
     def on_notebook_page_changed(self, e):
         self.selected_page_index = self.notebook.GetSelection()
         if self.selected_page_index == 0:
@@ -362,12 +341,12 @@ class NextPCBTools(wx.Dialog):
 
     def init_store(self):
         """Initialize the store of part assignments"""
-        self.store = Store(self, self.project_path, self.BOARD_LOADED)
+        self.store = Store(self, self.file_path, self.BOARD_LOADED)
         self.populate_footprint_list()
 
     def init_fabrication(self):
         """Initialize the fabrication"""
-        self.fabrication = Fabrication(self, self.BOARD_LOADED)
+        self.fabrication = Fabrication(self, self.BOARD_LOADED, self.file_path)
 
     def group_parts(self, e):
         """ """
@@ -401,8 +380,8 @@ class NextPCBTools(wx.Dialog):
 
             self.populate_footprint_list()
             wx.MessageBox(
-                "Auto match finished.Some parts might match failed.\nYou can try it again or match by manual.",
-                "Info",
+                _("Auto match finished.Some parts might match failed. You can try it again or match by manual."),
+                _("Info"),
                 style=wx.ICON_INFORMATION,
             )
         finally:
@@ -453,8 +432,8 @@ class NextPCBTools(wx.Dialog):
             response = requests.post(url, headers=headers, json=body)
             if response.status_code != 200:
                 wx.MessageBox(
-                    f"non-OK HTTP response.status code:{response.status_code}",
-                    "Error",
+                    _(f"non-OK HTTP response.status code:{response.status_code}"),
+                    _("Error"),
                     style=wx.ICON_ERROR,
                 )
                 continue
@@ -525,33 +504,7 @@ class NextPCBTools(wx.Dialog):
         self.fabrication.zip_gerber_excellon()
         self.fabrication.generate_cpl()
         self.fabrication.generate_bom()
-        # self.fabrication.path_message()
 
-    def generate_data_place_order(self, e):
-        self.fabrication.fill_zones()
-        self.fabrication.generate_geber(None)
-        self.fabrication.generate_excellon()
-        self.fabrication.zip_gerber_excellon()
-        self.fabrication.generate_cpl()
-        self.fabrication.generate_bom()
-        self.place_order_request()
-
-    def place_order_request(self):
-        zipname = f"GERBER-{self.fabrication.filename.split('.')[0]}.zip"
-        zipfile = os.path.join(self.fabrication.outputdir, zipname)
-        files = {"file": open(zipfile, "rb")}
-        upload_url = "https://www.nextpcb.com/Upfile/kiCadUpFile"
-        data = {
-            "type": "pcbfile",
-            "bwidth": ToMM(self.BOARD_LOADED.GetBoardEdgesBoundingBox().GetWidth()),
-            "blength": ToMM(self.BOARD_LOADED.GetBoardEdgesBoundingBox().GetHeight()),
-            "blayer": self.BOARD_LOADED.GetCopperLayerCount()
-            if hasattr(self.BOARD_LOADED, "GetCopperLayerCount")
-            else "",
-        }
-        rsp = requests.post(upload_url, files=files, data=data)
-        urls = json.loads(rsp.content)
-        webbrowser.open(urls["redirect"])
 
     def assign_parts(self, e):
         """Assign a selected nextPCB number to parts"""
@@ -673,7 +626,7 @@ class NextPCBTools(wx.Dialog):
             self.footprint_list.SelectRow(row)
 
     def remove_part(self, e):
-        """Remove an assigned a LCSC Part number to a footprint."""
+        """Remove an assigned a Part number to a footprint."""
         for item in self.footprint_list.GetSelections():
             row = self.footprint_list.ItemToRow(item)
             ref = self.footprint_list.GetTextValue(row, 1)
@@ -738,18 +691,6 @@ class NextPCBTools(wx.Dialog):
             return -1
         return self.footprint_list.GetColumnPosition(col)
 
-    def get_selected_part_id_from_gui(self):
-        """Get a list of LCSC part#s currently selected"""
-        lcsc_ids_selected = []
-        for item in self.footprint_list.GetSelections():
-            row = self.footprint_list.ItemToRow(item)
-            if row == -1:
-                continue
-
-            lcsc_id = self.get_row_item_in_column(row, "MPN")
-            lcsc_ids_selected.append(lcsc_id)
-
-        return lcsc_ids_selected
 
     def get_row_item_in_column(self, row, column_title):
         return self.footprint_list.GetTextValue(
@@ -800,7 +741,7 @@ class NextPCBTools(wx.Dialog):
             wx.EndBusyCursor()
 
     def copy_part_lcsc(self, e):
-        """Fetch part details from LCSC and show them in a modal."""
+        """Fetch part details from and show them in a modal."""
 
         item = self.footprint_list.GetSelection()
         row = self.footprint_list.ItemToRow(item)
@@ -872,23 +813,23 @@ class NextPCBTools(wx.Dialog):
     def OnRightDown(self, e):
         """Right click context menu for action on parts table."""
         conMenu = wx.Menu()
-        copy_lcsc = wx.MenuItem(conMenu, ID_COPY_MPN, "Copy MPN")
+        copy_lcsc = wx.MenuItem(conMenu, ID_COPY_MPN, _("Copy MPN"))
         conMenu.Append(copy_lcsc)
         conMenu.Bind(wx.EVT_MENU, self.copy_part_lcsc, copy_lcsc)
 
-        paste_lcsc = wx.MenuItem(conMenu, ID_PASTE_MPN, "Paste MPN")
+        paste_lcsc = wx.MenuItem(conMenu, ID_PASTE_MPN, _("Paste MPN"))
         conMenu.Append(paste_lcsc)
         conMenu.Bind(wx.EVT_MENU, self.paste_part_lcsc, paste_lcsc)
 
-        manual_match = wx.MenuItem(conMenu, ID_MANUAL_MATCH, "Manual Match")
+        manual_match = wx.MenuItem(conMenu, ID_MANUAL_MATCH, _("Manual Match"))
         conMenu.Append(manual_match)
         conMenu.Bind(wx.EVT_MENU, self.select_part, manual_match)
 
-        remove_mpn = wx.MenuItem(conMenu, ID_REMOVE_PART, "Remove Assigned MPN")
+        remove_mpn = wx.MenuItem(conMenu, ID_REMOVE_PART, _("Remove Assigned MPN"))
         conMenu.Append(remove_mpn)
         conMenu.Bind(wx.EVT_MENU, self.remove_part, remove_mpn)
 
-        part_detail = wx.MenuItem(conMenu, ID_PART_DETAILS, "Show Part Details")
+        part_detail = wx.MenuItem(conMenu, ID_PART_DETAILS, _("Show Part Details"))
         conMenu.Append(part_detail)
 
         item_count = len(self.footprint_list.GetSelections())
@@ -939,14 +880,12 @@ class NextPCBTools(wx.Dialog):
         root.addHandler(handler1)
         self.logger = logging.getLogger(__name__)
 
-    def import_mappings(self, e):
-        ImportBOMDailog(self).ShowModal()
 
     def export_bom(self, e):
         """Generate the bom file."""
         self.schematic_name = self.board_name.split(".")[0]
         self.parts = self.store.export_parts_by_group()
-        temp_dir = os.path.join(self.project_path, "nextpcb")
+        temp_dir = os.path.join(self.file_path, "nextpcb")
         bomFileName = "BOM_" + self.schematic_name + ".csv"
         if len(self.bom) > 0:
             with open(
@@ -962,8 +901,8 @@ class NextPCBTools(wx.Dialog):
                 for component in self.parts:
                     csv_writer.writerow(component)
             wx.MessageBox(
-                f"Export BOM file finished. file path : {temp_dir}",
-                "Info",
+                _(f"Export BOM file finished. file path : {temp_dir}"),
+                _("Info"),
                 style=wx.ICON_INFORMATION,
             )
 

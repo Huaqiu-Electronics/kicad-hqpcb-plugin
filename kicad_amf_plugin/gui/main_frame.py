@@ -49,9 +49,8 @@ from kicad_amf_plugin.kicad.fabrication_data_generator_thread import DataGenThre
 from enum import Enum
 
 # smt import
-from kicad_amf_plugin.smt_pcb_fabrication.base.base_info_view import SmtBaseInfoView
+from kicad_amf_plugin.smt_pcb_fabrication.smt_base.base_info_view import SmtBaseInfoView
 from kicad_amf_plugin.smt_pcb_fabrication.process.process_info_view import SmtProcessInfoView
-
 from kicad_amf_plugin.smt_pcb_fabrication.personalized.personalized_info_view import (
     SmtPersonalizedInfoView,
 )
@@ -104,7 +103,7 @@ class MainFrame(wx.Frame):
             self,
             parent,
             id=wx.ID_ANY,
-            title=_("HQ NextPCB Active Manufacturing"),
+            title=_(" HQ NextPCB "),
             pos=wx.DefaultPosition,
             size=size,
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
@@ -264,7 +263,6 @@ class MainFrame(wx.Frame):
         elif self.selected_page_index == 1:
             self.summary_view.switch_to_smt()
 
-
     def on_fabrication_data_gen_progress(self, evt: FabricationDataGenEvent):
         if self._data_gen_progress is not None:
             res = evt.get_status()
@@ -296,8 +294,6 @@ class MainFrame(wx.Frame):
 
     def smt_build_form(self, kind: FormKind):
         base = self.summary_view.get_file_name().__dict__
-        
-        # base =base | SmtFiles().__dict__ 
         for i in self.smt_pcb_form_parts.values():
             base = base | i.get_from(kind)
         return base
@@ -457,6 +453,7 @@ class MainFrame(wx.Frame):
                 return
             try:
                 form = self.get_query_price_form()
+                # smt chinese price
                 if SETTING_MANAGER.order_region == 0:
                     form =form | SmtFiles().__dict__ 
                     json_data = json.dumps(form).encode('utf-8')
@@ -475,6 +472,7 @@ class MainFrame(wx.Frame):
                     quote = quotes.get("body", {})
 
                 else:
+                    # smt international price
                     encoded_data = urlencode(form).encode('utf-8')
                     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
                     rep = urllib.request.Request(
@@ -527,20 +525,19 @@ class MainFrame(wx.Frame):
             try:
                 form = self.get_query_price_form()
                 if SETTING_MANAGER.order_region == 0:
-                    headers = {'Content-type': 'application/json',
-                        'smt' : '1234',
-                        'Authorization': 'dab6aedd-53d7-521c-849e-39292fb1c59a-65b8d8a3'
+                    # requests会自动处理multipart/form-data
+                    headers = { 'smt' : '1234',
                                }
                     rsp = requests.post(
                         url,
                         files=self.smt_build_file(),
-                        json=form,
+                        data=form,
                         headers=headers
                     )
                     fp = json.loads(rsp.content)
-                    _id = fp.get("id", {})
+                    _url = fp.get("url", {})
                 
-                    uat_url = "https://uat-smt.hqchip.com/online/submitOrder?id=" + str(_id)
+                    uat_url = str(_url)
                     webbrowser.open(uat_url)
 
                 else:

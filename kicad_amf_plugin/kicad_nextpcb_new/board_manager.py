@@ -22,7 +22,7 @@ def load_board_manager():
     else:
         dlg = wx.FileDialog(
             None,
-            message="Choose a kicad pcb file",
+            message=_("Choose a kicad pcb file"),
             defaultDir=os.getcwd(),
             defaultFile="",
             wildcard="*.kicad_pcb",

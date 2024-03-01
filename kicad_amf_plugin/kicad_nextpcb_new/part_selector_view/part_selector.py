@@ -30,7 +30,7 @@ class PartSelectorDialog(wx.Dialog):
             self,
             parent,
             id=wx.ID_ANY,
-            title="NextPCB Search Online",
+            title=_("NextPCB Search Online"),
             pos=wx.DefaultPosition,
             size=HighResWxSize(parent.window, wx.Size(1200, 800)),
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX,
@@ -196,14 +196,14 @@ class PartSelectorDialog(wx.Dialog):
             self.report_part_search_error("HTTP response timeout")
         if response.status_code != 200:
             self.report_part_search_error(
-                f"non-OK HTTP response status：{response.status_code}"
+                _(f"non-OK HTTP response status：{response.status_code}")
             )
             return
         self.search_part_list = []
         datas = response.json()
         data = datas[0].get("parts", {})
         if not data:
-            wx.MessageBox("No corresponding data was matched")
+            wx.MessageBox( _("No corresponding data was matched") )
             return
         self.total_num = len(data)
         if self.total_num == 0:
@@ -211,7 +211,7 @@ class PartSelectorDialog(wx.Dialog):
         for item in data:
             if not item.get("part", {}):
                 self.report_part_search_error(
-                    "returned JSON data does not have expected 'part' attribute"
+                    _("returned JSON data does not have expected 'part' attribute")
                 )
             search_part = item.get("part", {})
             self.search_part_list.append(search_part)
@@ -225,9 +225,9 @@ class PartSelectorDialog(wx.Dialog):
             return
         self.total_pages = ceil(self.total_num, 100)
         self.update_page_label()
-        self.part_list_view.result_count.SetLabel(f"{self.total_num} Results")
+        self.part_list_view.result_count.SetLabel(_(f"{self.total_num} Results"))
         if self.total_num >= 1000:
-            self.part_list_view.result_count.SetLabel("1000 Results (limited)")
+            self.part_list_view.result_count.SetLabel(_("1000 Results (limited)" ))
         else:
             self.part_list_view.result_count.SetLabel(f"{self.total_num} Results")
 
@@ -250,7 +250,7 @@ class PartSelectorDialog(wx.Dialog):
             response = requests.post(url, headers=headers, json=body, timeout=5)
             if response.status_code != 200:
                 self.report_part_search_error(
-                    f"non-OK HTTP response status：{response.status_code}"
+                    _(f"non-OK HTTP response status：{response.status_code}")
                 )
             # judge whether supplier chain data is available
             # Check if the response content is not empty
@@ -332,8 +332,8 @@ class PartSelectorDialog(wx.Dialog):
                 wx.EndBusyCursor()
         else:
             wx.MessageBox(
-                "Failed to get clicked part from NextPCB\r\n",
-                "Error",
+                _("Failed to get clicked part from NextPCB"),
+                _("Error"),
                 style=wx.ICON_ERROR,
             )
 
@@ -358,8 +358,8 @@ class PartSelectorDialog(wx.Dialog):
 
     def help(self, e):
         """Show message box with help instructions"""
-        title = "Help"
-        text = """
+        title = _("Help")
+        text ="""
         Use % as wildcard selector. \n
         For example DS24% will match DS2411\n
         %QFP% wil match LQFP-64 as well as TQFP-32\n
@@ -374,8 +374,8 @@ class PartSelectorDialog(wx.Dialog):
 
     def report_part_search_error(self, reason):
         wx.MessageBox(
-            f"Failed to download part detail from the NextPCB API ({reason})\r\n",
-            "Error",
+            _(f"Failed to download part detail from the NextPCB API ({reason})\r\n"),
+            _("Error"),
             style=wx.ICON_ERROR,
         )
         wx.CallAfter(wx.EndBusyCursor)
@@ -384,7 +384,7 @@ class PartSelectorDialog(wx.Dialog):
 
     def on_right_down(self, e):
         conMenu = wx.Menu()
-        selcet_part = wx.MenuItem(conMenu, ID_SELECT_PART, "Select Part")
+        selcet_part = wx.MenuItem(conMenu, ID_SELECT_PART, _("Select Part") )
         conMenu.Append(selcet_part)
         conMenu.Bind(wx.EVT_MENU, self.select_part, selcet_part)
         item = self.part_list_view.part_list.GetSelection()

@@ -8,6 +8,7 @@ from pathlib import Path
 from zipfile import ZipFile
 import contextlib
 import shutil
+import tempfile
 
 from pcbnew import (
     EXCELLON_WRITER,
@@ -46,16 +47,22 @@ class FabricationDataGenerator:
 
     @property
     def nextpcb_root(self):
-        return os.path.join(self.path, "nextpcb_amf")
+        nextpcb_path = os.path.join(self.path, "nextpcb")
+        try:
+            Path(nextpcb_path).mkdir(parents=True, exist_ok=True)
+        except PermissionError as e:
+            nextpcb_path = os.path.join(tempfile.gettempdir(), "nextpcb")
+        return nextpcb_path
 
-    @property
-    def output_dir(self):
-        return os.path.join(self.nextpcb_root, "output_files")
+    # @property
+    # def output_dir(self):
+    #     return os.path.join(self.nextpcb_root, "output_files")
 
     def create_folders(self):
         """Create output folders if they not already exist."""
+        self.output_dir = os.path.join(self.nextpcb_root, "output_files")
         Path(self.output_dir).mkdir(parents=True, exist_ok=True)
-        self.gerberdir = os.path.join(self.path, "nextpcb_amf", "gerber")
+        self.gerberdir = os.path.join(self.nextpcb_root, "gerber")
         Path(self.gerberdir).mkdir(parents=True, exist_ok=True)
 
     def fill_zones(self):
@@ -114,8 +121,9 @@ class FabricationDataGenerator:
 
         if is_nightly(GetBuildVersion()):
             from pcbnew import DRILL_MARKS_NO_DRILL_SHAPE
+            nites = DRILL_MARKS_NO_DRILL_SHAPE
 
-            popt.SetDrillMarksType(DRILL_MARKS_NO_DRILL_SHAPE)
+            nitd =  popt.SetDrillMarksType(DRILL_MARKS_NO_DRILL_SHAPE)
         else:
             popt.SetDrillMarksType(PCB_PLOT_PARAMS.NO_DRILL_SHAPE)
 

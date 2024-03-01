@@ -6,6 +6,8 @@ import json
 import wx
 from urllib.parse import urlparse, parse_qs, urlencode
 from wx.lib.pubsub import pub
+from pathlib import Path
+import tempfile
 
 class UploadFile:
     def __init__(self, board_manager: BoardManager, url, forms, smt_order_region, number ):
@@ -15,16 +17,19 @@ class UploadFile:
         self._number = number
         self.smt_order_region = smt_order_region
         self.project_path = os.path.split(self._board_manager.board.GetFileName())[0]
-        self.db_file_path = os.path.join(self.project_path, "project.db")
         
+        self.file_path = os.path.join(self.project_path, "nextpcb")
+        try:
+            Path(self.file_path).mkdir(parents=True, exist_ok=True)
+        except PermissionError as e:
+            self.file_path = os.path.join(tempfile.gettempdir(), "nextpcb")
         
         self.usa_get_files()
         self.upload_pcbfile(self._url)
         self.upload_smtfile(self._url)
 
-
     def usa_get_files(self):
-        self.getdir = os.path.join(self.project_path, "nextpcb", "production_files")
+        self.getdir = os.path.join(self.file_path, "production_files")
         file_list = []
         
         if os.path.exists(self.getdir) and os.path.isdir(self.getdir):

@@ -11,16 +11,16 @@ import wx.dataview as dv
 
 
 parameters = {
-    "mpn": "MPN",
-    "manufacturer": "Manufacturer",
-    "package": "Package / Footprint",
-    "category": "Category",
-    "part_desc": "Description",
+    "mpn": _("MPN"),
+    "manufacturer": _("Manufacturer"),
+    "package": _("Package / Footprint"),
+    "category": _("Category"),
+    "part_desc": _("Description"),
 }
 attribute_para = {
-    "sku": "SKU",
-    "vendor": "Supplier",
-    "quantity": "Stock",
+    "sku": _("SKU"),
+    "vendor": _("Supplier"),
+    "quantity": _("Stock"),
 }
 
 
@@ -40,13 +40,13 @@ class PartDetailsView(UiPartDetailsPanel):
         # ----------------------- Properties List -----------------------------
         # ---------------------------------------------------------------------
         self.property = self.data_list.AppendTextColumn(
-            "Property",
+            _("Property"),
             width=180,
             mode=dv.DATAVIEW_CELL_ACTIVATABLE,
             align=wx.ALIGN_LEFT,
         )
         self.value = self.data_list.AppendTextColumn(
-            "Value", width=-1, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_LEFT
+            _("Value"), width=-1, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_LEFT
         )
         self.initialize_data()
 
@@ -59,8 +59,8 @@ class PartDetailsView(UiPartDetailsPanel):
             self.data_list.AppendItem([v, " "])
         for k, v in attribute_para.items():
             self.data_list.AppendItem([v, " "])
-        self.data_list.AppendItem(["Price", " "])
-        self.data_list.AppendItem(["Datasheet", " "])
+        self.data_list.AppendItem([_("Price"), " "])
+        self.data_list.AppendItem([_("Datasheet"), " "])
         # update layout
         self.Layout()
 
@@ -88,7 +88,7 @@ class PartDetailsView(UiPartDetailsPanel):
         """fetch part data from NextPCB API and parse it into the table, set picture and PDF link"""
         if clicked_part == "":
             self.report_part_data_fetch_error(
-                "returned data does not have expected clicked part"
+                _("returned data does not have expected clicked part")
             )
         self.info = clicked_part.get("part_info", {})
         self.supplier = clicked_part.get("supplier_chain", {})
@@ -131,7 +131,7 @@ class PartDetailsView(UiPartDetailsPanel):
         self.pdfurl = "-" if self.pdfurl == "" else self.pdfurl
         self.data_list.AppendItem(
             [
-                "Datasheet",
+                _("Datasheet"),
                 self.pdfurl,
             ]
         )
@@ -149,9 +149,9 @@ class PartDetailsView(UiPartDetailsPanel):
 
     def report_part_data_fetch_error(self, reason):
         wx.MessageBox(
-            f"Failed to download part detail: ({reason})\r\n"
-            f"We looked for a part named:\r\n{self.info.find('mpn')}\r\n[hint: did you fill in the NextPCB field correctly?]",
-            "Error",
+            _(f"Failed to download part detail: ({reason})\r\n"),
+            _(f"We looked for a part named:\r\n{self.info.find('mpn')}\r\n[hint: did you fill in the NextPCB field correctly?]"),
+            _("Error"),
             style=wx.ICON_ERROR,
         )
         self.Destroy()

@@ -13,8 +13,6 @@ import wx.dataview
 from kicad_amf_plugin.utils.platebtn import PlateButton ,PB_STYLE_GRADIENT
 from kicad_amf_plugin.utils.platebtn import PlateButton ,PB_STYLE_GRADIENT,PB_STYLE_SQUARE
 
-import gettext
-_ = gettext.gettext
 
 ###########################################################################
 ## Class UiSummaryPanel
@@ -22,7 +20,7 @@ _ = gettext.gettext
 
 class UiSummaryPanel ( wx.Panel ):
 
-	def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 191,525 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+	def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
 		wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
 
 		bSizer1 = wx.BoxSizer( wx.VERTICAL )
@@ -32,9 +30,9 @@ class UiSummaryPanel ( wx.Panel ):
 		self.m_panel10 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,10 ), wx.TAB_TRAVERSAL )
 		bSizer3.Add( self.m_panel10, 0, wx.EXPAND |wx.ALL, 5 )
 
-		sbSizer4 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Preference") ), wx.HORIZONTAL )
+		sbSizer4 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _("Preference") ), wx.HORIZONTAL )
 
-		self.m_staticText1 = wx.StaticText( sbSizer4.GetStaticBox(), wx.ID_ANY, _(u"Website"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText1 = wx.StaticText( sbSizer4.GetStaticBox(), wx.ID_ANY, _("Website"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText1.Wrap( -1 )
 
 		sbSizer4.Add( self.m_staticText1, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -65,13 +63,13 @@ class UiSummaryPanel ( wx.Panel ):
 		self.switch_smt_panel = wx.Panel( self.switch_smt_splitter, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer10 = wx.BoxSizer( wx.VERTICAL )
 
-		sbSizer7 = wx.StaticBoxSizer( wx.StaticBox( self.switch_smt_panel, wx.ID_ANY, _(u"BOM view") ), wx.VERTICAL )
+		sbSizer7 = wx.StaticBoxSizer( wx.StaticBox( self.switch_smt_panel, wx.ID_ANY, _("BOM View") ), wx.VERTICAL )
 
 		self.list_bom_view = wx.dataview.DataViewListCtrl( sbSizer7.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.dataview.DV_ROW_LINES|wx.dataview.DV_VERT_RULES )
-		sbSizer7.Add( self.list_bom_view, 3, wx.ALL|wx.EXPAND, 5 )
+		sbSizer7.Add( self.list_bom_view, 1, wx.ALL|wx.EXPAND, 5 )
 
 
-		bSizer10.Add( sbSizer7, 3, wx.EXPAND, 5 )
+		bSizer10.Add( sbSizer7, 2, wx.EXPAND, 5 )
 
 		self.btn_bom_match=PlateButton(self.switch_smt_panel,bmp= wx.Bitmap( self.GetImagePath("bom_match.png" ),wx.BITMAP_TYPE_ANY ),style=PB_STYLE_GRADIENT ,label=_("BOM Match"))
 		bSizer10.Add( self.btn_bom_match, 0, wx.ALL|wx.EXPAND, 5 )
@@ -81,7 +79,7 @@ class UiSummaryPanel ( wx.Panel ):
 		self.switch_smt_panel.Layout()
 		bSizer10.Fit( self.switch_smt_panel )
 		self.m_panel9 = wx.Panel( self.switch_smt_splitter, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		sbSizer1 = wx.StaticBoxSizer( wx.StaticBox( self.m_panel9, wx.ID_ANY, _(u"Cost detail") ), wx.VERTICAL )
+		sbSizer1 = wx.StaticBoxSizer( wx.StaticBox( self.m_panel9, wx.ID_ANY, _("Cost Detail") ), wx.VERTICAL )
 
 		self.list_price_detail = wx.dataview.DataViewCtrl( sbSizer1.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.dataview.DV_ROW_LINES|wx.dataview.DV_VERT_RULES )
 		sbSizer1.Add( self.list_price_detail, 1, wx.ALL|wx.EXPAND, 5 )
@@ -98,7 +96,7 @@ class UiSummaryPanel ( wx.Panel ):
 		self.m_panel7.Layout()
 		bSizer13.Fit( self.m_panel7 )
 		self.switch_amf_panel = wx.Panel( self.splitter_detail_summary, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		sbSizer41 = wx.StaticBoxSizer( wx.StaticBox( self.switch_amf_panel, wx.ID_ANY, _(u"Order Summary") ), wx.VERTICAL )
+		sbSizer41 = wx.StaticBoxSizer( wx.StaticBox( self.switch_amf_panel, wx.ID_ANY, _("Order Summary") ), wx.VERTICAL )
 
 		self.list_order_summary = wx.dataview.DataViewCtrl( sbSizer41.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.dataview.DV_ROW_LINES|wx.dataview.DV_VERT_RULES )
 		sbSizer41.Add( self.list_order_summary, 1, wx.ALL|wx.EXPAND, 5 )
@@ -124,6 +122,7 @@ class UiSummaryPanel ( wx.Panel ):
 
 		self.SetSizer( bSizer1 )
 		self.Layout()
+		bSizer1.Fit( self )
 
 	def __del__( self ):
 		pass

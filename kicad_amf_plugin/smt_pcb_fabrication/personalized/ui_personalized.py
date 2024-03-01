@@ -10,8 +10,6 @@
 import wx
 import wx.xrc
 
-import gettext
-_ = gettext.gettext
 
 BOX_SP_REQUEST = 2030
 
@@ -24,24 +22,24 @@ class UiPersonalizedService ( wx.Panel ):
 	def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
 		wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
 
-		labelProcessInfo = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Special Technique") ), wx.VERTICAL )
+		labelProcessInfo = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _("Special Technique") ), wx.VERTICAL )
 
 		fgSizer25 = wx.FlexGridSizer( 0, 2, 0, 0 )
 		fgSizer25.AddGrowableCol( 1 )
 		fgSizer25.SetFlexibleDirection( wx.BOTH )
 		fgSizer25.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 
-		self.solder_paste_type_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"solder_paste_type"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.solder_paste_type_label.Wrap( -1 )
+		self.label_electric_test = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("Process Requirement"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.label_electric_test.Wrap( -1 )
 
-		fgSizer25.Add( self.solder_paste_type_label, 0, wx.ALL, 5 )
+		fgSizer25.Add( self.label_electric_test, 0, wx.ALL, 5 )
 
 		solder_paste_typeChoices = []
 		self.solder_paste_type = wx.Choice( labelProcessInfo.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, solder_paste_typeChoices, 0 )
 		self.solder_paste_type.SetSelection( 0 )
 		fgSizer25.Add( self.solder_paste_type, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.is_assembly_weld_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"is_assembly_weld"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.is_assembly_weld_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("Erecting Welding"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.is_assembly_weld_label.Wrap( -1 )
 
 		fgSizer25.Add( self.is_assembly_weld_label, 0, wx.ALL, 5 )
@@ -51,7 +49,7 @@ class UiPersonalizedService ( wx.Panel ):
 		self.is_assembly_weld.SetSelection( 0 )
 		fgSizer25.Add( self.is_assembly_weld, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.x_ray_number_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"x_ray_number"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.x_ray_number_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("X-RAY Boards"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.x_ray_number_label.Wrap( -1 )
 
 		fgSizer25.Add( self.x_ray_number_label, 0, wx.ALL, 5 )
@@ -59,7 +57,7 @@ class UiPersonalizedService ( wx.Panel ):
 		self.x_ray_number = wx.TextCtrl( labelProcessInfo.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
 		fgSizer25.Add( self.x_ray_number, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.x_ray_unit_number_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"x_ray_unit_number"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.x_ray_unit_number_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("X-RAY Elements"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.x_ray_unit_number_label.Wrap( -1 )
 
 		fgSizer25.Add( self.x_ray_unit_number_label, 0, wx.ALL, 5 )
@@ -67,7 +65,7 @@ class UiPersonalizedService ( wx.Panel ):
 		self.x_ray_unit_number = wx.TextCtrl( labelProcessInfo.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
 		fgSizer25.Add( self.x_ray_unit_number, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.is_layout_cleaning_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"is_layout_cleaning"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.is_layout_cleaning_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("Panel Cleaning"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.is_layout_cleaning_label.Wrap( -1 )
 
 		fgSizer25.Add( self.is_layout_cleaning_label, 0, wx.ALL, 5 )
@@ -77,7 +75,7 @@ class UiPersonalizedService ( wx.Panel ):
 		self.is_layout_cleaning.SetSelection( 0 )
 		fgSizer25.Add( self.is_layout_cleaning, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.is_material_baking_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"is_material_baking"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.is_material_baking_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("Material Baking"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.is_material_baking_label.Wrap( -1 )
 
 		fgSizer25.Add( self.is_material_baking_label, 0, wx.ALL, 5 )
@@ -87,7 +85,7 @@ class UiPersonalizedService ( wx.Panel ):
 		self.is_material_baking.SetSelection( 0 )
 		fgSizer25.Add( self.is_material_baking, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.is_welding_wire_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"is_welding_wire"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.is_welding_wire_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("Welding or Not"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.is_welding_wire_label.Wrap( -1 )
 
 		fgSizer25.Add( self.is_welding_wire_label, 0, wx.ALL, 5 )
@@ -97,7 +95,7 @@ class UiPersonalizedService ( wx.Panel ):
 		self.is_welding_wire.SetSelection( 0 )
 		fgSizer25.Add( self.is_welding_wire, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.is_test_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"functional test"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.is_test_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("Functional Test"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.is_test_label.Wrap( -1 )
 
 		fgSizer25.Add( self.is_test_label, 0, wx.ALL, 5 )
@@ -107,7 +105,7 @@ class UiPersonalizedService ( wx.Panel ):
 		self.is_test.SetSelection( 0 )
 		fgSizer25.Add( self.is_test, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.is_assemble_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"is_assemble"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.is_assemble_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("Assembled"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.is_assemble_label.Wrap( -1 )
 
 		fgSizer25.Add( self.is_assemble_label, 0, wx.ALL, 5 )
@@ -117,7 +115,7 @@ class UiPersonalizedService ( wx.Panel ):
 		self.is_assemble.SetSelection( 0 )
 		fgSizer25.Add( self.is_assemble, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.is_program_burning_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"is_program_burning"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.is_program_burning_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("Program Burning"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.is_program_burning_label.Wrap( -1 )
 
 		fgSizer25.Add( self.is_program_burning_label, 0, wx.ALL, 5 )
@@ -127,7 +125,7 @@ class UiPersonalizedService ( wx.Panel ):
 		self.is_program_burning.SetSelection( 0 )
 		fgSizer25.Add( self.is_program_burning, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.need_split_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"need_split"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.need_split_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("Split Shipment"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.need_split_label.Wrap( -1 )
 
 		fgSizer25.Add( self.need_split_label, 0, wx.ALL, 5 )
@@ -137,7 +135,7 @@ class UiPersonalizedService ( wx.Panel ):
 		self.need_split.SetSelection( 0 )
 		fgSizer25.Add( self.need_split, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.is_increase_tinning_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"is_increase_tinning"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.is_increase_tinning_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("Line/Pad Tinning"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.is_increase_tinning_label.Wrap( -1 )
 
 		fgSizer25.Add( self.is_increase_tinning_label, 0, wx.ALL, 5 )
@@ -147,7 +145,7 @@ class UiPersonalizedService ( wx.Panel ):
 		self.is_increase_tinning.SetSelection( 0 )
 		fgSizer25.Add( self.is_increase_tinning, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.need_conformal_coating_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"need_conformal_coating"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.need_conformal_coating_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("Three-proof Paint"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.need_conformal_coating_label.Wrap( -1 )
 
 		fgSizer25.Add( self.need_conformal_coating_label, 0, wx.ALL, 5 )
@@ -157,7 +155,7 @@ class UiPersonalizedService ( wx.Panel ):
 		self.need_conformal_coating.SetSelection( 0 )
 		fgSizer25.Add( self.need_conformal_coating, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.is_first_confirm_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"is_first_confirm"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.is_first_confirm_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("Sample Drawing Confirm"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.is_first_confirm_label.Wrap( -1 )
 
 		fgSizer25.Add( self.is_first_confirm_label, 0, wx.ALL, 5 )
@@ -167,7 +165,7 @@ class UiPersonalizedService ( wx.Panel ):
 		self.is_first_confirm.SetSelection( 0 )
 		fgSizer25.Add( self.is_first_confirm, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.packing_type_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _(u"packing_type"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.packing_type_label = wx.StaticText( labelProcessInfo.GetStaticBox(), wx.ID_ANY, _("Packaging Type"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.packing_type_label.Wrap( -1 )
 
 		fgSizer25.Add( self.packing_type_label, 0, wx.ALL, 5 )
@@ -180,7 +178,7 @@ class UiPersonalizedService ( wx.Panel ):
 
 		labelProcessInfo.Add( fgSizer25, 0, wx.EXPAND, 5 )
 
-		sp_box = wx.StaticBoxSizer( wx.StaticBox( labelProcessInfo.GetStaticBox(), BOX_SP_REQUEST, _(u"postscript") ), wx.VERTICAL )
+		sp_box = wx.StaticBoxSizer( wx.StaticBox( labelProcessInfo.GetStaticBox(), BOX_SP_REQUEST, _("Postscript") ), wx.VERTICAL )
 
 		self.postscript = wx.TextCtrl( sp_box.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
 		self.postscript.SetMinSize( wx.Size( -1,60 ) )

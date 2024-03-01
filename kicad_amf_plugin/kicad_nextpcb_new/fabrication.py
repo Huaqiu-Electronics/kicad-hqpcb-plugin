@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 from zipfile import ZipFile
 import wx
+import tempfile
 
 from pcbnew import (
     EXCELLON_WRITER,
@@ -22,7 +23,6 @@ from pcbnew import (
     F_Mask,
     F_Paste,
     F_SilkS,
-    GetBoard,
     GetBuildVersion,
     In1_Cu,
     In2_Cu,
@@ -35,19 +35,20 @@ from .helpers import get_exclude_from_pos, get_footprint_by_ref, get_smd, is_nig
 
 
 class Fabrication:
-    def __init__(self, parent, board):
+    def __init__(self, parent, board, file_path):
         self.parent = parent
         self.logger = logging.getLogger(__name__)
         self.board = board
         self.corrections = []
-        self.path, self.filename = os.path.split(self.board.GetFileName())
+        self.filename = os.path.split(self.board.GetFileName())[1]
+        self.file_path = file_path
         self.create_folders()
 
     def create_folders(self):
         """Create output folders if they not already exist."""
-        self.outputdir = os.path.join(self.path, "nextpcb", "production_files")
+        self.outputdir = os.path.join(self.file_path, "nextpcb", "production_files")
         Path(self.outputdir).mkdir(parents=True, exist_ok=True)
-        self.gerberdir = os.path.join(self.path, "nextpcb", "gerber")
+        self.gerberdir = os.path.join(self.file_path, "nextpcb", "gerber")
         Path(self.gerberdir).mkdir(parents=True, exist_ok=True)
 
     def fill_zones(self):
@@ -313,3 +314,5 @@ class Fabrication:
             "Info",
             style=wx.ICON_INFORMATION,
         )
+
+

@@ -25,6 +25,8 @@ from kicad_amf_plugin.kicad_nextpcb_new.store import Store
 import os
 from kicad_amf_plugin.api.base_request import (  SmtRequest )
 
+from pathlib import Path
+import tempfile
 
 OrderRegionSettings = (
     EditDisplayRole(SupportedRegion.CHINA_MAINLAND, _("Mainland China")),
@@ -38,8 +40,15 @@ class SummaryPanel(UiSummaryPanel):
         super().__init__(parent)
         self._board_manager = board_manager
         self.project_path = os.path.split(self._board_manager.board.GetFileName())[0]
-        self.db_file_path = os.path.join(self.project_path, "project.db")
+        nextpcb_path = os.path.join(self.project_path, "nextpcb")
+        try:
+            Path(nextpcb_path).mkdir(parents=True, exist_ok=True)
+        except PermissionError as e:
+            self.project_path = os.path.join(tempfile.gettempdir() )
+        
+        self.db_file_path = os.path.join(self.project_path, "database","project.db")
         self.get_files_dir = os.path.join(self.project_path, "nextpcb", "production_files")
+        self.store = Store(self, self.project_path, self._board_manager.board )
 
         self.init_ui()
         self.load_Designator()
@@ -143,13 +152,14 @@ class SummaryPanel(UiSummaryPanel):
 
     def is_database_exists(self):
         result = os.path.exists(self.db_file_path)
-        return result
+        parts = self.store.get_reference_mpn_footprint()
+        mpn_values = [part[1] for part in parts]
+        all_empty = all(value == '' for value in mpn_values)
+        return result and all_empty
 
     def get_data(self):
         parts = []
-        self.store = Store(self, self.project_path, self._board_manager.board )
         self.list_bom_view.DeleteAllItems()
-
         parts = self.store.get_reference_mpn_footprint()
         for part in parts:
             self.list_bom_view.AppendItem(part)
@@ -199,17 +209,14 @@ class SummaryPanel(UiSummaryPanel):
         dlg = NextPCBTools( self, self._board_manager )
         result = dlg.ShowModal()
         if result == wx.ID_OK:
-            print("NextPCBTools was closed with OK button.")
             dlg.generate_fabrication_data(e)
             self.get_data()
             self.get_files()
         elif result == wx.ID_CANCEL:
-            print("NextPCBTools was closed with Cancel button.")
             dlg.generate_fabrication_data(e)
             self.get_data()
             self.get_files()
         else:
-            print("NextPCBTools was closed with an unknown result.")
             dlg.generate_fabrication_data(e)
             self.get_data()
             self.get_files()
@@ -222,8 +229,11 @@ class SummaryPanel(UiSummaryPanel):
         wx.CallAfter(self.splitter_detail_summary.UpdateSize)
 
     def switch_to_smt(self):
-        self.switch_smt_splitter.SplitHorizontally(self.switch_smt_panel, self.m_panel9, 600)
         self.splitter_detail_summary.Unsplit(self.switch_amf_panel)
+        self.switch_smt_splitter.SplitHorizontally(self.switch_smt_panel, self.m_panel9, 0)
+        total_height = self.switch_smt_splitter.GetClientSize().GetHeight()
+        sash_position = int(total_height * 3 / 4)
+        self.switch_smt_splitter.SetSashPosition(sash_position)
         wx.CallAfter(self.switch_smt_splitter.UpdateSize)
         wx.CallAfter(self.splitter_detail_summary.UpdateSize) 
 

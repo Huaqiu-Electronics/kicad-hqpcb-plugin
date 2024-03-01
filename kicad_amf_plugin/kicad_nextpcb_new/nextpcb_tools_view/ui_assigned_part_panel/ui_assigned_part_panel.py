@@ -11,6 +11,7 @@ import wx
 import wx.xrc
 import wx.dataview
 
+
 ###########################################################################
 ## Class UiAssignedPartPanel
 ###########################################################################
@@ -26,7 +27,7 @@ class UiAssignedPartPanel ( wx.Panel ):
 		self.m_scrolledWindow4.SetScrollRate( 5, 5 )
 		bSizer11 = wx.BoxSizer( wx.HORIZONTAL )
 
-		sbSizer3 = wx.StaticBoxSizer( wx.StaticBox( self.m_scrolledWindow4, wx.ID_ANY, u"Part Details" ), wx.VERTICAL )
+		sbSizer3 = wx.StaticBoxSizer( wx.StaticBox( self.m_scrolledWindow4, wx.ID_ANY, _("Part Details") ), wx.VERTICAL )
 
 		self.data_list = wx.dataview.DataViewListCtrl( sbSizer3.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0 )
 		sbSizer3.Add( self.data_list, 1, wx.EXPAND, 5 )
@@ -42,7 +43,7 @@ class UiAssignedPartPanel ( wx.Panel ):
 
 		self.m_scrolledWindow41 = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
 		self.m_scrolledWindow41.SetScrollRate( 5, 5 )
-		sbSizer2 = wx.StaticBoxSizer( wx.StaticBox( self.m_scrolledWindow41, wx.ID_ANY, u"Part Picture" ), wx.VERTICAL )
+		sbSizer2 = wx.StaticBoxSizer( wx.StaticBox( self.m_scrolledWindow41, wx.ID_ANY, _("Part Picture") ), wx.VERTICAL )
 
 		self.m_scrolledWindow3 = wx.ScrolledWindow( sbSizer2.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
 		self.m_scrolledWindow3.SetScrollRate( 5, 5 )
@@ -72,5 +73,4 @@ class UiAssignedPartPanel ( wx.Panel ):
 
 	def __del__( self ):
 		pass
-
 

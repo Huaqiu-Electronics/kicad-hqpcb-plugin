@@ -33,8 +33,8 @@ class SchematicExport:
     def _update_schematic(self, path):
         """This only works with KiCad V6 files"""
         self.logger.info(f"Reading {path}...")
-        """Regex to look through schematic property, if we hit the pin section without finding a LCSC property, add it"""
-        """keep track of property ids and Reference property location to use with new LCSC property"""
+        """Regex to look through schematic property, if we hit the pin section without finding a property, add it"""
+        """keep track of property ids and Reference property location to use with new property"""
         propRx = re.compile(
             '\\(property\\s\\"(.*)\\"\\s\\"(.*)\\"\\s\\(id\\s(\\d+)\\)\\s\\(at\\s(-?\\d+(?:.\\d+)?\\s-?\\d+(?:.\\d+)?)\\s\\d+\\)'
         )

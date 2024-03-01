@@ -12,7 +12,7 @@ class SettingsDialog(wx.Dialog):
             self,
             parent,
             id=wx.ID_ANY,
-            title="NextPCB tools settings",
+            title=_("NextPCB Tools Settings"),
             pos=wx.DefaultPosition,
             size=HighResWxSize(parent.window, wx.Size(1200, 800)),
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX,
@@ -43,7 +43,7 @@ class SettingsDialog(wx.Dialog):
         self.tented_vias_setting = wx.CheckBox(
             self,
             id=wx.ID_ANY,
-            label="Do not tent vias",
+            label=_("Do not tent vias"),
             pos=wx.DefaultPosition,
             size=wx.DefaultSize,
             style=0,
@@ -51,7 +51,7 @@ class SettingsDialog(wx.Dialog):
         )
 
         self.tented_vias_setting.SetToolTip(
-            wx.ToolTip("Whether vias should be coverd by soldermask or not")
+            wx.ToolTip(_("Whether vias should be coverd by soldermask or not"))
         )
 
         self.tented_vias_image = wx.StaticBitmap(
@@ -74,7 +74,7 @@ class SettingsDialog(wx.Dialog):
         self.fill_zones_setting = wx.CheckBox(
             self,
             id=wx.ID_ANY,
-            label="Fill zones",
+            label=_("Fill zones"),
             pos=wx.DefaultPosition,
             size=wx.DefaultSize,
             style=0,
@@ -82,7 +82,7 @@ class SettingsDialog(wx.Dialog):
         )
 
         self.fill_zones_setting.SetToolTip(
-            wx.ToolTip("Whether zones should be filled on gerber generation")
+            wx.ToolTip(_("Whether zones should be filled on gerber generation"))
         )
 
         self.fill_zones_image = wx.StaticBitmap(
@@ -105,7 +105,7 @@ class SettingsDialog(wx.Dialog):
         self.plot_values_setting = wx.CheckBox(
             self,
             id=wx.ID_ANY,
-            label="Plot values",
+            label=_("Plot values"),
             pos=wx.DefaultPosition,
             size=wx.DefaultSize,
             style=0,
@@ -113,7 +113,7 @@ class SettingsDialog(wx.Dialog):
         )
 
         self.plot_values_setting.SetToolTip(
-            wx.ToolTip("Whether value should be plotted on gerber generation")
+            wx.ToolTip(_("Whether value should be plotted on gerber generation"))
         )
 
         self.plot_values_image = wx.StaticBitmap(
@@ -136,7 +136,7 @@ class SettingsDialog(wx.Dialog):
         self.plot_references_setting = wx.CheckBox(
             self,
             id=wx.ID_ANY,
-            label="Plot references",
+            label=_("Plot references"),
             pos=wx.DefaultPosition,
             size=wx.DefaultSize,
             style=0,
@@ -144,7 +144,7 @@ class SettingsDialog(wx.Dialog):
         )
 
         self.plot_references_setting.SetToolTip(
-            wx.ToolTip("Whether value should be plotted on gerber generation")
+            wx.ToolTip(_("Whether value should be plotted on gerber generation"))
         )
 
         self.plot_references_image = wx.StaticBitmap(
@@ -164,25 +164,25 @@ class SettingsDialog(wx.Dialog):
             self.plot_references_setting, 100, wx.ALL | wx.EXPAND, 5
         )
 
-        ##### LCSC priority #####
+        #####  priority #####
 
-        self.lcsc_priority_setting = wx.CheckBox(
+        self.priority_setting = wx.CheckBox(
             self,
             id=wx.ID_ANY,
-            label="MPN number priority",
+            label=_("MPN number priority"),
             pos=wx.DefaultPosition,
             size=wx.DefaultSize,
             style=0,
             name="general_lcsc_priority",
         )
 
-        self.lcsc_priority_setting.SetToolTip(
+        self.priority_setting.SetToolTip(
             wx.ToolTip(
-                "Whether nextPCB number from schematic should overrule those in the database"
+                _("Whether nextPCB number from schematic should overrule those in the database")
             )
         )
 
-        self.lcsc_priority_image = wx.StaticBitmap(
+        self.priority_image = wx.StaticBitmap(
             self,
             wx.ID_ANY,
             loadBitmapScaled("schematic.png", self.parent.scale_factor, static=True),
@@ -191,11 +191,11 @@ class SettingsDialog(wx.Dialog):
             0,
         )
 
-        self.lcsc_priority_setting.Bind(wx.EVT_CHECKBOX, self.update_settings)
+        self.priority_setting.Bind(wx.EVT_CHECKBOX, self.update_settings)
 
-        lcsc_priority_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        lcsc_priority_sizer.Add(self.lcsc_priority_image, 10, wx.ALL | wx.EXPAND, 5)
-        lcsc_priority_sizer.Add(self.lcsc_priority_setting, 100, wx.ALL | wx.EXPAND, 5)
+        priority_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        priority_sizer.Add(self.priority_image, 10, wx.ALL | wx.EXPAND, 5)
+        priority_sizer.Add(self.priority_setting, 100, wx.ALL | wx.EXPAND, 5)
 
         # ---------------------------------------------------------------------
         # ---------------------- Main Layout Sizer ----------------------------
@@ -206,7 +206,7 @@ class SettingsDialog(wx.Dialog):
         layout.Add(fill_zones_sizer, 0, wx.ALL | wx.EXPAND, 5)
         layout.Add(plot_values_sizer, 0, wx.ALL | wx.EXPAND, 5)
         layout.Add(plot_references_sizer, 0, wx.ALL | wx.EXPAND, 5)
-        layout.Add(lcsc_priority_sizer, 0, wx.ALL | wx.EXPAND, 5)
+        layout.Add(priority_sizer, 0, wx.ALL | wx.EXPAND, 5)
         self.SetSizer(layout)
         self.Layout()
         self.Centre(wx.BOTH)
@@ -217,13 +217,13 @@ class SettingsDialog(wx.Dialog):
         """Update settings dialog according to the settings."""
         if tented:
             self.tented_vias_setting.SetValue(tented)
-            self.tented_vias_setting.SetLabel("Tented vias")
+            self.tented_vias_setting.SetLabel(_("Tented vias"))
             self.tented_vias_image.SetBitmap(
                 loadBitmapScaled("tented.png", self.parent.scale_factor, static=True)
             )
         else:
             self.tented_vias_setting.SetValue(tented)
-            self.tented_vias_setting.SetLabel("Untented vias")
+            self.tented_vias_setting.SetLabel(_("Untented vias"))
             self.tented_vias_image.SetBitmap(
                 loadBitmapScaled("untented.png", self.parent.scale_factor, static=True)
             )
@@ -232,7 +232,7 @@ class SettingsDialog(wx.Dialog):
         """Update settings dialog according to the settings."""
         if fill:
             self.fill_zones_setting.SetValue(fill)
-            self.fill_zones_setting.SetLabel("Fill zones")
+            self.fill_zones_setting.SetLabel(_("Fill zones"))
             self.fill_zones_image.SetBitmap(
                 loadBitmapScaled(
                     "fill-zones.png", self.parent.scale_factor, static=True
@@ -240,7 +240,7 @@ class SettingsDialog(wx.Dialog):
             )
         else:
             self.fill_zones_setting.SetValue(fill)
-            self.fill_zones_setting.SetLabel("Don't fill zones")
+            self.fill_zones_setting.SetLabel(_("Don't fill zones"))
             self.fill_zones_image.SetBitmap(
                 loadBitmapScaled(
                     "unfill-zones.png", self.parent.scale_factor, static=True
@@ -251,7 +251,7 @@ class SettingsDialog(wx.Dialog):
         """Update settings dialog according to the settings."""
         if plot_values:
             self.plot_values_setting.SetValue(plot_values)
-            self.plot_values_setting.SetLabel("Plot values on silkscreen")
+            self.plot_values_setting.SetLabel(_("Plot values on silkscreen"))
             self.plot_values_image.SetBitmap(
                 loadBitmapScaled(
                     "plot_values.png", self.parent.scale_factor, static=True
@@ -259,7 +259,7 @@ class SettingsDialog(wx.Dialog):
             )
         else:
             self.plot_values_setting.SetValue(plot_values)
-            self.plot_values_setting.SetLabel("Don't plot values on silkscreen")
+            self.plot_values_setting.SetLabel(_("Don't plot values on silkscreen"))
             self.plot_values_image.SetBitmap(
                 loadBitmapScaled("no_values.png", self.parent.scale_factor, static=True)
             )
@@ -268,13 +268,13 @@ class SettingsDialog(wx.Dialog):
         """Update settings dialog according to the settings."""
         if plot_references:
             self.plot_references_setting.SetValue(plot_references)
-            self.plot_references_setting.SetLabel("Plot references on silkscreen")
+            self.plot_references_setting.SetLabel( _("Plot references on silkscreen") )
             self.plot_references_image.SetBitmap(
                 loadBitmapScaled("plot_refs.png", self.parent.scale_factor, static=True)
             )
         else:
             self.plot_references_setting.SetValue(plot_references)
-            self.plot_references_setting.SetLabel("Don't plot references on silkscreen")
+            self.plot_references_setting.SetLabel(_("Don't plot references on silkscreen"))
             self.plot_references_image.SetBitmap(
                 loadBitmapScaled("no_refs.png", self.parent.scale_factor, static=True)
             )
@@ -282,19 +282,19 @@ class SettingsDialog(wx.Dialog):
     def update_lcsc_priority(self, priority):
         """Update settings dialog according to the settings."""
         if priority:
-            self.lcsc_priority_setting.SetValue(priority)
-            self.lcsc_priority_setting.SetLabel(
-                "MPN numbers from schematic have priority"
+            self.priority_setting.SetValue(priority)
+            self.priority_setting.SetLabel(
+                _("MPN numbers from schematic have priority")
             )
-            self.lcsc_priority_image.SetBitmap(
+            self.priority_image.SetBitmap(
                 loadBitmapScaled("schematic.png", self.parent.scale_factor, static=True)
             )
         else:
-            self.lcsc_priority_setting.SetValue(priority)
-            self.lcsc_priority_setting.SetLabel(
-                "MPN numbers from database have priority"
+            self.priority_setting.SetValue(priority)
+            self.priority_setting.SetLabel(
+                _("MPN numbers from database have priority")
             )
-            self.lcsc_priority_image.SetBitmap(
+            self.priority_image.SetBitmap(
                 loadBitmapScaled(
                     "database-outline.png", self.parent.scale_factor, static=True
                 )
