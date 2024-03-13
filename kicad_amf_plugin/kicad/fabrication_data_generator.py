@@ -54,13 +54,13 @@ class FabricationDataGenerator:
             nextpcb_path = os.path.join(tempfile.gettempdir(), "nextpcb")
         return nextpcb_path
 
-    # @property
-    # def output_dir(self):
-    #     return os.path.join(self.nextpcb_root, "output_files")
+    @property
+    def output_dir(self):
+        return os.path.join(self.nextpcb_root, "output_files")
 
     def create_folders(self):
         """Create output folders if they not already exist."""
-        self.output_dir = os.path.join(self.nextpcb_root, "output_files")
+        # self.output_dir = os.path.join(self.nextpcb_root, "output_files")
         Path(self.output_dir).mkdir(parents=True, exist_ok=True)
         self.gerberdir = os.path.join(self.nextpcb_root, "gerber")
         Path(self.gerberdir).mkdir(parents=True, exist_ok=True)

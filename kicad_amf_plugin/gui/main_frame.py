@@ -103,7 +103,7 @@ class MainFrame(wx.Frame):
             self,
             parent,
             id=wx.ID_ANY,
-            title=_(" HQ NextPCB "),
+            title=_("   HQ MFG   "),
             pos=wx.DefaultPosition,
             size=size,
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
@@ -131,7 +131,24 @@ class MainFrame(wx.Frame):
             parent=self,
             style=0 | wx.PD_APP_MODAL,
         )
+        
 
+    def on_fabrication_data_gen_progress(self, evt: FabricationDataGenEvent):
+        if self._data_gen_progress is not None:
+            res = evt.get_status()
+            if GenerateStatus.RUNNING == res.get_status():
+                self._data_gen_progress.Update(res.get_progress(), res.get_message())
+            else:
+                self._data_gen_progress.Destroy()
+                self._data_gen_progress = None
+                if GenerateStatus.FAILED == res.get_status():
+                    wx.MessageBox(f"{res.get_message()}")
+
+    def destory_data_dialog(self):
+        self._data_gen_progress.Update(GenerateStatus.MAX_PROGRESS - 1, _("Sending order request"))
+        self._data_gen_progress.Destroy()
+        self._data_gen_progress = None
+        
     def init_ui(self):
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
         left_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -142,7 +159,7 @@ class MainFrame(wx.Frame):
         #------------amf---------------
         self.main_notebook = wx.Notebook( self.book_ctrl, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0 )
         self.active_manufacturing = wx.Panel( self.main_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-        self.main_notebook.AddPage( self.active_manufacturing, u"   Active Manufacturing   ", True )
+        self.main_notebook.AddPage( self.active_manufacturing, u"                PCB                ", True )
         amf_sizer = wx.BoxSizer( wx.VERTICAL )
         
         pcb_fab_scroll_wind = wx.ScrolledWindow(
@@ -173,7 +190,7 @@ class MainFrame(wx.Frame):
 
         #------------smt-------------
         self.surface_mount_technology = wx.Panel( self.main_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-        self.main_notebook.AddPage( self.surface_mount_technology, u"   Surface Mount Technology   ", False )
+        self.main_notebook.AddPage( self.surface_mount_technology, u"         BOM && SMT         ", False )
         smt_sizer = wx.BoxSizer( wx.VERTICAL )
         
         smt_fab_scroll_wind = wx.ScrolledWindow(
@@ -263,16 +280,7 @@ class MainFrame(wx.Frame):
         elif self.selected_page_index == 1:
             self.summary_view.switch_to_smt()
 
-    def on_fabrication_data_gen_progress(self, evt: FabricationDataGenEvent):
-        if self._data_gen_progress is not None:
-            res = evt.get_status()
-            if GenerateStatus.RUNNING == res.get_status():
-                self._data_gen_progress.Update(res.get_progress(), res.get_message())
-            else:
-                self._data_gen_progress.Destroy()
-                self._data_gen_progress = None
-                if GenerateStatus.FAILED == res.get_status():
-                    wx.MessageBox(f"{res.get_message()}")
+    
 
     def on_sash_pos_changed(self, evt):
         sash_pos = evt.GetSashPosition()
@@ -487,9 +495,7 @@ class MainFrame(wx.Frame):
                         wx.MessageBox(_("Return false"))
                         return                    
                     quote = quotes.get("response_data", {}).get("list", {}).get("assembly", {})
-
                 return self.parse_smt_price(quote)
-
             except Exception as e:
                 wx.MessageBox(str(e))
                 raise e  # TODO remove me
@@ -505,14 +511,18 @@ class MainFrame(wx.Frame):
                 wx.MessageBox(_("No available url for placing order in current region"))
                 return
             if self._dataGenThread is not None:
+                self._dataGenThread.start()
                 self._dataGenThread.join()
                 self._dataGenThread = None
+            
             self._dataGenThread = DataGenThread(
-                self, self.fabrication_data_generator, self.get_place_order_form(), url
+                self, 
+                self.fabrication_data_generator, 
+                self.get_place_order_form(), 
+                url
             )
-
+            
         elif self.selected_page_index == 1:
-            # self.show_data_gen_progress_dialog()
             if not self.form_is_valid():
                 return
             url = OrderRegion.get_url(SETTING_MANAGER.order_region, URL_KIND.SMT_PLACE_ORDER)
@@ -522,12 +532,12 @@ class MainFrame(wx.Frame):
             if not self.judge_files_exist():
                 wx.MessageBox(_('Place perform "BOM Match"'))
                 return
+            self.show_data_gen_progress_dialog()
             try:
                 form = self.get_query_price_form()
                 if SETTING_MANAGER.order_region == 0:
                     # requests会自动处理multipart/form-data
-                    headers = { 'smt' : '1234',
-                               }
+                    headers = { 'smt' : '1234' }
                     rsp = requests.post(
                         url,
                         files=self.smt_build_file(),
@@ -536,16 +546,15 @@ class MainFrame(wx.Frame):
                     )
                     fp = json.loads(rsp.content)
                     _url = fp.get("url", {})
-                
                     uat_url = str(_url)
                     webbrowser.open(uat_url)
-
                 else:
                     smt_order_region = SETTING_MANAGER.order_region
                     uploadfile =  UploadFile( self._board_manager, url, form, smt_order_region, self._number )
-                    upload_file = uploadfile.upload_bomfile(url)
+                    upload_file = uploadfile.upload_bomfile()
                     webbrowser.open(upload_file)
                     pass
+                self.destory_data_dialog()
 
 
             except Exception as e:

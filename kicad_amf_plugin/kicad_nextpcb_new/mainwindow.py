@@ -7,7 +7,6 @@ from .helpers import (
     GetScaleFactor,
     HighResWxSize,
     get_footprint_by_ref,
-    getVersion,
     loadBitmapScaled,
 )
 from .fabrication import Fabrication
@@ -214,7 +213,7 @@ class NextPCBTools(wx.Dialog):
 
         self.Bind(wx.EVT_COMBOBOX, self.group_parts, self.cb_group_strategy)
         self.Bind(wx.EVT_TOOL, self.auto_match_parts, self.auto_match_button)
-        self.Bind(wx.EVT_BUTTON, self.generate_fabrication_data, self.generate_button)
+        self.Bind(wx.EVT_BUTTON, self.generate_fabrication_file, self.generate_button)
         self.Bind(wx.EVT_TOOL, self.manage_settings, self.settings_button)
 
         # ---------------------------------------------------------------------
@@ -505,6 +504,10 @@ class NextPCBTools(wx.Dialog):
         self.fabrication.generate_cpl()
         self.fabrication.generate_bom()
 
+    def generate_fabrication_file(self, e):
+        """Generate fabrication data."""
+        self.generate_fabrication_data(e)
+        self.fabrication.path_message()
 
     def assign_parts(self, e):
         """Assign a selected nextPCB number to parts"""

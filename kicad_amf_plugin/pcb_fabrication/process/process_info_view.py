@@ -11,11 +11,11 @@ from pcbnew import PCB_TRACK, PCB_TRACE_T, PCB_ARC_T, PCB_VIA_T
 
 
 THICKNESS_SETTING = {
-    "1": ["0.6", "0.8", "1.0", "1.2", "1.6"],
-    "2": ["0.6", "0.8", "1.0", "1.2", "1.6"],
-    "4": ["0.6", "0.8", "1.0", "1.2", "1.6", "2.0", "2.5"],
-    "6": ["1.0", "1.2", "1.6", "2.0", "2.5"],
-    "8": ["1.2", "1.6", "2.0", "2.5"],
+    "1": ["0.6", "0.8", "1.0", "1.2", "1.6", "2.0"],
+    "2": ["0.6", "0.8", "1.0", "1.2", "1.6", "2.0"],
+    "4": ["0.6", "0.8", "1.0", "1.2", "1.6", "2.0"],
+    "6": ["0.8", "1.0", "1.2", "1.6", "2.0", "2.5"],
+    "8": ["1.0", "1.2", "1.6", "2.0", "2.5"],
     "10": ["1.2", "1.6", "2.0", "2.5"],
     "12": ["1.6", "2.0", "2.5"],
     "14": ["1.6", "2.0", "2.5", "3.0"],
@@ -33,7 +33,7 @@ INNER_COPPER_THICKNESS_CHOICE = [0.5, 1, 2]
 
 MIL = "mil"
 
-MIN_TRACE_WIDTH_CLEARANCE_CHOICE = [10, 8, 6, 5, 4, 3.5]
+MIN_TRACE_WIDTH_CLEARANCE_CHOICE = [ 10, 8, 6, 5, 4, 3.5 ]
 MIN_HOLE_SIZE_CHOICE = [0.3, 0.25, 0.2, 0.15]
 
 MM = "mm"
@@ -89,6 +89,9 @@ SILK_SCREEN_COLOR_BY_SOLDER_COLOR = {
     _("Black"): [_("White")],
 }
 
+ZO_2_SILK_SCREEN_COLOR_BY_SOLDER_COLOR = {
+    _("Green"): [_("White")],
+}
 
 class ProcessInfoView(UiProcessInfo, FormPanelBase):
     def __init__(self, parent, board_manager: BoardManager):
@@ -97,7 +100,8 @@ class ProcessInfoView(UiProcessInfo, FormPanelBase):
 
         self.combo_surface_process.Bind(wx.EVT_CHOICE, self.on_surface_process_changed)
         self.combo_solder_color.Bind(wx.EVT_CHOICE, self.OnMaskColorChange)
-
+        self.combo_outer_copper_thickness.Bind(wx.EVT_CHOICE, self.on_outer_thickness_changed)
+        self.combo_board_thickness.Bind(wx.EVT_CHOICE, self.on_thickness_selection)
         self.Fit()
 
     @fitter_and_map_form_value
@@ -268,6 +272,27 @@ class ProcessInfoView(UiProcessInfo, FormPanelBase):
             ]
         )
         self.combo_silk_screen_color.SetSelection(0)
+        
+    def on_outer_thickness_changed(self, event):
+        if self.combo_outer_copper_thickness.GetSelection() == 1:  # Index 1 corresponds to '2 oz'
+            self.combo_solder_color.SetSelection(0)
+            self.combo_solder_color.Enable(False)
+            self.combo_silk_screen_color.Enable(False)
+            if 2 == self.layer_count:
+                self.on_thickness_selection(event)
+                
+        else:
+            self.combo_solder_color.Enable(True)
+            self.combo_silk_screen_color.Enable(True)
+
+
+    def on_thickness_selection(self, event):
+        selected_thickness_index = self.combo_board_thickness.GetSelection()
+        selected_thickness = self.combo_board_thickness.GetString(selected_thickness_index)
+        if self.layer_count == 2 and self.combo_outer_copper_thickness.GetSelection() == 1 and selected_thickness not in ["1.6", "2.0"]:
+            # 如果选择的不是 "1.6" 或 "2.0"，则强制设置为默认选择
+            self.combo_board_thickness.SetSelection(4)
+
 
     def on_region_changed(self):
         pass
@@ -280,11 +305,8 @@ class ProcessInfoView(UiProcessInfo, FormPanelBase):
             else None
         )
         minTraceClearance = designSettings.m_MinClearance
-        minHoleSize = (
-            designSettings.m_MinThroughDrill
-            if designSettings.m_MinThroughDrill != 0
-            else None
-        )
+        min_value = min(designSettings.m_MinThroughDrill, designSettings.m_ViasMinSize)
+        minHoleSize = min_value if min_value != 0 else None
 
         tracks: "list[PCB_TRACK]" = self.board_manager.board.Tracks()
         for i in tracks:

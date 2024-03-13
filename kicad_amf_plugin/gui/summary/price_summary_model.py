@@ -15,7 +15,7 @@ class PriceCategory(Enum):
     BOM = "bom"
 
 
-PRICE_KIND = 3
+PRICE_KIND = 2
 
 
 @dataclass
@@ -32,7 +32,7 @@ class PriceSummaryModel(dv.PyDataViewModel):
         self.price_category: "dict[int,PriceModelBase]" = {
             PriceCategory.PCB: PCBPriceModel(),
             PriceCategory.SMT: SmtPriceModel(),
-            PriceCategory.BOM: BomPriceModel(),
+            # PriceCategory.BOM: BomPriceModel(),
         }
         self._days_cost = 0
         self._pcb_quantity = 0
@@ -46,7 +46,8 @@ class PriceSummaryModel(dv.PyDataViewModel):
         return self._pcb_quantity
 
     def update_price(self, price: "dict"):
-        for i in PriceCategory.PCB, PriceCategory.SMT, PriceCategory.BOM:
+        # for i in PriceCategory.PCB, PriceCategory.SMT, PriceCategory.BOM:
+        for i in PriceCategory.PCB, PriceCategory.SMT,:
             if i.value in price:
                 self.price_category[i].update(price[i.value])
         self.Cleared()
@@ -156,7 +157,7 @@ class PriceSummaryModel(dv.PyDataViewModel):
         if (
             isinstance(node, PCBPriceModel)
             or isinstance(node, SmtPriceModel)
-            or isinstance(node, BomPriceModel)
+            # or isinstance(node, BomPriceModel)
         ):
             attr.SetColour("blue")
             attr.SetBold(True)
@@ -164,6 +165,7 @@ class PriceSummaryModel(dv.PyDataViewModel):
         return False
 
     def clear_content(self):
-        for i in PriceCategory.PCB, PriceCategory.SMT, PriceCategory.BOM:
+        # for i in PriceCategory.PCB, PriceCategory.SMT, PriceCategory.BOM:
+        for i in PriceCategory.PCB, PriceCategory.SMT,:
             self.price_category[i].clear()
         self.Cleared()

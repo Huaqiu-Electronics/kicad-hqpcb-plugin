@@ -16,5 +16,5 @@ class BaseInfoModel:
     sidewidth: str = None  # Break-away Rail
 
     testpoint: int = 0  # 测试点数，默认为0
-    pbnum: int = None  # 拼版款数，指文件内不同款的板子个数， 不传默认为1
+    pbnum: int = 1  # 拼版款数，指文件内不同款的板子个数， 不传默认为1
     board_tg: str = None  # 4层及以上可选TG值，TG130、TG150、TG170

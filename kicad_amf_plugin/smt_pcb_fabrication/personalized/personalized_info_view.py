@@ -1,13 +1,14 @@
+import wx
 from kicad_amf_plugin.order.order_region import OrderRegion, SupportedRegion
 from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
 from kicad_amf_plugin.settings.form_value_fitter import fitter_and_map_form_value
 from .personalized_info_model import PersonalizedInfoModel
-from .ui_personalized import UiPersonalizedService, BOX_SP_REQUEST
+from .ui_smt_personalized import UiPersonalizedService, BOX_SP_REQUEST
 from kicad_amf_plugin.utils.constraint import BOOLEAN_CHOICE
 from .personalized_info_model import PersonalizedInfoModel
 from kicad_amf_plugin.utils.form_panel_base import FormKind, FormPanelBase
 from kicad_amf_plugin.utils.roles import EditDisplayRole
-
+from kicad_amf_plugin.settings.single_plugin import SINGLE_PLUGIN
 
 ASSEMBLY_WELD ={
     _("No Need"): "No Need",
@@ -77,6 +78,8 @@ class SmtPersonalizedInfoView(UiPersonalizedService, FormPanelBase):
         super().__init__(parent)
         self.special_process: PersonalizedInfoModel = None
         self.initUI()
+        
+        self.need_split.Bind(wx.EVT_CHOICE, self.on_need_split_changed)
 
     def initUI(self):
         # NOTE It seems that all tests are free now
@@ -109,7 +112,8 @@ class SmtPersonalizedInfoView(UiPersonalizedService, FormPanelBase):
 
         self.x_ray_number.SetValue("1")
         self.x_ray_unit_number.SetValue("1")
-        
+        self.single_pcb_width.SetValue("")
+        self.single_pcb_height.SetValue("")
         self.on_region_changed()
 
     @fitter_and_map_form_value
@@ -129,80 +133,41 @@ class SmtPersonalizedInfoView(UiPersonalizedService, FormPanelBase):
             need_conformal_coating = self.need_conformal_coating.GetSelection(),
             is_first_confirm = self.is_first_confirm.GetSelection(),
             packing_type = self.packing_type.GetSelection(),
-
+            
             x_ray_number = self.x_ray_number.GetValue(),
             x_ray_unit_number = self.x_ray_unit_number.GetValue(),
-
-
-            # test=TEST_METHOD_CHOICE[self.comb_test_method.StringSelection]
-            # if self.comb_test_method.Shown
-            # else None,
-            # shipment_report=str(self.comb_delivery_report.GetSelection()),
-            # slice_report=str(self.combo_microsection_report.GetSelection()),
-            # report_type=str(self.GetReportType()),
-            # review_file=REVIEW_FILE_OPTION[
-            #     int(self.comb_approve_gerber.GetSelection())
-            # ].EditRole,
-            # has_period=str(self.GetHasPeriod()),
-            # period_format=self.GetPeriodFormat()
-            # if self.comb_ul_mark.GetSelection()
-            # else None,
-            # film_report=str(self.comb_film.GetSelection()),
-            # cross_board=CROSS_BOARD[self.combo_cross_board.GetSelection()].EditRole,
-            # paper=PAPER[self.combo_paper.GetSelection()].EditRole,
-            # user_stamp=USER_STAMP[self.combo_user_stamp.GetSelection()].EditRole,
-            # hq_pack=HQ_PACK[int(self.combo_hq_pack.GetSelection())].EditRole
-            # if self.combo_hq_pack.Shown
-            # else None,
-            # pcb_note=self.edit_special_request.GetValue()
-            # if self.edit_special_request.Shown
-            # else None,
+            
 
         )
+        pcb_width_str = self.single_pcb_width.GetValue()
+        pcb_height_str = self.single_pcb_height.GetValue()
+        if pcb_width_str == '' or pcb_height_str == '':
+            info.pcb_width = pcb_width_str
+            info.pcb_height = pcb_height_str
+        else:
+            info.pcb_width = str(float(pcb_width_str) * 0.1)
+            info.pcb_height = str(float(pcb_height_str) * 0.1)
         return vars(info)
-
-    # def GetReportType(self):
-    #     if (
-    #         self.comb_delivery_report.GetSelection() == 0
-    #         and self.combo_microsection_report.GetSelection() == 0
-    #     ):
-    #         return 0
-    #     elif self.comb_report_format.GetSelection() == 0:
-    #         return 2
-    #     elif self.comb_report_format.GetSelection() == 1:
-    #         return 1
-
-    # def GetHasPeriod(self):
-    #     if self.comb_ul_mark.GetSelection() == 0:
-    #         return "2"
-    #     else:
-    #         return "6"
 
     @property
     def sp_box(self):
         return self.FindWindowById(BOX_SP_REQUEST)
 
-    # def GetPeriodFormat(self):
-    #     if self.comb_ul_mark.GetSelection() == 1:
-    #         return "2"
-    #     elif self.comb_ul_mark.GetSelection() == 2:
-    #         return "1"
+    def on_need_split_changed( self, evt=None ):
+        self.single_pcb_panel.Show(self.need_split.GetSelection() == 1)  
+        self.Layout()
+        if SINGLE_PLUGIN.get_main_wind() is not None:
+            SINGLE_PLUGIN.get_main_wind().smt_adjust_size()
 
     def on_region_changed(self):
         for i in [ self.is_layout_cleaning, self.is_layout_cleaning_label,
                   self.is_welding_wire, self.is_welding_wire_label, self.is_assemble, self.is_assemble_label,
-                  self.is_increase_tinning , self.is_increase_tinning_label ] :
+                  self.is_increase_tinning , self.is_increase_tinning_label,] :
             i.Show( SETTING_MANAGER.order_region == SupportedRegion.CHINA_MAINLAND )
-        # self.sp_box.Show( SETTING_MANAGER.order_region == SupportedRegion.CHINA_MAINLAND )
+        
+        self.need_split.SetSelection(0)
+        self.need_split.Enable(SETTING_MANAGER.order_region == SupportedRegion.CHINA_MAINLAND)
+        self.on_need_split_changed( None )
         self.Layout()
-
-    # def smt_on_region_changed(self):
-    #     for i in self.combo_hq_pack, self.label_hq_pack:
-    #         i.Show(SETTING_MANAGER.order_region == SupportedRegion.CHINA_MAINLAND)
-    #         visibility_condition = SETTING_MANAGER.order_region == SupportedRegion.CHINA_MAINLAND
-    #         print(f"{i.GetName()} ------smt-----PersonalizedInfoView set to {visibility_condition}")
-    #     self.sp_box.Show(SETTING_MANAGER.order_region != SupportedRegion.CHINA_MAINLAND)
-    #     sp_box_visibility = SETTING_MANAGER.order_region != SupportedRegion.CHINA_MAINLAND
-    #     print(f"-----smt-----PersonalizedInfoView {sp_box_visibility}")
 
 

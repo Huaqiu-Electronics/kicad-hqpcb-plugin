@@ -206,21 +206,13 @@ class SummaryPanel(UiSummaryPanel):
         )
 
     def on_bom_match(self, e):
-        dlg = NextPCBTools( self, self._board_manager )
+        dlg = NextPCBTools(self, self._board_manager)
         result = dlg.ShowModal()
-        if result == wx.ID_OK:
-            dlg.generate_fabrication_data(e)
-            self.get_data()
-            self.get_files()
-        elif result == wx.ID_CANCEL:
-            dlg.generate_fabrication_data(e)
-            self.get_data()
-            self.get_files()
-        else:
-            dlg.generate_fabrication_data(e)
-            self.get_data()
-            self.get_files()
-        dlg.Destroy()
+        dlg.generate_fabrication_data(e)
+        self.get_data()
+        self.get_files()
+        if result in (wx.ID_OK, wx.ID_CANCEL):
+            dlg.Destroy()
 
     def switch_to_amf(self):
         self.switch_smt_splitter.Unsplit(self.switch_smt_panel)

@@ -25,8 +25,8 @@ class UploadFile:
             self.file_path = os.path.join(tempfile.gettempdir(), "nextpcb")
         
         self.usa_get_files()
-        self.upload_pcbfile(self._url)
-        self.upload_smtfile(self._url)
+        self.upload_pcbfile()
+        self.upload_smtfile()
 
     def usa_get_files(self):
         self.getdir = os.path.join(self.file_path, "production_files")
@@ -45,10 +45,10 @@ class UploadFile:
         self.bom_file = next((file for file in file_list if "BOM" in file and "csv" in file), "")
 
 
-    def upload_pcbfile(self,url):
+    def upload_pcbfile(self):
         form = { "type": "pcbfile" }
         rsp = requests.post(
-            url,
+            self._url,
             files={
                 "file": open(self.pcb_file, 'rb')
             },
@@ -59,10 +59,10 @@ class UploadFile:
         # return self.gerber_file_id
 
 
-    def upload_smtfile(self, url):
+    def upload_smtfile(self):
         form = { "type": "attach" }
         rsp = requests.post(
-            url,
+            self._url,
             files={
                 "file": open(self.patch_file, 'rb')
             },
@@ -72,7 +72,7 @@ class UploadFile:
         self.other_file_id = fp.get("response_data",{}).get("other_file_id",{})
 
 
-    def upload_bomfile(self, url):
+    def upload_bomfile(self):
         if self.smt_order_region == 1:
             form = { 'type': 'pcbabomfile',
                     'gerber_file_id': self.gerber_file_id ,
@@ -85,7 +85,7 @@ class UploadFile:
                     'region': 'jp',
                     }
         rsp = requests.post(
-            url,
+            self._url,
             files={
                 "file": open(self.bom_file, 'rb')
             },
@@ -93,8 +93,6 @@ class UploadFile:
         )
         fp = json.loads(rsp.content)
         redirect = fp.get("response_data",{}).get("redirect",{})
-        
-        
         parsed_url = urlparse(redirect)
         query_params = parse_qs(parsed_url.query)
         

@@ -20,7 +20,7 @@ class BoardManager:
 
 
 def load_board_manager():
-    for fp in   "C:\\Program Files\\demos\\flat_hierarchy\\flat_hierarchy.kicad_pcb",'C:\\Program Files\\demos\\flat_hierarchy\\flat_hierarchy.kicad_pcb',:
+    for fp in   'C:\\Program Files\\demos\\flat_hierarchy\\flat_hierarchy.kicad_pcb',"C:\\Program Files\\demos\\video\\video.kicad_pcb",:
         if os.path.exists(fp):
             return BoardManager(LoadBoard(fp))
     board = GetBoard()

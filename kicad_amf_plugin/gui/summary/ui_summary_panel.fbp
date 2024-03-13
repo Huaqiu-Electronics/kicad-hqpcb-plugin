@@ -541,7 +541,7 @@
                                     <property name="drag_accept_files">0</property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>
-                                    <property name="font"></property>
+                                    <property name="font">宋体,90,400,9,70,0</property>
                                     <property name="hidden">0</property>
                                     <property name="id">wxID_ANY</property>
                                     <property name="maximum_size"></property>

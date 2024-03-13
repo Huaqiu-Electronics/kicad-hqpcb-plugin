@@ -5,14 +5,16 @@ from kicad_amf_plugin.utils.number_round import number_round
 
 
 TRANSLATED = {
-    0: _("total_fee"),
+    # 0: _("total_fee"),
+    0: _("smt_goods_fee_no_tax"),
     1: _("total"),
     2: _("smt_goods_fee_tax"),
 }
 
 
 PROS = {
-    0: "total_fee",
+    # 0: "total_fee",
+    0: "smt_goods_fee_no_tax",
     1: "total",
     2: "smt_goods_fee_tax",
 }

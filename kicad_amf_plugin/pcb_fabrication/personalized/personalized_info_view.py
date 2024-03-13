@@ -154,6 +154,10 @@ class PersonalizedInfoView(UiPersonalizedService, FormPanelBase):
     def on_region_changed(self):
         for i in self.combo_hq_pack, self.label_hq_pack:
             i.Show(SETTING_MANAGER.order_region == SupportedRegion.CHINA_MAINLAND)
+        for i in (self.lab_microsection_report,self.combo_microsection_report,self.lab_report_format,
+        self.comb_report_format,self.lab_ul_mark, self.comb_ul_mark, self.label_file, self.comb_film,
+        self.lab_approve_gerber, self.comb_approve_gerber):
+            i.Show(SETTING_MANAGER.order_region != SupportedRegion.CHINA_MAINLAND)
         self.sp_box.Show(SETTING_MANAGER.order_region != SupportedRegion.CHINA_MAINLAND)
 
 

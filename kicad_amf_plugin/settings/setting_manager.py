@@ -74,12 +74,11 @@ class _SettingManager(wx.EvtHandler):
 
     def set_language(self, now: int):
         old = self.get_language()
-        # try:
-        #     now = int(now)
-        # except ValueError:
-        #     # 处理 'now' 不是有效整数的情况
-        #     print(f"无效的 'now' 值：{now}")
-        #     return
+        try:
+            now = int(now)
+        except ValueError:
+            # 处理 'now' 不是有效整数的情况
+            return
         if old == now:
             return
         self.app_conf.WriteInt(key=LANGUAGE, value=now)
