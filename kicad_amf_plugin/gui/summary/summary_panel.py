@@ -27,6 +27,10 @@ from kicad_amf_plugin.api.base_request import (  SmtRequest )
 
 from pathlib import Path
 import tempfile
+from enum import Enum
+from .price_model_base import PriceModelBase
+from .pcb_price_model import PCBPriceModel
+from .smt_price_model import SmtPriceModel
 
 OrderRegionSettings = (
     EditDisplayRole(SupportedRegion.CHINA_MAINLAND, _("Mainland China")),
@@ -34,6 +38,14 @@ OrderRegionSettings = (
     EditDisplayRole(SupportedRegion.JAPAN, _("Worldwide (Japanese)")),
 )
 
+class PriceCategory(Enum):
+    PCB = "pcb"
+    SMT = "smt"
+
+pcb_price_model = { PriceCategory.PCB: PCBPriceModel() }
+smt_price_model = { PriceCategory.PCB: pcb_price_model[PriceCategory.PCB],
+                PriceCategory.SMT: SmtPriceModel(),
+                }
 
 class SummaryPanel(UiSummaryPanel):
     def __init__(self, parent, board_manager: BoardManager):
@@ -49,6 +61,10 @@ class SummaryPanel(UiSummaryPanel):
         self.db_file_path = os.path.join(self.project_path, "database","project.db")
         self.get_files_dir = os.path.join(self.project_path, "nextpcb", "production_files")
         self.store = Store(self, self.project_path, self._board_manager.board )
+        self.price_category: "dict[int,PriceModelBase]" = {
+            PriceCategory.PCB: PCBPriceModel(),
+            PriceCategory.SMT: SmtPriceModel(),
+        }
 
         self.init_ui()
         self.load_Designator()
@@ -131,7 +147,7 @@ class SummaryPanel(UiSummaryPanel):
         )
 
 
-        self.model_price_summary = PriceSummaryModel()
+        self.model_price_summary = PriceSummaryModel( pcb_price_model )
         self.list_price_detail.AssociateModel(self.model_price_summary)
         self.choice_order_region.AppendItems(
             [i.DisplayRole for i in OrderRegionSettings]
@@ -219,6 +235,10 @@ class SummaryPanel(UiSummaryPanel):
         self.splitter_detail_summary.SplitHorizontally(self.m_panel7, self.switch_amf_panel, 0 )
         wx.CallAfter(self.switch_smt_splitter.UpdateSize)
         wx.CallAfter(self.splitter_detail_summary.UpdateSize)
+        self.model_price_summary = PriceSummaryModel( pcb_price_model )
+        self.list_price_detail.AssociateModel(self.model_price_summary)
+        
+        
 
     def switch_to_smt(self):
         self.splitter_detail_summary.Unsplit(self.switch_amf_panel)
@@ -228,6 +248,8 @@ class SummaryPanel(UiSummaryPanel):
         self.switch_smt_splitter.SetSashPosition(sash_position)
         wx.CallAfter(self.switch_smt_splitter.UpdateSize)
         wx.CallAfter(self.splitter_detail_summary.UpdateSize) 
+        self.model_price_summary = PriceSummaryModel( smt_price_model )
+        self.list_price_detail.AssociateModel(self.model_price_summary)
 
     def splitter_detail_summaryOnIdle(self, event):
         self.splitter_detail_summary.SetSashPosition(

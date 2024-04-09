@@ -24,10 +24,12 @@ class SmtPriceModel(PriceModelBase):
     def __init__(self) -> None:
         super().__init__()
         self.prices_item: "list[PriceItem]" = []
+        self.visible = True
         for i in TRANSLATED:
             self.prices_item.append(PriceItem(PROS[i], TRANSLATED[i], 0, self))
 
     smt_price: float = 0
+
 
     def data(self, row: int, col: int):
         if col == PriceModelCol.VALUE:
@@ -61,3 +63,5 @@ class SmtPriceModel(PriceModelBase):
         for i in self.prices_item:
             i.value = 0
 
+    def set_visibility(self, visibility):
+        self.visible = visibility

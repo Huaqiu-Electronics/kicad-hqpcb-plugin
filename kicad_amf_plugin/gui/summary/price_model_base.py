@@ -43,3 +43,6 @@ class PriceModelBase:
 
     def clear(self):
         pass
+    
+    def set_visibility(self, visibility):
+        pass

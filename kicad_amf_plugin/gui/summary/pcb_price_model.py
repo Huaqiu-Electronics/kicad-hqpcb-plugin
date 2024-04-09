@@ -117,5 +117,9 @@ class PCBPriceModel(PriceModelBase):
         return PROS
 
     def clear(self):
-        for i in self.prices_item:
-            i.value = 0
+        # for i in self.prices_item:
+        #     i.value = 0
+        pass
+
+    def set_visibility(self, visibility):
+        pass

@@ -18,3 +18,6 @@ class BomPriceModel(PriceModelBase):
 
     def update(self, data: dict):
         pass
+
+    def set_visibility(self, visibility):
+        pass

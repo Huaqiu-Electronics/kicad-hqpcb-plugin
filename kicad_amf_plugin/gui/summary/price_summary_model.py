@@ -12,7 +12,7 @@ from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
 class PriceCategory(Enum):
     PCB = "pcb"
     SMT = "smt"
-    BOM = "bom"
+
 
 
 PRICE_KIND = 2
@@ -26,16 +26,17 @@ class PriceSummary:
 
 
 class PriceSummaryModel(dv.PyDataViewModel):
-    def __init__(self):
+    def __init__(self  , models : 'dict[ int,PriceModelBase ]'):
         dv.PyDataViewModel.__init__(self)
         self.UseWeakRefs(True)
-        self.price_category: "dict[int,PriceModelBase]" = {
-            PriceCategory.PCB: PCBPriceModel(),
-            PriceCategory.SMT: SmtPriceModel(),
-            # PriceCategory.BOM: BomPriceModel(),
-        }
+        # self.price_category: "dict[int,PriceModelBase]" = {
+        #     PriceCategory.PCB: PCBPriceModel(),
+        #     PriceCategory.SMT: SmtPriceModel(),
+        # }
+        self.price_category = models
         self._days_cost = 0
         self._pcb_quantity = 0
+        self.row_item_mapping = []  # Maintain a mapping of row index to item
 
     @property
     def day_cost(self):
@@ -47,7 +48,10 @@ class PriceSummaryModel(dv.PyDataViewModel):
 
     def update_price(self, price: "dict"):
         # for i in PriceCategory.PCB, PriceCategory.SMT, PriceCategory.BOM:
-        for i in PriceCategory.PCB, PriceCategory.SMT,:
+        print(f"{PriceCategory.SMT.value}")
+        # if  PriceCategory.SMT.value 
+        # for i in PriceCategory.PCB, PriceCategory.SMT:
+        for i in self.price_category:
             if i.value in price:
                 self.price_category[i].update(price[i.value])
         self.Cleared()
@@ -68,21 +72,54 @@ class PriceSummaryModel(dv.PyDataViewModel):
         }
         return mapper[col]
 
-    def GetChildren(self, parent, children):
+    def GetChildren(self, parent, children, hideSmt = True):
         if not parent:
             for cat in self.price_category:
+                if cat.value == 'smt':
+                    children.append(self.ObjectToItem(self.price_category[cat]))
+                    return PRICE_KIND
                 children.append(self.ObjectToItem(self.price_category[cat]))
-            return PRICE_KIND
+            return 1
+        
 
         # Otherwise we'll fetch the python object associated with the parent
         # item and make DV items for each of its child objects.
         node = self.ItemToObject(parent)
+        if node is None:
+            # 如果 node 为 None，则不进行任何操作，直接返回
+            return
         if isinstance(node, PriceModelBase):
             for i in node.get_items():
-                children.append(self.ObjectToItem(i))
+                item = self.ObjectToItem(i)
+                children.append(item)
             return len(node.get_items())
         return 0
 
+
+    # def add_custom_children(self, parent, hideSmt):
+    #     """
+    #     Add different children based on custom logic using GetChildren().
+    #     """
+    #     children = []
+
+    #     # Call GetChildren() to populate children list
+    #     self.GetChildren(parent, children, hideSmt)
+
+    #     # # Custom logic to add or modify children based on hideSmt parameter
+    #     # if not parent:
+    #     #     for cat in self.price_category:
+    #     #         # Check if hideSmt is True and the category is SMT, skip appending the child
+    #     #         if hideSmt and cat == PriceCategory.SMT:
+    #     #             continue
+    #     #         children.append(self.ObjectToItem(self.price_category[cat]))
+    #     # else:
+    #     #     # Custom logic for modifying children based on parent
+    #     #     # Add other conditions as needed for different parent types
+    #     #     pass
+
+    #     return children
+    
+    
     def IsContainer(self, item):
         # Return True if the item has children, False otherwise.
         ##self.log.write("IsContainer\n")
@@ -119,7 +156,15 @@ class PriceSummaryModel(dv.PyDataViewModel):
         # Overriding this method allows you to let the view know if there is any
         # data at all in the cell. If it returns False then GetValue will not be
         # called for this item and column.
+        # if item is None:
+        # # 如果 node 为 None，则不进行任何操作，直接返回
+        #     return
+        if int(item.GetID()) == 1:
+            return False
+
+        # print(f"{int(item.GetID())}")
         node = self.ItemToObject(item)
+        
         if isinstance(node, PriceModelBase) or isinstance(node, PriceItem):
             return True
         return False
@@ -130,6 +175,9 @@ class PriceSummaryModel(dv.PyDataViewModel):
         # associated with the items in GetChildren.
 
         # Fetch the data object for this item.
+        # 如果 node 为 None，则不进行任何操作，直接返回
+        if int(item.GetID()) == 1:
+            return False
         node = self.ItemToObject(item)
 
         if isinstance(node, PriceModelBase):
@@ -153,6 +201,9 @@ class PriceSummaryModel(dv.PyDataViewModel):
 
     def GetAttr(self, item, col, attr):
         ##self.log.write('GetAttr')
+        # 如果 node 为 None，则不进行任何操作，直接返回
+        if int(item.GetID()) == 1:
+            return False
         node = self.ItemToObject(item)
         if (
             isinstance(node, PCBPriceModel)
@@ -165,7 +216,13 @@ class PriceSummaryModel(dv.PyDataViewModel):
         return False
 
     def clear_content(self):
-        # for i in PriceCategory.PCB, PriceCategory.SMT, PriceCategory.BOM:
+        # for i in PriceCategory.PCB, PriceCategory.SMT,:
+        #     self.price_category[i].clear()
+        # self.Cleared()
+        pass
+
+    def set_visibility(self, visibility):
         for i in PriceCategory.PCB, PriceCategory.SMT,:
-            self.price_category[i].clear()
-        self.Cleared()
+            self.price_category[i].set_visibility(visibility)
+        # self.visible = visibility
+        
