@@ -8,6 +8,8 @@ from kicad_amf_plugin.kicad.board_manager import load_board_manager
 from kicad_amf_plugin.utils.combo_box_ignore_wheel import ComboBoxIgnoreWheel
 from kicad_amf_plugin.icon import GetImagePath
 import wx
+from wx import Locale
+from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
 
 # add translation macro to builtin similar to what gettext does
 builtins.__dict__["_"] = wx.GetTranslation
@@ -22,6 +24,7 @@ def _displayHook(obj):
 class BaseApp(wx.EvtHandler):
     def __init__(self):
         super().__init__()
+        # self.locale = Locale(wx.LANGUAGE_CHINESE_SIMPLIFIED)
         sys.displayhook = _displayHook
         wx.Locale.AddCatalogLookupPathPrefix(
             os.path.join(PLUGIN_ROOT, "language", "locale")
@@ -43,9 +46,13 @@ class BaseApp(wx.EvtHandler):
     def startup_dialog(self):
         from kicad_amf_plugin.gui.main_frame import MainFrame
         from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
-
+        
+        from kicad_amf_plugin.settings.timestamp import TimeStamp
+        timestamp=TimeStamp()
+        
         self.main_wind = MainFrame(
             self.board_manager, SETTING_MANAGER.get_window_size()
         )
+        timestamp.log( " show dialog ", level='info')
         self.main_wind.SetIcon(wx.Icon(GetImagePath("Huaqiu.ico")))
         self.main_wind.Show()

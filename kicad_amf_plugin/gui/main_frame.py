@@ -24,8 +24,10 @@ from kicad_amf_plugin.gui.event.pcb_fabrication_evt_list import (
     EVT_PLACE_ORDER,
     EVT_ORDER_REGION_CHANGED,
     EVT_SMT_ORDER_REGION_CHANGED,
-    PanelTabControl,
-    EVT_COMBO_NUMBER,
+
+    EVT_SHOW_TIP_FLNSIHED_COPPER_WEIGHT,
+    EVT_SHOW_SOLDER_MASK_COLOR,
+    EVT_SHOW_PCB_PACKAGE_KIND,
 )
 from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
 from kicad_amf_plugin.kicad.fabrication_data_generator import FabricationDataGenerator
@@ -57,6 +59,7 @@ from kicad_amf_plugin.smt_pcb_fabrication.personalized.personalized_info_view im
 from urllib.parse import urlencode
 from kicad_amf_plugin.gui.summary.upload_file import UploadFile
 from wx.lib.pubsub import pub
+import threading
 
 class SMTPCBFormPart(Enum):
     SMT_BASE_INFO = 0
@@ -184,9 +187,12 @@ class MainFrame(wx.Frame):
         self.active_manufacturing.SetSizer(amf_sizer)
         self.active_manufacturing.Layout()
         amf_sizer.Fit(self.active_manufacturing)
-        for i in self._pcb_form_parts.values():
-            i.init()
-            i.on_region_changed()
+        # for i in self._pcb_form_parts.values():
+        #     i.init()
+        #     i.on_region_changed()
+
+        thread = threading.Thread(target=self.init_pcb_parts)
+        thread.start()  # 启动线程
 
         #------------smt-------------
         self.surface_mount_technology = wx.Panel( self.main_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
@@ -220,10 +226,11 @@ class MainFrame(wx.Frame):
         self.surface_mount_technology.Layout()
         smt_sizer.Fit( self.surface_mount_technology )
 
-        for j in self.smt_pcb_form_parts.values():
-            j.init()
-            j.on_region_changed()
-        smt_fab_scroll_wind.Layout()
+        # for j in self.smt_pcb_form_parts.values():
+        #     j.init()
+        #     j.on_region_changed()
+        thread = threading.Thread(target=self.init_smt_parts)
+        thread.start()  # 启动线程
 
         #---- book ctrl ----
         self.main_splitter.SplitVertically(
@@ -238,17 +245,8 @@ class MainFrame(wx.Frame):
         self.main_notebook.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.change_ui)
 
 
-        self.Bind(
-            EVT_LAYER_COUNT_CHANGE,
-            self._pcb_form_parts[PCBFormPart.PROCESS_INFO].setup_board_thickness_choice,
-        )
-        self.Bind(
-            EVT_LAYER_COUNT_CHANGE,
-            self._pcb_form_parts[PCBFormPart.SPECIAL_PROCESS].on_layer_count_changed,
-        )
         self.Bind(EVT_UPDATE_PRICE, self.on_update_price)
         self.Bind(EVT_PLACE_ORDER, self.on_place_order)
-        self.Bind(EVT_COMBO_NUMBER, self.on_place_order)
         self.Bind(EVT_ORDER_REGION_CHANGED, self.on_order_region_changed)
         self.Bind(EVT_SMT_ORDER_REGION_CHANGED, self.smt_on_order_region_changed)
 
@@ -263,6 +261,11 @@ class MainFrame(wx.Frame):
         self.Bind(
             EVT_BUTTON_FABRICATION_DATA_GEN_RES, self.on_fabrication_data_gen_progress
         )
+        
+        self.Bind( EVT_SHOW_TIP_FLNSIHED_COPPER_WEIGHT, self.OnShowTipFinishedCopperWeight )
+        self.Bind( EVT_SHOW_SOLDER_MASK_COLOR, self.OnShowTipSolderMaskColor  )
+        self.Bind(EVT_SHOW_PCB_PACKAGE_KIND, self.OnShowTipPcbPackageKind )
+
         pub.subscribe(self.receive_number_data, "combo_number")
 
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -271,16 +274,33 @@ class MainFrame(wx.Frame):
         self.Layout()
         self.Centre(wx.BOTH)
 
-        
+    def init_pcb_parts(self):
+        for i in self._pcb_form_parts.values():
+            i.init()
+            i.on_region_changed()
+    
+    def init_smt_parts(self):
+        for j in self.smt_pcb_form_parts.values():
+            j.init()
+            j.on_region_changed()
+
+
+    def OnShowTipFinishedCopperWeight(self, evt ):
+        self.summary_view.ShowTipFinishedCopperWeight( evt.copper_wight_selection )
+
+    def OnShowTipSolderMaskColor(self, evt ):
+        self.summary_view.ShowTipSolderMaskColor( evt.solder_color_selection )
+
+    def OnShowTipPcbPackageKind(self , evt):
+        self.summary_view.ShowTipPcbPackageKind( evt.pcb_package_kind_selection )
+
+
     def change_ui(self, evt):
         self.selected_page_index = self.main_notebook.GetSelection()
-        ev = PanelTabControl(-1, page_index= self.selected_page_index)
         if self.selected_page_index == 0:
             self.summary_view.switch_to_amf()
         elif self.selected_page_index == 1:
             self.summary_view.switch_to_smt()
-
-    
 
     def on_sash_pos_changed(self, evt):
         sash_pos = evt.GetSashPosition()
@@ -501,20 +521,19 @@ class MainFrame(wx.Frame):
                 raise e  # TODO remove me
 
     def on_place_order(self, evt):
+        import time
         self.selected_page_index = self.main_notebook.GetSelection()
         if self.selected_page_index == 0:
-            self.show_data_gen_progress_dialog()
             if not self.form_is_valid():
                 return
             url = OrderRegion.get_url(SETTING_MANAGER.order_region, URL_KIND.PLACE_ORDER)
             if url is None:
                 wx.MessageBox(_("No available url for placing order in current region"))
                 return
+            self.show_data_gen_progress_dialog()
             if self._dataGenThread is not None:
-                self._dataGenThread.start()
                 self._dataGenThread.join()
                 self._dataGenThread = None
-            
             self._dataGenThread = DataGenThread(
                 self, 
                 self.fabrication_data_generator, 
@@ -534,26 +553,21 @@ class MainFrame(wx.Frame):
                 return
             self.show_data_gen_progress_dialog()
             try:
+                time.sleep(1)
+                self._data_gen_progress.Update( 50 , _("Sending order request") ) 
                 form = self.get_query_price_form()
-                if SETTING_MANAGER.order_region == 0:
-                    # requests会自动处理multipart/form-data
-                    headers = { 'smt' : '1234' }
-                    rsp = requests.post(
-                        url,
-                        files=self.smt_build_file(),
-                        data=form,
-                        headers=headers
-                    )
-                    fp = json.loads(rsp.content)
-                    _url = fp.get("url", {})
-                    uat_url = str(_url)
-                    webbrowser.open(uat_url)
-                else:
-                    smt_order_region = SETTING_MANAGER.order_region
-                    uploadfile =  UploadFile( self._board_manager, url, form, smt_order_region, self._number )
-                    upload_file = uploadfile.upload_bomfile()
-                    webbrowser.open(upload_file)
-                    pass
+                # requests会自动处理multipart/form-data
+                headers = { 'smt' : '1234' }
+                rsp = requests.post(
+                    url,
+                    files=self.smt_build_file(),
+                    data=form,
+                    headers=headers
+                )
+                fp = json.loads(rsp.content)
+                _url = fp.get("url", {})
+                uat_url = str(_url)
+                webbrowser.open(uat_url)
                 self.destory_data_dialog()
 
 

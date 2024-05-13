@@ -14,7 +14,6 @@ from kicad_amf_plugin.gui.event.pcb_fabrication_evt_list import (
     PlaceOrder,
     OrderRegionChanged,
     SmtOrderRegionChanged,
-    EVT_PANEL_TAB_CONTROL,
 )
 
 from kicad_amf_plugin.kicad.helpers import get_valid_footprints
@@ -69,15 +68,17 @@ class SummaryPanel(UiSummaryPanel):
         self.init_ui()
         self.load_Designator()
         self.btn_update_price.Bind(wx.EVT_BUTTON, self.on_update_price_clicked)
+        
         self.btn_place_order.Bind(wx.EVT_BUTTON, self.on_place_order_clicked)
-        self.choice_order_region.Bind(wx.EVT_CHOICE, self.on_region_changed)
+        # self.choice_order_region.Bind(wx.EVT_CHOICE, self.on_region_changed)
         self.Bind(
             wx.EVT_SPLITTER_SASH_POS_CHANGED,
             self.on_sash_changed,
             self.splitter_detail_summary,
         )
-        self.Bind(EVT_PANEL_TAB_CONTROL, self.init_ui)
         self.btn_bom_match.Bind(wx.EVT_BUTTON, self.on_bom_match)
+        
+        SETTING_MANAGER.set_order_region(SupportedRegion.CHINA_MAINLAND)
 
     def init_ui(self ):
         self.list_bom_view.AppendTextColumn(
@@ -149,10 +150,10 @@ class SummaryPanel(UiSummaryPanel):
 
         self.model_price_summary = PriceSummaryModel( pcb_price_model )
         self.list_price_detail.AssociateModel(self.model_price_summary)
-        self.choice_order_region.AppendItems(
-            [i.DisplayRole for i in OrderRegionSettings]
-        )
-        self.choice_order_region.SetSelection(SETTING_MANAGER.order_region)
+        # self.choice_order_region.AppendItems(
+        #     [i.DisplayRole for i in OrderRegionSettings]
+        # )
+        # self.choice_order_region.SetSelection(SETTING_MANAGER.order_region)
 
         max_width = 300
         for view in self.list_order_summary, self.list_price_detail:
@@ -165,6 +166,31 @@ class SummaryPanel(UiSummaryPanel):
         self.SetMinSize(wx.Size(max_width + 30, -1))
         self.switch_smt_splitter.Unsplit(self.switch_smt_panel)
         wx.CallAfter(self.switch_smt_splitter.UpdateSize)
+
+
+    def ShowTipFinishedCopperWeight(self, copper_wight_selection ):
+        if copper_wight_selection == 0:
+            self.flnsihed_copper_text.Show(False)
+        else:
+            self.flnsihed_copper_text.Show(True)
+        wx.CallAfter(self.switch_amf_panel.Layout)
+
+
+    def ShowTipSolderMaskColor(self, mask_color_selection ):
+        if mask_color_selection == _("Green"):
+            self.solder_mask_text.Show(False)
+        else:
+            self.solder_mask_text.Show(True)
+        wx.CallAfter(self.switch_amf_panel.Layout)
+
+
+    def ShowTipPcbPackageKind(self, pcb_package_kind_selection):
+        if pcb_package_kind_selection == 1:
+            self.board_type_text.Show(False)
+        else:
+            self.board_type_text.Show(True)
+        wx.CallAfter(self.switch_amf_panel.Layout)
+
 
     def is_database_exists(self):
         result = os.path.exists(self.db_file_path)
@@ -233,6 +259,11 @@ class SummaryPanel(UiSummaryPanel):
     def switch_to_amf(self):
         self.switch_smt_splitter.Unsplit(self.switch_smt_panel)
         self.splitter_detail_summary.SplitHorizontally(self.m_panel7, self.switch_amf_panel, 0 )
+
+        total_height = self.splitter_detail_summary.GetClientSize().GetHeight()
+        sash_position = int(total_height * 3 / 8)
+        self.splitter_detail_summary.SetSashPosition(sash_position)
+        
         wx.CallAfter(self.switch_smt_splitter.UpdateSize)
         wx.CallAfter(self.splitter_detail_summary.UpdateSize)
         self.model_price_summary = PriceSummaryModel( pcb_price_model )
@@ -294,14 +325,14 @@ class SummaryPanel(UiSummaryPanel):
             i.clear_content()
 
     def on_region_changed(self, evt):
-        SETTING_MANAGER.set_order_region(self.choice_order_region.GetCurrentSelection())
+        SETTING_MANAGER.set_order_region(SupportedRegion.CHINA_MAINLAND)
         self.clear_content()
         ev = OrderRegionChanged(-1)
         wx.PostEvent(self.Parent, ev)
         self.smt_on_region_changed(evt)
 
     def smt_on_region_changed(self, event):
-        SETTING_MANAGER.set_order_region(self.choice_order_region.GetCurrentSelection())
+        SETTING_MANAGER.set_order_region(SupportedRegion.CHINA_MAINLAND)
         self.clear_content()
         evt = SmtOrderRegionChanged(-1)
         wx.PostEvent(self.Parent, evt)   

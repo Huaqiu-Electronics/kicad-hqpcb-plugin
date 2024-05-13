@@ -22,8 +22,7 @@ class DataGenThread(Thread):
         self.fabrication_data_generator = gen
         self.place_order_form = form
         self._url = url
-        self.run()
-        # self.start()
+        self.start()
 
     def run(self):
         try:

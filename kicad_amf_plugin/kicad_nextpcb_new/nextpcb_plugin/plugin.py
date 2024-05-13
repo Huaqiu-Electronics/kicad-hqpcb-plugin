@@ -1,6 +1,6 @@
 import os
 from pcbnew import ActionPlugin
-from kicad_amf_plugin.kicad_nextpcb_new.nextpcb_plugin._main import _main
+from kicad_amf_plugin.kicad_nextpcb_new.kicad_amf_plugin._main import _main
 
 
 class NextPcbBomTool(ActionPlugin):

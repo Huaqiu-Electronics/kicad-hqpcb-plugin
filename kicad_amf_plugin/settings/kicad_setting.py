@@ -18,7 +18,8 @@ class KiCadSetting:
         finally:
             if len(lang) == 0:
                 return KiCadSetting.read_lang_setting_from_json()
-            return lang
+            # return lang
+            return wx.LANGUAGE_CHINESE_SIMPLIFIED
 
     @staticmethod
     def read_lang_setting_from_json():

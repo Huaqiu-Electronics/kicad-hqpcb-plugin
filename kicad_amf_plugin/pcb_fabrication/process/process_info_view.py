@@ -8,7 +8,8 @@ from .ui_process_info import UiProcessInfo
 import wx
 import pcbnew
 from pcbnew import PCB_TRACK, PCB_TRACE_T, PCB_ARC_T, PCB_VIA_T
-
+from kicad_amf_plugin.gui.event.pcb_fabrication_evt_list import ( ShowTipFlnsihedCopperWeight,
+                                                                   ShowSolderMaskColor )
 
 THICKNESS_SETTING = {
     "1": ["0.6", "0.8", "1.0", "1.2", "1.6", "2.0"],
@@ -272,6 +273,10 @@ class ProcessInfoView(UiProcessInfo, FormPanelBase):
             ]
         )
         self.combo_silk_screen_color.SetSelection(0)
+                
+        evt = ShowSolderMaskColor( -1 ,solder_color_selection = self.combo_solder_color.GetStringSelection())
+        wx.PostEvent(self.GetEventHandler(), evt) 
+        
         
     def on_outer_thickness_changed(self, event):
         if self.combo_outer_copper_thickness.GetSelection() == 1:  # Index 1 corresponds to '2 oz'
@@ -284,6 +289,10 @@ class ProcessInfoView(UiProcessInfo, FormPanelBase):
         else:
             self.combo_solder_color.Enable(True)
             self.combo_silk_screen_color.Enable(True)
+
+        # 触发事件:显示提示
+        evt = ShowTipFlnsihedCopperWeight( -1 ,copper_wight_selection = self.combo_outer_copper_thickness.GetSelection())
+        wx.PostEvent(self.GetEventHandler(), evt)
 
 
     def on_thickness_selection(self, event):

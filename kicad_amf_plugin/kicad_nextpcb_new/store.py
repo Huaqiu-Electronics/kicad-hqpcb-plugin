@@ -121,7 +121,7 @@ class Store:
                 return [
                     list(part)
                     for part in cur.execute(
-                        f"SELECT reference, value, footprint,  mpn, manufacturer, category, sku, supplier, 1 as quantity,\
+                        f"SELECT reference, value, footprint,  mpn, manufacturer, category, sku, 1 as quantity,\
                             bomcheck, poscheck, rotation, side FROM part_info ORDER BY {self.order_by} COLLATE naturalsort {self.order_dir}"
                     ).fetchall()
                 ]
@@ -132,7 +132,7 @@ class Store:
             con.create_collation("naturalsort", natural_sort_collation)
             with con as cur:
                 query = f"SELECT GROUP_CONCAT(reference), value, footprint, mpn, manufacturer, \
-                category, sku, supplier, COUNT(*) as quantity, GROUP_CONCAT(bomcheck), GROUP_CONCAT(poscheck), GROUP_CONCAT(rotation), \
+                category, sku,  COUNT(*) as quantity, GROUP_CONCAT(bomcheck), GROUP_CONCAT(poscheck), GROUP_CONCAT(rotation), \
                  GROUP_CONCAT(side) FROM part_info GROUP BY value, footprint, mpn, manufacturer \
                 ORDER BY {self.order_by} COLLATE naturalsort {self.order_dir}"
                 a = [list(part) for part in cur.execute(query).fetchall()]
@@ -144,7 +144,7 @@ class Store:
             con.create_collation("naturalsort", natural_sort_collation)
             with con as cur:
                 query = f"SELECT GROUP_CONCAT(reference), value, footprint, mpn, manufacturer, \
-                category, sku, supplier, COUNT(*) as quantity FROM part_info \
+                category, sku, COUNT(*) as quantity FROM part_info \
                 GROUP BY value, footprint, mpn, manufacturer \
                 ORDER BY reference COLLATE naturalsort ASC "
                 a = [list(part) for part in cur.execute(query).fetchall()]
@@ -300,14 +300,14 @@ class Store:
                 )
                 cur.commit()
 
-    def set_supplier(self, ref, value):
-        """Change the BOM attribute for a part in the database."""
-        with contextlib.closing(sqlite3.connect(self.dbfile)) as con:
-            with con as cur:
-                cur.execute(
-                    f"UPDATE part_info SET supplier = '{value}' WHERE reference = '{ref}'"
-                )
-                cur.commit()
+    # def set_supplier(self, ref, value):
+    #     """Change the BOM attribute for a part in the database."""
+    #     with contextlib.closing(sqlite3.connect(self.dbfile)) as con:
+    #         with con as cur:
+    #             cur.execute(
+    #                 f"UPDATE part_info SET supplier = '{value}' WHERE reference = '{ref}'"
+    #             )
+    #             cur.commit()
 
     def print_part_info(self, ref):
         """Print the information for a part in the database."""
@@ -374,17 +374,17 @@ class Store:
                 ] == [bool(x) for x in dbpart[9:10]]:
                     # if part in the database, has no mpn value the board part has a mpn value, update including mpn
                     if dbpart and not dbpart[3]:
-                        self.logger.debug(
-                            f"Part {part[PART_REFERENCE]} is already in the database but without mpn value, so the value supplied from the board will be set."
-                        )
+                        # self.logger.debug(
+                        #     f"Part {part[PART_REFERENCE]} is already in the database but without mpn value, so the value supplied from the board will be set."
+                        # )
                         self.update_part(part)
                     # if part in the database, has a mpn value
                     elif dbpart and dbpart[3]:
                         # update mpn value as well if setting is accordingly
                         part.pop(PART_MPN)
-                        self.logger.debug(
-                            f"Part {part[PART_REFERENCE]} is already in the database and has a mpn value, the value supplied from the board will be ignored."
-                        )
+                        # self.logger.debug(
+                        #     f"Part {part[PART_REFERENCE]} is already in the database and has a mpn value, the value supplied from the board will be ignored."
+                        # )
                         self.update_part(part)
                 else:
                     # If something changed, we overwrite the part and dump the mpn value or use the one supplied by the board

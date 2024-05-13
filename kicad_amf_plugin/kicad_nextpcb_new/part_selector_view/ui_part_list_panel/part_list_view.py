@@ -44,18 +44,24 @@ class PartListView(UiPartListPanel):
         self.part_list.AppendTextColumn(
             _("SKU"), width=150, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
         )
+        
         self.part_list.AppendTextColumn(
-            _("Supplier"),
-            width=150,
-            mode=dv.DATAVIEW_CELL_ACTIVATABLE,
-            align=wx.ALIGN_CENTER,
+            "",
+            width=1,
+            mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
         )
-        self.part_list.AppendTextColumn(
-            _("Price")+ "(￥)",
-            width=150,
-            mode=dv.DATAVIEW_CELL_ACTIVATABLE,
-            align=wx.ALIGN_CENTER,
-        )
-        self.part_list.AppendTextColumn(
-            _("Stock"), width=60, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
-        )
+        # self.part_list.AppendTextColumn(
+        #     _("Supplier"),
+        #     width=150,
+        #     mode=dv.DATAVIEW_CELL_ACTIVATABLE,
+        #     align=wx.ALIGN_CENTER,
+        # )
+        # self.part_list.AppendTextColumn(
+        #     _("Price")+ "($)",
+        #     width=150,
+        #     mode=dv.DATAVIEW_CELL_ACTIVATABLE,
+        #     align=wx.ALIGN_CENTER,
+        # )
+        # self.part_list.AppendTextColumn(
+        #     _("Stock"), width=60, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
+        # )

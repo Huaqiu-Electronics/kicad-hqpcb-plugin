@@ -10,9 +10,6 @@
 import wx
 import wx.xrc
 
-import gettext
-_ = gettext.gettext
-
 BOX_SP_REQUEST = 2030
 
 ###########################################################################

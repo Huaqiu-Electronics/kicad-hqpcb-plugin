@@ -13,14 +13,14 @@ from kicad_amf_plugin.kicad_nextpcb_new.helpers import loadBitmapScaled
 parameters = {
     "mpn": _("MPN"),
     "manufacturer": _("Manufacturer"),
-    "package": _("Package / Footprint"),
+    "pkg": _("Package / Footprint"),
     "category": _("Category"),
     "part_desc": _("Description"),
 }
 attribute_para = {
     "sku": _("SKU"),
-    "vendor": _("Supplier"),
-    "quantity": _("Stock"),
+    # "vendor": _("Supplier"),
+    # "quantity": _("Stock"),
 }
 
 
@@ -59,7 +59,7 @@ class AssignedPartView(UiAssignedPartPanel):
             self.data_list.AppendItem([v, " "])
         for k, v in attribute_para.items():
             self.data_list.AppendItem([v, " "])
-        self.data_list.AppendItem([_("Price"), " "])
+        # self.data_list.AppendItem([_("Price"), " "])
         self.data_list.AppendItem([_("Datasheet"), " "])
         # update layout
         self.Layout()
@@ -91,7 +91,7 @@ class AssignedPartView(UiAssignedPartPanel):
                 _("returned data does not have expected part details")
             )
         self.info = selected_part.get("part_info", {})
-        self.supplier = selected_part.get("supplier_chain", {})
+        self.suppliers = selected_part.get("supplier_chain", {})
 
         for i in range(self.data_list.GetItemCount()):
             self.data_list.DeleteItem(0)
@@ -103,31 +103,14 @@ class AssignedPartView(UiAssignedPartPanel):
                 self.data_list.AppendItem([v, "-"])
 
         # judge whether supplier chain data is available
-        if self.supplier != []:
-            for k, v in attribute_para.items():
-                val = self.supplier.get(k, "-")
-                if val != "null" and val:
-                    self.data_list.AppendItem([v, str(val)])
-                else:
-                    self.data_list.AppendItem([v, "-"])
-
-            prices_stair = self.supplier.get("price", [])
-            if prices_stair == None:
-                self.data_list.AppendItem([_("Price"), "-"])
-            else:
-                # Populate price_echelon based on prices_stair data
-                price_echelon = {}
-                for index, price_range in enumerate(prices_stair):
-                    break_min = price_range.get("breakMin")
-                    break_max = price_range.get("breakMax")
-                    if break_max is None:
-                        key = f">{break_min} Piece(￥)"
-                    else:
-                        key = f"{break_min}-{break_max} Piece(￥)"
-                    price_echelon[key] = price_range["rmb"]
-                # Populate self.data_list with the key-value pairs
-                for key, value in price_echelon.items():
-                    self.data_list.AppendItem([key, str(value)])
+        for k, v in attribute_para.items():
+            val = "-"
+            if self.suppliers != []:
+                for supplier_chain  in self.suppliers:
+                    vendor = supplier_chain.get("vendor", {})
+                    if vendor == "hqself":
+                        val = supplier_chain.get(k, "-")
+            self.data_list.AppendItem([v, str(val)])
 
         self.pdfurl = self.info.get("datasheet", {})
         self.pdfurl = "-" if self.pdfurl == "" else self.pdfurl

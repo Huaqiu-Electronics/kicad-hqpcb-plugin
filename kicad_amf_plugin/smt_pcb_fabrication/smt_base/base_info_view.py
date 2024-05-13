@@ -19,7 +19,6 @@ from kicad_amf_plugin.utils.validators import (
 from kicad_amf_plugin.utils.roles import EditDisplayRole
 from kicad_amf_plugin.settings.form_value_fitter import fitter_and_map_form_value
 from kicad_amf_plugin.settings.supported_layer_count import AVAILABLE_LAYER_COUNTS
-from kicad_amf_plugin.gui.event.pcb_fabrication_evt_list import ( ComboNumber )
 
 import pcbnew
 import wx

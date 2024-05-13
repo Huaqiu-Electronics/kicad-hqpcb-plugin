@@ -10,6 +10,10 @@ from kicad_amf_plugin.settings.single_plugin import SINGLE_PLUGIN
 def _main():
     if not SINGLE_PLUGIN.show_existing():
         from kicad_amf_plugin.gui.app_base import BaseApp
+        
+        from kicad_amf_plugin.settings.timestamp import TimeStamp
+        timestamp=TimeStamp()
+        timestamp.log( "start load pcb ", level='info')
         app = BaseApp()
         if app.load_success():
             app.startup_dialog()

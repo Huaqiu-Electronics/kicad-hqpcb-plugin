@@ -5,7 +5,7 @@ from kicad_amf_plugin.settings.single_plugin import SINGLE_PLUGIN
 from kicad_amf_plugin.utils.form_panel_base import FormKind, FormPanelBase
 from .base_info_model import BaseInfoModel
 from kicad_amf_plugin.gui.event.pcb_fabrication_evt_list import (
-    LayerCountChange, boardCount,EVT_BOARD_COUNT )
+    LayerCountChange, boardCount, ShowPcbPackageKind )
 from .ui_base_info import (
     UiBaseInfo,
     BOX_SIZE_SETTING,
@@ -346,6 +346,10 @@ class BaseInfoView(UiBaseInfo, FormPanelBase):
         self.on_margin_mode_changed()
         if SINGLE_PLUGIN.get_main_wind() is not None:
             SINGLE_PLUGIN.get_main_wind().adjust_size()
+    
+        evt= ShowPcbPackageKind(-1, pcb_package_kind_selection = self.pcb_package_kind)
+        wx.PostEvent(self.Parent , evt)
+
 
     def on_margin_mode_changed(self, event=None):
         self.edit_margin_size.Enabled = self.margin_mode != MarginMode.NA

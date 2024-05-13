@@ -10,6 +10,7 @@ APP_NAME = "kicad_amf_plugin"
 VENDOR_NAME = "NextPCB"
 
 LANGUAGE = "language"
+# LANGUAGE = "中国"
 
 ORDER_REGION = "order_region"
 
@@ -96,6 +97,7 @@ class _SettingManager(wx.EvtHandler):
         self.app_conf.Flush()
 
     def get_language(self) -> int:
+        # wx.MessageBox(f"{self.app_conf.ReadInt(LANGUAGE)}")
         return self.app_conf.ReadInt(LANGUAGE)
 
     def set_order_region(self, region: int):
@@ -109,7 +111,7 @@ class _SettingManager(wx.EvtHandler):
         return self.app_conf.ReadInt(ORDER_REGION)
 
     def get_price_unit(self, translated=False):
-        sym = "¥" if not self.order_region else "$"
+        sym = "¥" if not self.order_region else "￥"
         if not translated:
             return sym
         if self.get_language() == wx.LANGUAGE_CHINESE_SIMPLIFIED:

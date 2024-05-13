@@ -13,14 +13,14 @@ import wx.dataview as dv
 parameters = {
     "mpn": _("MPN"),
     "manufacturer": _("Manufacturer"),
-    "package": _("Package / Footprint"),
+    "pkg": _("Package / Footprint"),
     "category": _("Category"),
     "part_desc": _("Description"),
 }
 attribute_para = {
     "sku": _("SKU"),
-    "vendor": _("Supplier"),
-    "quantity": _("Stock"),
+    # "vendor": _("Supplier"),
+    # "quantity": _("Stock"),
 }
 
 
@@ -59,7 +59,7 @@ class PartDetailsView(UiPartDetailsPanel):
             self.data_list.AppendItem([v, " "])
         for k, v in attribute_para.items():
             self.data_list.AppendItem([v, " "])
-        self.data_list.AppendItem([_("Price"), " "])
+        # self.data_list.AppendItem([_("Price"), " "])
         self.data_list.AppendItem([_("Datasheet"), " "])
         # update layout
         self.Layout()
@@ -91,7 +91,7 @@ class PartDetailsView(UiPartDetailsPanel):
                 _("returned data does not have expected clicked part")
             )
         self.info = clicked_part.get("part_info", {})
-        self.supplier = clicked_part.get("supplier_chain", {})
+        self.suppliers = clicked_part.get("supplier_chain", {})
 
         for i in range(self.data_list.GetItemCount()):
             self.data_list.DeleteItem(0)
@@ -102,30 +102,16 @@ class PartDetailsView(UiPartDetailsPanel):
             else:
                 self.data_list.AppendItem([v, "-"])
 
-        if self.supplier != []:
-            for k, v in attribute_para.items():
-                val = self.supplier.get(k, "-")
-                if val != "null" and val:
-                    self.data_list.AppendItem([v, str(val)])
-                else:
-                    self.data_list.AppendItem([v, "-"])
-            prices_stair = self.supplier.get("price", [])
-            if prices_stair == None:
-                self.data_list.AppendItem(["Price", "-"])
-            else:
-                price_echelon = {}
-                # Populate price_echelon based on prices_stair data
-                for index, price_range in enumerate(prices_stair):
-                    break_min = price_range.get("breakMin")
-                    break_max = price_range.get("breakMax")
-                    if break_max is None:
-                        key = f">{break_min} Piece(￥)"
-                    else:
-                        key = f"{break_min}-{break_max} Piece(￥)"
-                    price_echelon[key] = price_range["rmb"]
-                # Populate self.data_list with the key-value pairs
-                for key, value in price_echelon.items():
-                    self.data_list.AppendItem([key, str(value)])
+        
+        for k, v in attribute_para.items():
+            val = "-"
+            if self.suppliers != []:
+                for supplier_chain  in self.suppliers:
+                    vendor = supplier_chain.get("vendor", {})
+                    if vendor == "hqself":
+                        val = supplier_chain.get(k, "-")
+            self.data_list.AppendItem([v, str(val)])
+
 
         self.pdfurl = self.info.get("datasheet", {})
         self.pdfurl = "-" if self.pdfurl == "" else self.pdfurl

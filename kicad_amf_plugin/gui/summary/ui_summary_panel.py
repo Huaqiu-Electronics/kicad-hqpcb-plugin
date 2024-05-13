@@ -13,7 +13,6 @@ import wx.dataview
 from kicad_amf_plugin.utils.platebtn import PlateButton ,PB_STYLE_GRADIENT
 from kicad_amf_plugin.utils.platebtn import PlateButton ,PB_STYLE_GRADIENT,PB_STYLE_SQUARE
 
-
 ###########################################################################
 ## Class UiSummaryPanel
 ###########################################################################
@@ -30,24 +29,6 @@ class UiSummaryPanel ( wx.Panel ):
 		self.m_panel10 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,10 ), wx.TAB_TRAVERSAL )
 		bSizer3.Add( self.m_panel10, 0, wx.EXPAND |wx.ALL, 5 )
 
-		sbSizer4 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _("Preference") ), wx.HORIZONTAL )
-
-		self.m_staticText1 = wx.StaticText( sbSizer4.GetStaticBox(), wx.ID_ANY, _("Website"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText1.Wrap( -1 )
-
-		sbSizer4.Add( self.m_staticText1, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-
-		choice_order_regionChoices = []
-		self.choice_order_region = wx.Choice( sbSizer4.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choice_order_regionChoices, 0 )
-		self.choice_order_region.SetSelection( 0 )
-		sbSizer4.Add( self.choice_order_region, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-
-
-		sbSizer4.Add( ( 0, 0), 1, wx.EXPAND, 5 )
-
-
-		bSizer3.Add( sbSizer4, 1, wx.EXPAND, 5 )
-
 
 		bSizer1.Add( bSizer3, 0, wx.EXPAND, 5 )
 
@@ -63,7 +44,7 @@ class UiSummaryPanel ( wx.Panel ):
 		self.switch_smt_panel = wx.Panel( self.switch_smt_splitter, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer10 = wx.BoxSizer( wx.VERTICAL )
 
-		sbSizer7 = wx.StaticBoxSizer( wx.StaticBox( self.switch_smt_panel, wx.ID_ANY, _("BOM View") ), wx.VERTICAL )
+		sbSizer7 = wx.StaticBoxSizer( wx.StaticBox( self.switch_smt_panel, wx.ID_ANY, _(u"BOM View") ), wx.VERTICAL )
 
 		self.list_bom_view = wx.dataview.DataViewListCtrl( sbSizer7.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.dataview.DV_ROW_LINES|wx.dataview.DV_VERT_RULES )
 		sbSizer7.Add( self.list_bom_view, 1, wx.ALL|wx.EXPAND, 5 )
@@ -79,7 +60,7 @@ class UiSummaryPanel ( wx.Panel ):
 		self.switch_smt_panel.Layout()
 		bSizer10.Fit( self.switch_smt_panel )
 		self.m_panel9 = wx.Panel( self.switch_smt_splitter, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		sbSizer1 = wx.StaticBoxSizer( wx.StaticBox( self.m_panel9, wx.ID_ANY, _("Cost Detail") ), wx.VERTICAL )
+		sbSizer1 = wx.StaticBoxSizer( wx.StaticBox( self.m_panel9, wx.ID_ANY, _(u"Cost Detail") ), wx.VERTICAL )
 
 		self.list_price_detail = wx.dataview.DataViewCtrl( sbSizer1.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.dataview.DV_ROW_LINES|wx.dataview.DV_VERT_RULES )
 		sbSizer1.Add( self.list_price_detail, 1, wx.ALL|wx.EXPAND, 5 )
@@ -96,15 +77,60 @@ class UiSummaryPanel ( wx.Panel ):
 		self.m_panel7.Layout()
 		bSizer13.Fit( self.m_panel7 )
 		self.switch_amf_panel = wx.Panel( self.splitter_detail_summary, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		sbSizer41 = wx.StaticBoxSizer( wx.StaticBox( self.switch_amf_panel, wx.ID_ANY, _("Order Summary") ), wx.VERTICAL )
+		bSizer101 = wx.BoxSizer( wx.VERTICAL )
+
+		sbSizer41 = wx.StaticBoxSizer( wx.StaticBox( self.switch_amf_panel, wx.ID_ANY, _(u"Order Summary") ), wx.VERTICAL )
 
 		self.list_order_summary = wx.dataview.DataViewCtrl( sbSizer41.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.dataview.DV_ROW_LINES|wx.dataview.DV_VERT_RULES )
 		sbSizer41.Add( self.list_order_summary, 1, wx.ALL|wx.EXPAND, 5 )
 
 
-		self.switch_amf_panel.SetSizer( sbSizer41 )
+		bSizer101.Add( sbSizer41, 1, wx.EXPAND, 5 )
+
+		self.show_hidden_text = wx.Panel( self.switch_amf_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		sbSizer5 = wx.StaticBoxSizer( wx.StaticBox( self.show_hidden_text, wx.ID_ANY, _(u"Tip") ), wx.VERTICAL )
+
+		self.m_staticText1 = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"50*50mm ≤ X ≤ 400*340mm"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText1.Wrap( -1 )
+
+		sbSizer5.Add( self.m_staticText1, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+		self.m_staticText2 = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"The final quotation is subject to review."), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText2.Wrap( -1 )
+
+		sbSizer5.Add( self.m_staticText2, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+		self.board_type_text = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"Board Type (Recommand) : Single Piece"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.board_type_text.Wrap( -1 )
+
+		self.board_type_text.Hide()
+
+		sbSizer5.Add( self.board_type_text, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+		self.flnsihed_copper_text = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"Flnsihed Copper Weight (Best Price) : 1zo"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.flnsihed_copper_text.Wrap( -1 )
+
+		self.flnsihed_copper_text.Hide()
+
+		sbSizer5.Add( self.flnsihed_copper_text, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+		self.solder_mask_text = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"Solder Mask Color (Best Price) : Green"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.solder_mask_text.Wrap( -1 )
+
+		self.solder_mask_text.Hide()
+
+		sbSizer5.Add( self.solder_mask_text, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+
+		self.show_hidden_text.SetSizer( sbSizer5 )
+		self.show_hidden_text.Layout()
+		sbSizer5.Fit( self.show_hidden_text )
+		bSizer101.Add( self.show_hidden_text, 0, wx.EXPAND |wx.ALL, 5 )
+
+
+		self.switch_amf_panel.SetSizer( bSizer101 )
 		self.switch_amf_panel.Layout()
-		sbSizer41.Fit( self.switch_amf_panel )
+		bSizer101.Fit( self.switch_amf_panel )
 		self.splitter_detail_summary.SplitHorizontally( self.m_panel7, self.switch_amf_panel, 0 )
 		bSizer1.Add( self.splitter_detail_summary, 1, wx.EXPAND, 5 )
 
@@ -138,3 +164,37 @@ class UiSummaryPanel ( wx.Panel ):
 	# Virtual image path resolution method. Override this in your derived class.
 	def GetImagePath( self, bitmap_path ):
 		return bitmap_path
+
+
+###########################################################################
+## Class MyPanel2
+###########################################################################
+
+class MyPanel2 ( wx.Panel ):
+
+	def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+		wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
+
+		bSizer11 = wx.BoxSizer( wx.VERTICAL )
+
+		self.m_panel1 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer7 = wx.BoxSizer( wx.VERTICAL )
+
+
+		self.m_panel1.SetSizer( bSizer7 )
+		self.m_panel1.Layout()
+		bSizer7.Fit( self.m_panel1 )
+		bSizer11.Add( self.m_panel1, 1, wx.EXPAND |wx.ALL, 5 )
+
+
+		self.SetSizer( bSizer11 )
+		self.Layout()
+
+	def __del__( self ):
+		pass
+
+	# Virtual image path resolution method. Override this in your derived class.
+	def GetImagePath( self, bitmap_path ):
+		return bitmap_path
+
+

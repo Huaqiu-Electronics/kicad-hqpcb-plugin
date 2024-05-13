@@ -66,12 +66,12 @@ DB_MPN = 3
 DB_MANU = 4
 DB_CATE = 5
 DB_SKU = 6
-DB_SUPPL = 7
-DB_QUANT = 8
-DB_BOM = 9
-DB_POS = 10
-DE_ROT = 11
-DB_SIDE = 12
+# DB_SUPPL = 7
+DB_QUANT = 7
+DB_BOM = 8
+DB_POS = 9
+DE_ROT = 10
+DB_SIDE = 11
 
 
 class NextPCBTools(wx.Dialog):
@@ -95,10 +95,10 @@ class NextPCBTools(wx.Dialog):
         self.project_path = os.path.split(self.BOARD_LOADED.GetFileName())[0]
         self.board_name = os.path.split(self.BOARD_LOADED.GetFileName())[1]
         self.schematic_name = f"{self.board_name.split('.')[0]}.kicad_sch"
-        self.hide_bom_parts = False
-        self.hide_pos_parts = False
-        self.manufacturers = []
-        self.packages = []
+        # self.hide_bom_parts = False
+        # self.hide_pos_parts = False
+        # self.manufacturers = []
+        # self.packages = []
         self.store = None
         self.settings = None
         self.group_strategy = 0
@@ -120,7 +120,7 @@ class NextPCBTools(wx.Dialog):
                 "manufacturer": "",
                 "Category": "",
                 "SKU": "",
-                "supplier": "",
+                # "supplier": "",
                 "quantity": "",
             }
         ]
@@ -310,10 +310,20 @@ class NextPCBTools(wx.Dialog):
         self.Bind(EVT_POPULATE_FOOTPRINT_LIST_EVENT, self.populate_footprint_list)
         self.Bind(EVT_UPDATE_SETTING, self.update_settings)
 
+        wx.CallAfter(self.on_notebook_page_changed, None)
+        wx.CallAfter(self.init_fabrication )
+        wx.CallAfter(self.init_store )
         self.init_logger()
-        self.on_notebook_page_changed(None)
-        self.init_fabrication()
-        self.init_store()
+        
+    #     initialization_thread = threading.Thread(target=self.initialize)
+    #     initialization_thread.start()
+
+    # def initialize(self):
+    #     self.on_notebook_page_changed(None)
+    #     self.init_fabrication()
+    #     self.init_store()
+    #     self.init_logger()
+
 
     @property
     def file_path(self):
@@ -332,7 +342,7 @@ class NextPCBTools(wx.Dialog):
         elif self.selected_page_index == 1:
             self.footprint_list = self.fplist_unmana
 
-        self.populate_footprint_list()
+        wx.CallAfter(self.populate_footprint_list)
 
     def quit_dialog(self, e):
         """Destroy dialog on close"""
@@ -341,7 +351,7 @@ class NextPCBTools(wx.Dialog):
     def init_store(self):
         """Initialize the store of part assignments"""
         self.store = Store(self, self.file_path, self.BOARD_LOADED)
-        self.populate_footprint_list()
+        wx.CallAfter(self.populate_footprint_list)
 
     def init_fabrication(self):
         """Initialize the fabrication"""
@@ -363,17 +373,23 @@ class NextPCBTools(wx.Dialog):
         return parts
 
     def auto_match_parts(self, e):
+        import multiprocessing
+
+        
         self.upper_toolbar.EnableTool(ID_AUTO_MATCH, False)
         try:
             wx.BeginBusyCursor()
             # get unmanaged part from UI
             unmanaged_parts = self.get_unmanaged_parts_from_list()
+            
+            self.start_threads(unmanaged_parts)
 
-            thread = threading.Thread(
-                target=self.bom_match_api_request(unmanaged_parts)
-            )
-            thread.start()
-            thread.join()
+
+            # thread = threading.Thread(
+            #     target=self.bom_match_api_request(unmanaged_parts)
+            # )
+            # thread.start()
+            # thread.join()
 
             # self.update_db_after_match()
 
@@ -386,6 +402,30 @@ class NextPCBTools(wx.Dialog):
         finally:
             wx.EndBusyCursor()
             self.upper_toolbar.EnableTool(ID_AUTO_MATCH, True)
+
+    def start_threads(self,unmanaged_parts):
+        import multiprocessing
+        cpu_cores = multiprocessing.cpu_count()
+        threads = []
+
+        # 确定每个线程处理的unmanaged_parts数量
+        parts_per_thread = len(unmanaged_parts) // cpu_cores
+        extra_parts = len(unmanaged_parts) % cpu_cores
+
+        # 计算每个线程的起始和结束索引
+        start_index = 0
+        for i in range(cpu_cores):
+            end_index = start_index + parts_per_thread + (1 if i < extra_parts else 0)
+            part_subset = unmanaged_parts[start_index:end_index]
+            thread = threading.Thread(target=self.bom_match_api_request, args=(part_subset,))
+            thread.start()
+            threads.append(thread)
+            start_index = end_index
+
+        # 等待所有线程完成
+        for thread in threads:
+            thread.join()
+
 
     def get_unmanaged_parts_from_list(self):
         rows = []
@@ -426,7 +466,9 @@ class NextPCBTools(wx.Dialog):
                     "comment": value,
                 }
             ]
-            url = "http://192.168.50.100:5010/bom_components_match"
+            # url = "http://192.168.50.100:5010/bom_components_match"
+            url = "http://www.fdatasheets.com/api/chiplet/kicad/bomComponentsMatch"
+            
 
             response = requests.post(url, headers=headers, json=body)
             if response.status_code != 200:
@@ -441,46 +483,53 @@ class NextPCBTools(wx.Dialog):
 
             if not rsp_datas:
                 continue
-            rsp_data = rsp_datas[0].get("parts", {})
+            
+            # rsp_data = rsp_datas[0].get("parts", {})
+            rsp_data = rsp_datas.get("result", {})[0].get("parts", {})
             if not rsp_data:
                 continue
             if not rsp_data[0].get("part", {}):
                 continue
             BOM_part = rsp_data[0].get("part", {})
 
-            manu = BOM_part.get("manufacturer", {})
+            manu_id = BOM_part.get("manufacturer_id", {})
             mpn = BOM_part.get("mpn", {})
-            supplier_chain = {}
+            suppliers_chain = {}
             headers = {"Content-Type": "application/json"}
-            body = [f"-{mpn}"]
-            url = "http://192.168.50.102:8012/search/supplychain/list/mfg-mpn"
+            body = [f"{manu_id}-{mpn}"]
+            url = "http://www.fdatasheets.com/api/chiplet/kicad/searchSupplyChain"
             response = requests.post(url, headers=headers, json=body, timeout=5)
 
-            if not response.content:
+            datas = response.json()
+            if not datas.get("result", {}):
                 temp_list[3] = "-"
-                temp_list[4] = "-"
+                # temp_list[4] = "-"
                 combined_data = {
                     "part_info": BOM_part,
                     "supplier_chain": [],
                 }
             else:
-                datas = response.json()
-                supplier_chain = datas[0]
-                sku = supplier_chain.get("sku", {})
-                sku = "-" if sku == "" else sku
-                temp_list[3] = supplier_chain.get("sku", {})
-                supplier = supplier_chain.get("sku", {})
-                supplier = "-" if supplier == "" else supplier
-                temp_list[4] = supplier_chain.get("vendor", {})
+                
+                suppliers_chain = datas.get("result", {})
+                sku = "-"
+                for supplier_chain  in suppliers_chain:
+                    vendor = supplier_chain.get("vendor", {})
+                    if vendor == "hqself":
+                        sku = supplier_chain.get("sku", "-")
+                temp_list[3] = sku
+                
+                # supplier = supplier_chain.get("sku", {})
+                # supplier = "-" if supplier == "" else supplier
+                # temp_list[4] = supplier_chain.get("vendor", {})
                 combined_data = {
                     "part_info": BOM_part,
-                    "supplier_chain": supplier_chain,
+                    "supplier_chain": suppliers_chain,
                 }
 
             temp_list[0] = BOM_part.get("mpn", {})
             temp_list[1] = BOM_part.get("manufacturer", {})
             temp_list[2] = BOM_part.get("category", {})
-            temp_list[5] = combined_data
+            temp_list[4] = combined_data
             self.update_db_after_match(references, temp_list)
             self.populate_footprint_list()
 
@@ -492,8 +541,8 @@ class NextPCBTools(wx.Dialog):
                 self.store.set_manufacturer(reference, matched_list[1])
                 self.store.set_category(reference, matched_list[2])
                 self.store.set_sku(reference, matched_list[3])
-                self.store.set_supplier(reference, matched_list[4])
-                self.store.set_part_detail(reference, matched_list[5])
+                # self.store.set_supplier(reference, matched_list[4])
+                self.store.set_part_detail(reference, matched_list[4])
 
     def generate_fabrication_data(self, e):
         """Generate fabrication data."""
@@ -518,7 +567,7 @@ class NextPCBTools(wx.Dialog):
                 self.store.set_manufacturer(reference, e.manufacturer)
                 self.store.set_category(reference, e.category)
                 self.store.set_sku(reference, e.sku)
-                self.store.set_supplier(reference, e.supplier)
+                # self.store.set_supplier(reference, e.supplier)
                 self.store.set_part_detail(reference, e.selected_part_detail)
         self.populate_footprint_list()
 
@@ -554,7 +603,6 @@ class NextPCBTools(wx.Dialog):
                 part[DB_MANU] = (part[DB_MANU].split(","))[0]
                 part[DB_CATE] = (part[DB_CATE].split(","))[0]
                 part[DB_SKU] = part[DB_SKU]
-                part[DB_SUPPL] = part[DB_SUPPL]
                 part[DB_QUANT] = part[DB_QUANT]
                 part[DB_BOM] = 0 if "0" in part[DB_BOM].split(",") else 1
                 part[DB_POS] = 0 if "0" in part[DB_POS].split(",") else 1
@@ -574,7 +622,7 @@ class NextPCBTools(wx.Dialog):
             parts.append(part)
         for idx, part in enumerate(parts, start=1):
             part.insert(0, f"{idx}")
-            part[9] = str(part[9])
+            part[8] = str(part[8])
             if self.selected_page_index == 1 and part[4]:
                 continue
             self.listsd = self.footprint_list.AppendItem(part)
@@ -641,7 +689,7 @@ class NextPCBTools(wx.Dialog):
                         self.store.set_manufacturer(iter_ref, "")
                         self.store.set_category(iter_ref, "")
                         self.store.set_sku(iter_ref, "")
-                        self.store.set_supplier(iter_ref, "")
+                        # self.store.set_supplier(iter_ref, "")
                         self.store.set_bom(iter_ref, True)
                         self.store.set_pos(iter_ref, True)
                         self.store.set_part_detail(iter_ref, "")
@@ -755,7 +803,7 @@ class NextPCBTools(wx.Dialog):
         part += str(self.footprint_list.GetTextValue(row, 5)) + "\n"
         part += str(self.footprint_list.GetTextValue(row, 6)) + "\n"
         part += str(self.footprint_list.GetTextValue(row, 7)) + "\n"
-        part += str(self.footprint_list.GetTextValue(row, 8)) + "\n"
+        # part += str(self.footprint_list.GetTextValue(row, 8)) + "\n"
         ref = self.footprint_list.GetTextValue(row, 1).split(",")[0]
         part += str(self.store.get_part_detail(ref))
 
@@ -775,8 +823,8 @@ class NextPCBTools(wx.Dialog):
             manufacturer = lines[1]
             cate = lines[2]
             sku = lines[3]
-            supplier = lines[4]
-            part_detail = json.loads(lines[5])
+            # supplier = lines[4]
+            part_detail = json.loads(lines[4])
 
             if mpn == "":
                 return
@@ -788,7 +836,7 @@ class NextPCBTools(wx.Dialog):
                 self.store.set_manufacturer(ref, manufacturer)
                 self.store.set_category(ref, cate)
                 self.store.set_sku(ref, sku)
-                self.store.set_supplier(ref, supplier)
+                # self.store.set_supplier(ref, supplier)
                 self.store.set_part_detail(ref, part_detail)
         self.populate_footprint_list()
 

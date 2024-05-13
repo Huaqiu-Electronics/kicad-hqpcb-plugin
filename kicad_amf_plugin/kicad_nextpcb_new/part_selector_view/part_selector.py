@@ -15,8 +15,6 @@ from .ui_part_list_panel.part_list_view import PartListView
 ID_SELECT_PART = wx.NewIdRef()
 
 COLUM_SKU = 5
-COLUM_PRICE = 6
-COLUM_STOCK = 7
 
 
 def ceil(x, y):
@@ -160,7 +158,8 @@ class PartSelectorDialog(wx.Dialog):
             manufacturer = ""
         else:
             manufacturer = self.search_view.manufacturer.GetValue()
-        if self.search_view.description.GetValue() == "":
+            
+        if self.search_view.description.GetValue() == "" or mpn != "" or manufacturer != "":
             comment = ""
         else:
             comment = self.search_view.description.GetValue()
@@ -178,7 +177,8 @@ class PartSelectorDialog(wx.Dialog):
             }
         ]
 
-        url = "http://192.168.50.100:5010/bom_components_match"
+        # url = "http://192.168.50.100:5010/bom_components_match"
+        url = "http://www.fdatasheets.com/api/chiplet/kicad/bomComponentsMatch"
         self.search_view.search_button.Disable()
         try:
             threading.Thread(target=self.search_api_request(url, body)).start()
@@ -201,7 +201,9 @@ class PartSelectorDialog(wx.Dialog):
             return
         self.search_part_list = []
         datas = response.json()
-        data = datas[0].get("parts", {})
+        # datas = datas.get("result", {})
+        data = datas.get("result", {})[0].get("parts", {})
+        # data = datas[0].get("parts", {})
         if not data:
             wx.MessageBox( _("No corresponding data was matched") )
             return
@@ -231,7 +233,8 @@ class PartSelectorDialog(wx.Dialog):
         else:
             self.part_list_view.result_count.SetLabel(f"{self.total_num} Results")
 
-        parameters = ["mpn", "manufacturer", "package", "category"]
+        # parameters = ["mpn", "manufacturer", "package", "category"]
+        parameters = ["mpn", "manufacturer", "pkg", "category"]
         # but "item_total_list" contains more comprehensive data infomation.
         self.item_total_list = []
         for idx, part_info in enumerate(self.search_part_list, start=1):
@@ -241,12 +244,13 @@ class PartSelectorDialog(wx.Dialog):
                 val = "-" if val == "" else val
                 part.append(val)
             part.insert(0, f"{idx}")
-            manu = part_info.get("manufacturer", {})
+            manu_id = part_info.get("manufacturer_id", {})
             mpn = part_info.get("mpn", {})
-            supplier_chain = {}
+            suppliers_chain = {}
             headers = {"Content-Type": "application/json"}
-            body = [f"-{mpn}"]
-            url = "http://192.168.50.102:8012/search/supplychain/list/mfg-mpn"
+            body = [f"{manu_id}-{mpn}"]
+            # url = "http://192.168.50.102:8012/search/supplychain/list/mfg-mpn"
+            url = "http://www.fdatasheets.com/api/chiplet/kicad/searchSupplyChain"
             response = requests.post(url, headers=headers, json=body, timeout=5)
             if response.status_code != 200:
                 self.report_part_search_error(
@@ -254,11 +258,11 @@ class PartSelectorDialog(wx.Dialog):
                 )
             # judge whether supplier chain data is available
             # Check if the response content is not empty
-            if not response.content:
+
+
+            datas = response.json()
+            if not datas.get("result", {}):
                 part.insert(5, "-")
-                part.insert(6, "-")
-                part.insert(7, "-")
-                part.insert(8, "-")
                 combined_data = {
                     "part_info": part_info,
                     "supplier_chain": [],
@@ -266,25 +270,19 @@ class PartSelectorDialog(wx.Dialog):
                 self.item_total_list.append(combined_data)
                 self.part_list_view.part_list.AppendItem(part)
                 continue
-
-            datas = response.json()
-            supplier_chain = datas[0]
-            sku = supplier_chain.get("sku", {})
-            sku = "-" if sku == None else sku
+            
+            
+            
+            suppliers_chain = datas.get("result", {})
+            sku = "-"
+            for supplier_chain  in suppliers_chain:
+                vendor = supplier_chain.get("vendor", {})
+                if vendor == "hqself":
+                    sku = supplier_chain.get("sku", "-")
             part.insert(5, sku)
-            supplier = supplier_chain.get("vendor", {})
-            supplier = "-" if supplier == None else supplier
-            part.insert(6, supplier)
-            if supplier_chain.get("price", {}) == None:
-                part.insert(7, "-")
-            else:
-                price = supplier_chain.get("price", {})[0].get("rmb", {})
-                price = "-" if price == "" else price
-                part.insert(7, str(price))
-            stock = supplier_chain.get("quantity", {})
-            stock = "-" if stock == "" else stock
-            part.insert(8, str(stock))
-            combined_data = {"part_info": part_info, "supplier_chain": supplier_chain}
+            
+            
+            combined_data = {"part_info": part_info, "supplier_chain": suppliers_chain}
             self.item_total_list.append(combined_data)
             self.part_list_view.part_list.AppendItem(part)
 
@@ -298,14 +296,15 @@ class PartSelectorDialog(wx.Dialog):
         manu = self.part_list_view.part_list.GetValue(row, 2)
         cate = self.part_list_view.part_list.GetValue(row, 4)
         sku = self.part_list_view.part_list.GetValue(row, 5)
-        supp = self.part_list_view.part_list.GetValue(row, 6)
+        # supp = self.part_list_view.part_list.GetValue(row, 6)
+        # supp = "__"
         self.selected_part = self.item_total_list[row]
         evt = AssignPartsEvent(
             mpn=selection,
             manufacturer=manu,
             category=cate,
             sku=sku,
-            supplier=supp,
+            # supplier=supp,
             references=list(self.parts.keys()),
             selected_part_detail=self.selected_part,
         )
@@ -379,7 +378,6 @@ class PartSelectorDialog(wx.Dialog):
             style=wx.ICON_ERROR,
         )
         wx.CallAfter(wx.EndBusyCursor)
-        wx.CallAfter(self.search_view.search_button.Enable())
         return
 
     def on_right_down(self, e):
