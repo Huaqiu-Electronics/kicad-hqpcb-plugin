@@ -187,12 +187,12 @@ class MainFrame(wx.Frame):
         self.active_manufacturing.SetSizer(amf_sizer)
         self.active_manufacturing.Layout()
         amf_sizer.Fit(self.active_manufacturing)
-        # for i in self._pcb_form_parts.values():
-        #     i.init()
-        #     i.on_region_changed()
+        for i in self._pcb_form_parts.values():
+            i.init()
+            i.on_region_changed()
 
-        thread = threading.Thread(target=self.init_pcb_parts)
-        thread.start()  # 启动线程
+        # thread = threading.Thread(target=self.init_pcb_parts)
+        # thread.start()  # 启动线程
 
         #------------smt-------------
         self.surface_mount_technology = wx.Panel( self.main_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
@@ -226,11 +226,11 @@ class MainFrame(wx.Frame):
         self.surface_mount_technology.Layout()
         smt_sizer.Fit( self.surface_mount_technology )
 
-        # for j in self.smt_pcb_form_parts.values():
-        #     j.init()
-        #     j.on_region_changed()
-        thread = threading.Thread(target=self.init_smt_parts)
-        thread.start()  # 启动线程
+        for j in self.smt_pcb_form_parts.values():
+            j.init()
+            j.on_region_changed()
+        # thread = threading.Thread(target=self.init_smt_parts)
+        # thread.start()  # 启动线程
 
         #---- book ctrl ----
         self.main_splitter.SplitVertically(
