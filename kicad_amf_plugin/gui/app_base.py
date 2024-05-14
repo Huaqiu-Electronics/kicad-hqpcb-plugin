@@ -47,12 +47,8 @@ class BaseApp(wx.EvtHandler):
         from kicad_amf_plugin.gui.main_frame import MainFrame
         from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
         
-        from kicad_amf_plugin.settings.timestamp import TimeStamp
-        timestamp=TimeStamp()
-        
         self.main_wind = MainFrame(
             self.board_manager, SETTING_MANAGER.get_window_size()
         )
-        timestamp.log( " show dialog ", level='info')
         self.main_wind.SetIcon(wx.Icon(GetImagePath("Huaqiu.ico")))
         self.main_wind.Show()

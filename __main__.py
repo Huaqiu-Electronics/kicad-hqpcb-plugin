@@ -1,5 +1,4 @@
 from wx import App, Locale
-from kicad_amf_plugin.settings.timestamp import TimeStamp
 
 class StandAloneApp(App):
     def __init__(
@@ -10,13 +9,11 @@ class StandAloneApp(App):
     def OnInit(self):
         from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
 
-        self.locale = Locale(SETTING_MANAGER.get_language())
+        # self.locale = Locale(SETTING_MANAGER.get_language())
         return True
 
 if __name__ == "__main__":
     from kicad_amf_plugin.plugin._main import _main
-    timestamp=TimeStamp()
-    timestamp.log( " init Plugin ", level='info')
     app = StandAloneApp()
     _main()
     app.MainLoop()
