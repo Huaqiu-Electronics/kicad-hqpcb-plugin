@@ -20,32 +20,12 @@ class BoardManager:
 
 
 def load_board_manager():
-    for fp in   "C:\\Program Files\\demos\\video\\video.kicad_pcb",'C:\\Program Files\\demos\\flat_hierarchy\\flat_hierarchy.kicad_pcb',:
-        if os.path.exists(fp):
-            return BoardManager(LoadBoard(fp))
-    board = GetBoard()
-    if board:
-        return BoardManager(board)
-    else:
-        dlg = wx.FileDialog(
-            None,
-            message="Choose a kicad pcb file",
-            defaultDir=os.getcwd(),
-            defaultFile="",
-            wildcard="*.kicad_pcb",
-            style=wx.FD_OPEN
-            | wx.FD_MULTIPLE
-            | wx.FD_CHANGE_DIR
-            | wx.FD_FILE_MUST_EXIST
-            | wx.FD_PREVIEW,
-        )
-
-        # Show the dialog and retrieve the user response. If it is the OK response,
-        # process the data.
-        if dlg.ShowModal() == wx.ID_OK:
-            # This returns a Python list of files that were selected.
-            paths = dlg.GetPaths()
-            if len(paths):
-                board = LoadBoard(paths[0])
-        dlg.Destroy()
-        return BoardManager(board)
+    try:
+        GetBoard().GetFileName()
+        board = GetBoard()
+        if board:
+            return BoardManager(board)
+    except Exception as e:
+        for fp in   "C:\\Program Files\\demos\\video\\video.kicad_pcb",'C:\\Program Files\\demos\\flat_hierarchy\\flat_hierarchy.kicad_pcb',:
+            if os.path.exists(fp):
+                return BoardManager(LoadBoard(fp))
