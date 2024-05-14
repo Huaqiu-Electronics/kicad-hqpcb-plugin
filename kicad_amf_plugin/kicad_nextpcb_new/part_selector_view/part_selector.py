@@ -249,7 +249,6 @@ class PartSelectorDialog(wx.Dialog):
             suppliers_chain = {}
             headers = {"Content-Type": "application/json"}
             body = [f"{manu_id}-{mpn}"]
-            # url = "http://192.168.50.102:8012/search/supplychain/list/mfg-mpn"
             url = "http://www.fdatasheets.com/api/chiplet/kicad/searchSupplyChain"
             response = requests.post(url, headers=headers, json=body, timeout=5)
             if response.status_code != 200:
@@ -392,3 +391,4 @@ class PartSelectorDialog(wx.Dialog):
         conMenu.Enable(ID_SELECT_PART, True)
         self.part_list_view.part_list.PopupMenu(conMenu)
         conMenu.Destroy()
+

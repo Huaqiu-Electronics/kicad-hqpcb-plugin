@@ -21,7 +21,7 @@ msgid "Unsupported layer count!"
 msgstr "ボードレイヤーの数はサポートされていません!"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-mfg-plugin\kicad_amf_plugin\gui\main_frame.py:109
-msgid "   HQ MFG   "
+msgid "   HQ PCB   "
 msgstr ""
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-mfg-plugin\kicad_amf_plugin\gui\main_frame.py:131

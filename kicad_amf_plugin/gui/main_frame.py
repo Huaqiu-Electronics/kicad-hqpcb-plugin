@@ -106,7 +106,7 @@ class MainFrame(wx.Frame):
             self,
             parent,
             id=wx.ID_ANY,
-            title=_("   HQ MFG   "),
+            title=_("   HQ PCB   "),
             pos=wx.DefaultPosition,
             size=size,
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER,
@@ -565,6 +565,10 @@ class MainFrame(wx.Frame):
                     headers=headers
                 )
                 fp = json.loads(rsp.content)
+                if fp.get("code", {}) != 0:
+                    _msg = fp.get("msg", {})
+                    wx.MessageBox( f"{_msg}",wx.ICON_ERROR )
+                    return
                 _url = fp.get("url", {})
                 uat_url = str(_url)
                 webbrowser.open(uat_url)
