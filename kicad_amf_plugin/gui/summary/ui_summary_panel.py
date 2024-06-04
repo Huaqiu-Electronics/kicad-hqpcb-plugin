@@ -13,13 +13,16 @@ import wx.dataview
 from kicad_amf_plugin.utils.platebtn import PlateButton ,PB_STYLE_GRADIENT
 from kicad_amf_plugin.utils.platebtn import PlateButton ,PB_STYLE_GRADIENT,PB_STYLE_SQUARE
 
+import gettext
+_ = gettext.gettext
+
 ###########################################################################
 ## Class UiSummaryPanel
 ###########################################################################
 
 class UiSummaryPanel ( wx.Panel ):
 
-	def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+	def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 319,385 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
 		wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
 
 		bSizer1 = wx.BoxSizer( wx.VERTICAL )
@@ -90,31 +93,33 @@ class UiSummaryPanel ( wx.Panel ):
 		self.show_hidden_text = wx.Panel( self.switch_amf_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		sbSizer5 = wx.StaticBoxSizer( wx.StaticBox( self.show_hidden_text, wx.ID_ANY, _(u"Tip") ), wx.VERTICAL )
 
-		self.m_staticText1 = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"50*50mm ≤ X ≤ 400*340mm"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText1.Wrap( -1 )
+		self.m_staticText1 = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"Factors that affect the price : Layer,  Min Trace/Space Outer, Min Pilled Hole "), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL|wx.ST_ELLIPSIZE_MIDDLE )
+		self.m_staticText1.Wrap( 310 )
 
 		sbSizer5.Add( self.m_staticText1, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-		self.m_staticText2 = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"The final quotation is subject to review."), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText2.Wrap( -1 )
+		self.min_trace_outer_text = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"Min Trace/Space Outer(Recommand) : 6mil--10mil"), wx.DefaultPosition, wx.DefaultSize, wx.ST_ELLIPSIZE_MIDDLE )
+		self.min_trace_outer_text.Wrap( -1 )
 
-		sbSizer5.Add( self.m_staticText2, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+		self.min_trace_outer_text.Hide()
 
-		self.board_type_text = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"Board Type (Recommand) : Single Piece"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		sbSizer5.Add( self.min_trace_outer_text, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+		self.board_type_text = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"Board Type (Recommand) : Single Piece"), wx.DefaultPosition, wx.DefaultSize, wx.ST_ELLIPSIZE_MIDDLE )
 		self.board_type_text.Wrap( -1 )
 
 		self.board_type_text.Hide()
 
 		sbSizer5.Add( self.board_type_text, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-		self.flnsihed_copper_text = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"Flnsihed Copper Weight (Best Price) : 1zo"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.flnsihed_copper_text = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"Flnsihed Copper Weight (Best Price) : 1zo"), wx.DefaultPosition, wx.DefaultSize, wx.ST_ELLIPSIZE_MIDDLE )
 		self.flnsihed_copper_text.Wrap( -1 )
 
 		self.flnsihed_copper_text.Hide()
 
 		sbSizer5.Add( self.flnsihed_copper_text, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-		self.solder_mask_text = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"Solder Mask Color (Best Price) : Green"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.solder_mask_text = wx.StaticText( sbSizer5.GetStaticBox(), wx.ID_ANY, _(u"Solder Mask Color (Best Price) : Green"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL|wx.ST_ELLIPSIZE_MIDDLE )
 		self.solder_mask_text.Wrap( -1 )
 
 		self.solder_mask_text.Hide()
@@ -148,7 +153,6 @@ class UiSummaryPanel ( wx.Panel ):
 
 		self.SetSizer( bSizer1 )
 		self.Layout()
-		bSizer1.Fit( self )
 
 	def __del__( self ):
 		pass

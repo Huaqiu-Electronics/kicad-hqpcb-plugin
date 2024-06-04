@@ -8,7 +8,6 @@ from kicad_amf_plugin.kicad.board_manager import load_board_manager
 from kicad_amf_plugin.utils.combo_box_ignore_wheel import ComboBoxIgnoreWheel
 from kicad_amf_plugin.icon import GetImagePath
 import wx
-from wx import Locale
 from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
 
 # add translation macro to builtin similar to what gettext does
@@ -24,7 +23,6 @@ def _displayHook(obj):
 class BaseApp(wx.EvtHandler):
     def __init__(self):
         super().__init__()
-        # self.locale = Locale(wx.LANGUAGE_CHINESE_SIMPLIFIED)
         sys.displayhook = _displayHook
         wx.Locale.AddCatalogLookupPathPrefix(
             os.path.join(PLUGIN_ROOT, "language", "locale")
@@ -32,6 +30,8 @@ class BaseApp(wx.EvtHandler):
         existing_locale = wx.GetLocale()
         if existing_locale is not None:
             existing_locale.AddCatalog(LANG_DOMAIN)
+        self.progress_dialog = wx.ProgressDialog(_("Open Software"), _("In progress") )
+        self.progress_dialog.Update( 30 )
 
     def load_success(self):
         from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
@@ -47,8 +47,12 @@ class BaseApp(wx.EvtHandler):
         from kicad_amf_plugin.gui.main_frame import MainFrame
         from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
         
+        self.progress_dialog.Update( 60 )
         self.main_wind = MainFrame(
             self.board_manager, SETTING_MANAGER.get_window_size()
         )
         self.main_wind.SetIcon(wx.Icon(GetImagePath("Huaqiu.ico")))
         self.main_wind.Show()
+
+        self.progress_dialog.Update( 100 )
+        self.progress_dialog.Destroy()

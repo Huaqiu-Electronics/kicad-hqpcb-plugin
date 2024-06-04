@@ -15,7 +15,7 @@ class FootPrintList(wx.dataview.DataViewListCtrl):
         id=wx.ID_ANY,
         pos=wx.DefaultPosition,
         size=wx.DefaultSize,
-        style=wx.dataview.DV_MULTIPLE,
+        style=wx.dataview.DV_SINGLE,
     ):
         wx.dataview.DataViewListCtrl.__init__(self, parent, id, pos, size, style)
 
@@ -76,13 +76,6 @@ class FootPrintList(wx.dataview.DataViewListCtrl):
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
-        # self.colu_supplier = self.AppendTextColumn(
-        #     _("Supplier"),
-        #     mode=wx.dataview.DATAVIEW_CELL_INERT,
-        #     width=int(mainwindows.scale_factor * 150),
-        #     align=wx.ALIGN_CENTER,
-        #     flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
-        # )
         
         self.colu_quantity = self.AppendTextColumn(
             _("Quantity"),
@@ -105,13 +98,6 @@ class FootPrintList(wx.dataview.DataViewListCtrl):
             align=wx.ALIGN_CENTER,
             flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
         )
-        self.rot = self.AppendTextColumn(
-            _("Rotation"),
-            mode=wx.dataview.DATAVIEW_CELL_INERT,
-            width=int(mainwindows.scale_factor * 80),
-            align=wx.ALIGN_CENTER,
-            flags=wx.dataview.DATAVIEW_COL_RESIZABLE,
-        )
         self.side = self.AppendTextColumn(
             _("Side"),
             mode=wx.dataview.DATAVIEW_CELL_INERT,
@@ -121,7 +107,7 @@ class FootPrintList(wx.dataview.DataViewListCtrl):
         )
 
         self.AppendTextColumn(
-            "",
+            " ",
             mode=wx.dataview.DATAVIEW_CELL_INERT,
             width=1,
             align=wx.ALIGN_CENTER,

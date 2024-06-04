@@ -285,8 +285,7 @@ class Fabrication:
                             part[2],
                             ToMM(position.x),
                             ToMM(position.y) * -1,
-                            "",
-                            # self.fix_rotation(fp),
+                            self.fix_rotation(fp),
                             "top" if fp.GetLayer() == 0 else "bottom",
                         ]
                     )
@@ -303,7 +302,7 @@ class Fabrication:
         ) as csvfile:
             writer = csv.writer(csvfile, delimiter=",")
             # writer.writerow(["Value", "Designator", "Footprint", "MPN"])
-            writer.writerow(["MPN", "Qty", "Designator", "Customer Supply", "Customer Remark"])
+            writer.writerow(["MPN", "Qty", "Designator","value", "manufacturer", "Category", "SKU", "Customer Supply", "Customer Remark"])
             for part in self.parent.store.read_bom_parts():
                 writer.writerow(part)
         self.logger.info("Finished generating BOM file")

@@ -225,4 +225,3 @@ class PriceSummaryModel(dv.PyDataViewModel):
         for i in PriceCategory.PCB, PriceCategory.SMT,:
             self.price_category[i].set_visibility(visibility)
         # self.visible = visibility
-        

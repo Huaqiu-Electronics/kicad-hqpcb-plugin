@@ -5,7 +5,7 @@ from kicad_amf_plugin.kicad_nextpcb_new.kicad_amf_plugin._main import _main
 
 class NextPcbBomTool(ActionPlugin):
     def defaults(self):
-        self.name = "NextPCB Tools"
+        self.name = "BOM Tools"
         self.category = "Fabrication data generation"
         self.description = (
             "Generate NextPCB-compatible Gerber, Excellon, BOM and CPL files"

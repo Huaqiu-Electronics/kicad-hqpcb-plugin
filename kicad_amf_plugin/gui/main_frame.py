@@ -28,6 +28,8 @@ from kicad_amf_plugin.gui.event.pcb_fabrication_evt_list import (
     EVT_SHOW_TIP_FLNSIHED_COPPER_WEIGHT,
     EVT_SHOW_SOLDER_MASK_COLOR,
     EVT_SHOW_PCB_PACKAGE_KIND,
+    EVT_GET_UNIQUE_MPN_COUNT,
+    EVT_SHOW_MIN_TRACE_WIDTH,
 )
 from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
 from kicad_amf_plugin.kicad.fabrication_data_generator import FabricationDataGenerator
@@ -134,24 +136,8 @@ class MainFrame(wx.Frame):
             parent=self,
             style=0 | wx.PD_APP_MODAL,
         )
-        
 
-    def on_fabrication_data_gen_progress(self, evt: FabricationDataGenEvent):
-        if self._data_gen_progress is not None:
-            res = evt.get_status()
-            if GenerateStatus.RUNNING == res.get_status():
-                self._data_gen_progress.Update(res.get_progress(), res.get_message())
-            else:
-                self._data_gen_progress.Destroy()
-                self._data_gen_progress = None
-                if GenerateStatus.FAILED == res.get_status():
-                    wx.MessageBox(f"{res.get_message()}")
 
-    def destory_data_dialog(self):
-        self._data_gen_progress.Update(GenerateStatus.MAX_PROGRESS - 1, _("Sending order request"))
-        self._data_gen_progress.Destroy()
-        self._data_gen_progress = None
-        
     def init_ui(self):
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
         left_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -265,7 +251,10 @@ class MainFrame(wx.Frame):
         self.Bind( EVT_SHOW_TIP_FLNSIHED_COPPER_WEIGHT, self.OnShowTipFinishedCopperWeight )
         self.Bind( EVT_SHOW_SOLDER_MASK_COLOR, self.OnShowTipSolderMaskColor  )
         self.Bind(EVT_SHOW_PCB_PACKAGE_KIND, self.OnShowTipPcbPackageKind )
-
+        self.Bind(EVT_GET_UNIQUE_MPN_COUNT, self.OnGetBomMaterialCount )
+        self.Bind(EVT_SHOW_MIN_TRACE_WIDTH, self.OnShowTipMinTraceWidth )
+        
+        
         pub.subscribe(self.receive_number_data, "combo_number")
 
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -273,6 +262,8 @@ class MainFrame(wx.Frame):
         self.SetSizer(main_sizer)
         self.Layout()
         self.Centre(wx.BOTH)
+
+
 
     def init_pcb_parts(self):
         for i in self._pcb_form_parts.values():
@@ -294,6 +285,11 @@ class MainFrame(wx.Frame):
     def OnShowTipPcbPackageKind(self , evt):
         self.summary_view.ShowTipPcbPackageKind( evt.pcb_package_kind_selection )
 
+    def OnShowTipMinTraceWidth(self, evt):
+        self.summary_view.ShowTipMinTraceOuter( evt.selected_min_trace_width )
+
+    def OnGetBomMaterialCount(self , evt):
+        self.smt_pcb_form_parts[SMTPCBFormPart.SMT_PROCESS_INFO].SetBomMaterialCount(evt.unique_npm_count)
 
     def change_ui(self, evt):
         self.selected_page_index = self.main_notebook.GetSelection()
@@ -301,6 +297,23 @@ class MainFrame(wx.Frame):
             self.summary_view.switch_to_amf()
         elif self.selected_page_index == 1:
             self.summary_view.switch_to_smt()
+
+
+    def on_fabrication_data_gen_progress(self, evt: FabricationDataGenEvent):
+        if self._data_gen_progress is not None:
+            res = evt.get_status()
+            if GenerateStatus.RUNNING == res.get_status():
+                self._data_gen_progress.Update(res.get_progress(), res.get_message())
+            else:
+                self._data_gen_progress.Destroy()
+                self._data_gen_progress = None
+                if GenerateStatus.FAILED == res.get_status():
+                    wx.MessageBox(f"{res.get_message()}")
+
+    def destory_data_gen_dialog(self):
+        self._data_gen_progress.Update(GenerateStatus.MAX_PROGRESS - 1, _("Sending order request"))
+        self._data_gen_progress.Destroy()
+        self._data_gen_progress = None
 
     def on_sash_pos_changed(self, evt):
         sash_pos = evt.GetSashPosition()
@@ -552,9 +565,10 @@ class MainFrame(wx.Frame):
                 wx.MessageBox(_('Place perform "BOM Match"'))
                 return
             self.show_data_gen_progress_dialog()
+            self.summary_view.on_generate_fabrication_file()
             try:
                 time.sleep(1)
-                self._data_gen_progress.Update( 50 , _("Sending order request") ) 
+                self._data_gen_progress.Update( 200 , _("Sending order request") ) 
                 form = self.get_query_price_form()
                 # requests会自动处理multipart/form-data
                 headers = { 'smt' : '1234' }
@@ -572,13 +586,12 @@ class MainFrame(wx.Frame):
                 _url = fp.get("url", {})
                 uat_url = str(_url)
                 webbrowser.open(uat_url)
-                self.destory_data_dialog()
-
 
             except Exception as e:
                 wx.MessageBox(str(e))
                 raise e  # TODO remove me
-
+            finally:
+                self.destory_data_gen_dialog()
 
     def receive_number_data(self, param1):
         self._number =  param1
