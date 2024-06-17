@@ -39,7 +39,7 @@ ShowPcbPackageKind, EVT_SHOW_PCB_PACKAGE_KIND = ne.NewCommandEvent()
 ShowMinTraceWidth, EVT_SHOW_MIN_TRACE_WIDTH = ne.NewCommandEvent()
 
 
-GetUniqueMpnCount, EVT_GET_UNIQUE_MPN_COUNT = ne.NewCommandEvent()
+GetUniqueValueFpCount, EVT_GET_UNIQUE_VALUE_FP_COUNT = ne.NewCommandEvent()
 
 DestorySmtDataGen, EVT_DESTORY_SMT_DATA_GEN = ne.NewCommandEvent()
 

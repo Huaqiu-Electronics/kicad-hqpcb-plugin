@@ -28,7 +28,7 @@ from kicad_amf_plugin.gui.event.pcb_fabrication_evt_list import (
     EVT_SHOW_TIP_FLNSIHED_COPPER_WEIGHT,
     EVT_SHOW_SOLDER_MASK_COLOR,
     EVT_SHOW_PCB_PACKAGE_KIND,
-    EVT_GET_UNIQUE_MPN_COUNT,
+    EVT_GET_UNIQUE_VALUE_FP_COUNT,
     EVT_SHOW_MIN_TRACE_WIDTH,
 )
 from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
@@ -251,7 +251,7 @@ class MainFrame(wx.Frame):
         self.Bind( EVT_SHOW_TIP_FLNSIHED_COPPER_WEIGHT, self.OnShowTipFinishedCopperWeight )
         self.Bind( EVT_SHOW_SOLDER_MASK_COLOR, self.OnShowTipSolderMaskColor  )
         self.Bind(EVT_SHOW_PCB_PACKAGE_KIND, self.OnShowTipPcbPackageKind )
-        self.Bind(EVT_GET_UNIQUE_MPN_COUNT, self.OnGetBomMaterialCount )
+        self.Bind(EVT_GET_UNIQUE_VALUE_FP_COUNT, self.OnGetValueFpGuoupCount )
         self.Bind(EVT_SHOW_MIN_TRACE_WIDTH, self.OnShowTipMinTraceWidth )
         
         
@@ -288,8 +288,8 @@ class MainFrame(wx.Frame):
     def OnShowTipMinTraceWidth(self, evt):
         self.summary_view.ShowTipMinTraceOuter( evt.selected_min_trace_width )
 
-    def OnGetBomMaterialCount(self , evt):
-        self.smt_pcb_form_parts[SMTPCBFormPart.SMT_PROCESS_INFO].SetBomMaterialCount(evt.unique_npm_count)
+    def OnGetValueFpGuoupCount(self , evt):
+        self.smt_pcb_form_parts[SMTPCBFormPart.SMT_PROCESS_INFO].SetValueFpGuoupCount(evt.unique_value_fp_count)
 
     def change_ui(self, evt):
         self.selected_page_index = self.main_notebook.GetSelection()
@@ -342,9 +342,6 @@ class MainFrame(wx.Frame):
     def smt_build_file(self):
         smt_files = self.summary_view.get_files()
         return smt_files
-        
-    def judge_files_exist(self):
-        return self.summary_view.judge_files_exist()
         
     def build_form(self, kind: FormKind):
         base = BaseRequest().__dict__
@@ -560,9 +557,6 @@ class MainFrame(wx.Frame):
             url = OrderRegion.get_url(SETTING_MANAGER.order_region, URL_KIND.SMT_PLACE_ORDER)
             if url is None:
                 wx.MessageBox(_("No available url for querying price in current region"))
-                return
-            if not self.judge_files_exist():
-                wx.MessageBox(_('Place perform "BOM Match"'))
                 return
             self.show_data_gen_progress_dialog()
             self.summary_view.on_generate_fabrication_file()

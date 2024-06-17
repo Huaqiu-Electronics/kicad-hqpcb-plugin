@@ -312,7 +312,6 @@ class ProcessInfoView(UiProcessInfo, FormPanelBase):
         selected_min_trace_width = self.combo_min_trace_width_clearance.GetSelection()
         evt = ShowMinTraceWidth( -1 ,selected_min_trace_width = self.combo_min_trace_width_clearance.GetSelection() )
         wx.PostEvent(self.GetEventHandler(), evt)
-        # 012
 
     def on_region_changed(self):
         pass

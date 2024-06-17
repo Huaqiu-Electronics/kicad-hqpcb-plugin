@@ -321,18 +321,19 @@ class Store:
                 ).fetchall()
                 return result
 
-    def get_unique_mpn_count(self):
+    def get_unique_value_fp_count(self):
         """Get the count of unique mpn values from the database."""
         with contextlib.closing(sqlite3.connect(self.dbfile)) as con:
             with con:
                 cur = con.cursor()
                 # 使用 DISTINCT 来获取不同的 mpn 值，并计数
                 cur.execute(
-                    "SELECT COUNT(DISTINCT mpn) FROM part_info"
+                    "SELECT value, footprint FROM part_info GROUP BY value, footprint;"
                 )
-                result = cur.fetchone() 
-                return ( result[0]-1 )  # return count result, minus colume head count 1.
-
+                all_results = cur.fetchall()   
+                total_count = len(all_results)  # 计算总数
+                return total_count   
+            
     def delete_part(self, ref):
         """Delete a part from the database by its reference."""
         with contextlib.closing(sqlite3.connect(self.dbfile)) as con:
@@ -396,7 +397,7 @@ class Store:
                     f"SELECT part_detail, image FROM part_info WHERE reference = '{ref}'"
                 ).fetchone()
                 return result
-        
+
 
     def update_from_board(self):
         """Read all footprints from the board and insert them into the database if they do not exist."""

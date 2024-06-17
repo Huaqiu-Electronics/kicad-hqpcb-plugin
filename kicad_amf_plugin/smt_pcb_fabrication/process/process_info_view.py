@@ -71,11 +71,9 @@ class SmtProcessInfoView(UiProcessInfo, FormPanelBase):
         self.patch_pad_number.SetValue("0")
         self.plug_number.SetValue("0")
 
-
-    def SetBomMaterialCount(self, unique_mpn_count):
-        self.bom_material_type_number.SetValue( str( unique_mpn_count) )
-        
-   
+    def SetValueFpGuoupCount(self, unique_value_fp_count):
+        self.bom_material_type_number.SetValue( str( unique_value_fp_count) )
+    
     def GetPatchPadCount(self):
         pads = self.board_manager.board.GetPads()
     

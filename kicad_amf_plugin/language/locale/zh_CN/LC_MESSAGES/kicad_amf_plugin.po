@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2024-06-04 14:57+0800\n"
-"PO-Revision-Date: 2024-06-04 15:07+0800\n"
+"PO-Revision-Date: 2024-06-04 15:44+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -264,7 +264,7 @@ msgstr "值"
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:99
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\foot_print_list.py:45
 msgid "Footprint"
-msgstr "封装布局"
+msgstr "封装"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:108
 msgid "Build Time"
@@ -436,7 +436,7 @@ msgstr "不分组"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:141
 msgid " Value & Footprint "
-msgstr "值&封装布局"
+msgstr "值&封装"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:146
 msgid "No Group"
@@ -526,7 +526,7 @@ msgstr "索引"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\foot_print_list.py:31
 msgid "Reference"
-msgstr "偏好设置"
+msgstr "位号"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\foot_print_list.py:59
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:23
@@ -547,7 +547,7 @@ msgstr "种类"
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:25
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_list_panel\part_list_view.py:46
 msgid "SKU"
-msgstr "库存管理单元"
+msgstr "SKU"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\foot_print_list.py:81
 msgid "Quantity"
@@ -573,7 +573,7 @@ msgstr "显示更多"
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:24
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:21
 msgid "Package / Footprint"
-msgstr "封装/封装布局"
+msgstr "封装"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:26
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:23
@@ -711,7 +711,7 @@ msgstr "图片"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_list_panel\part_list_view.py:34
 msgid "Package/Footprint"
-msgstr "封装/封装布局"
+msgstr "封装"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_list_panel\ui_part_list_panel.py:27
 msgid "0 Results"
