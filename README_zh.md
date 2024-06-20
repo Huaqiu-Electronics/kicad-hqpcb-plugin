@@ -1,8 +1,8 @@
-# 华秋 PCB Active Manufacturing
+# HQ PCB
 
 ### 在 KiCad 一键询价和下单
 
-华秋 PCB Active Manufacturing 插件将帮助您：
+HQ PCB 插件将帮助您：
 
 - 从您的设计中提取关键制造参数
 - 在 KiCad 内获取华秋的实时报价
@@ -40,15 +40,26 @@ _注意：某些组合受到限制（例如白色丝印不能与白色阻焊层�
 一切都是同步的，因此不需要额外的调整。当然，您可以随意更改网站上的设置，然后继续订购。
 
 支持以下区域：
-
-- 欧洲和美国：[NextPCB](https://www.nextpcb.com/pcb-quote)
 - 中国大陆 [华秋 PCB](https://www.hqpcb.com/quote/)
-- 日本：[JP.NextPCB](https://jp.nextpcb.com/pcb-quote#/pcb-quote/)
 
 ## 安装
 
 从 **为包保留** 下载最新版本的 ZIP 文件，然后在 KiCad 中，从主窗口打开“插件和内容管理器”。最后，使用窗口底部的“从文件安装...”来安装 ZIP 文件。
 ![图片](https://github.com/HubertHQH/HQ-NextPCB/assets/125419974/97ef0ca3-380e-4f6f-a14b-6960271118fc)
+
+
+## NextPCB
+
+NextPCB为海外版本的HQ PCB ，支持日本、欧洲和美国下单。
+- 欧洲和美国：[NextPCB](https://www.nextpcb.com/pcb-quote)
+- 日本：[JP.NextPCB](https://jp.nextpcb.com/pcb-quote#/pcb-quote/)
+
+## HQ DFM
+
+HQ DFM 一键分析开短路、断头线、线距线宽等20余项设计风险问题。
+[华秋DFM](https://dfm.hqpcb.com/)
+您可以使用 HQ DFM 仔细检查您的制造文件，调整电路板参数。
+
 
 ### 关于华秋 PCB
 
