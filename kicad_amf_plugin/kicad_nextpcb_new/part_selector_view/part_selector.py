@@ -199,7 +199,7 @@ class PartSelectorDialog(wx.Dialog):
             }
 
 
-        url = "http://www.fdatasheets.com/api/chiplet/products/queryPage"
+        url = "http://www.eda.cn/api/chiplet/products/queryPage"
 
         self.search_view.search_button.Disable()
         try:
@@ -253,7 +253,7 @@ class PartSelectorDialog(wx.Dialog):
             body_value = ( f"{manu_id}-{mpn}" )
             body.append(body_value)
         
-        url = "http://www.fdatasheets.com/api/chiplet/kicad/searchSupplyChain"
+        url = "http://www.eda.cn/api/chiplet/kicad/searchSupplyChain"
 
         response = self.api_request_interface( url, body )
         res_datas = response.json().get("result", {})

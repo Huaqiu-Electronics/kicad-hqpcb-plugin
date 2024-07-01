@@ -365,12 +365,12 @@ class NextPCBTools(wx.Dialog):
             
             self.bom_match_api_request (unmanaged_parts )
 
-            wx.CallAfter( self.populate_footprint_list )
-            wx.MessageBox(
-                _('The matching is complete. Check the matching result carefully. You can try to manually match the "Unmatched" part'),
-                _("Info"),
-                style=wx.ICON_INFORMATION,
-            )
+            # wx.CallAfter( self.populate_footprint_list )
+            # wx.MessageBox(
+            #     _('The matching is complete. Check the matching result carefully. You can try to manually match the "Unmatched" part'),
+            #     _("Info"),
+            #     style=wx.ICON_INFORMATION,
+            # )
         finally:
             wx.EndBusyCursor()
             self.upper_toolbar.EnableTool(ID_AUTO_MATCH, True)
@@ -414,7 +414,7 @@ class NextPCBTools(wx.Dialog):
         
         # body =[{'line_no': '1', 'mpn': '', 'manufacturer': '', 'package': 'LED_D3.0mm', 'reference': '', 'quantity': 0, 'sku': '', 'comment': 'LED'}, {'line_no': '2', 'mpn': '', 'manufacturer': '', 'package': 'DSUB-9_Female_Horizontal_P2.77x2.84mm_EdgePinOffset14.56mm_Housed_MountingHolesOffset15.98mm', 'reference': '', 'quantity': 0, 'sku': '', 'comment': 'DB9FEM'}, {'line_no': '3', 'mpn': '', 'manufacturer': '', 'package': 'LRTDK', 'reference': '', 'quantity': 0, 'sku': '', 'comment': '470ns'}, {'line_no': '4', 'mpn': '', 'manufacturer': '', 'package': 'subclick', 'reference': '', 'quantity': 0, 'sku': '', 'comment': 'BNC'}, {'line_no': '5', 'mpn': '', 'manufacturer': '', 'package': 'PinHeader_1x02_P2.54mm_Vertical', 'reference': '', 'quantity': 0, 'sku': '', 'comment': 'CONN_2'}, {'line_no': '6', 'mpn': '', 'manufacturer': '', 'package': 'PinHeader_1x05_P2.54mm_Vertical', 'reference': '', 'quantity': 0, 'sku': '', 'comment': 'CONN_5'}]
         body = request_bodys
-        url = "http://www.fdatasheets.com/api/chiplet/kicad/bomComponentsMatch"
+        url = "http://www.eda.cn/api/chiplet/kicad/bomComponentsMatch"
         
         try:
             response = requests.post(url, headers=headers, json=body, timeout=5)
@@ -433,11 +433,12 @@ class NextPCBTools(wx.Dialog):
             )
 
         if not response.json():
-            wx.MessageBox( _("No return data"), _("Info"), style=wx.ICON_ERROR, )
+            wx.MessageBox( _("No return data"), _("Info"), style=wx.ICON_ERROR )
             return
         data = response.json()
         res_datas = response.json().get("result", {})
         if not res_datas:
+            wx.MessageBox( _("No corresponding data was matched. You can try to manually match."), _("Info") )
             return
         
         request_bodys = []
@@ -454,7 +455,7 @@ class NextPCBTools(wx.Dialog):
 
 
         body = request_bodys
-        url = "http://www.fdatasheets.com/api/chiplet/kicad/searchSupplyChain"
+        url = "http://www.eda.cn/api/chiplet/kicad/searchSupplyChain"
         
         try:
             response = requests.post(url, headers=headers, json=body, timeout=5)
@@ -473,8 +474,8 @@ class NextPCBTools(wx.Dialog):
             
 
         res_datas = response.json().get("result", {})
-        if not res_datas:
-            wx.MessageBox( _("No corresponding data was matched") )
+        # if not res_datas:
+        #     wx.MessageBox( _("No corresponding data was matched") )
             
         for batch_part in unmanaged_parts:
             match_list = [None, None, None, None, None, None, None]
@@ -496,6 +497,11 @@ class NextPCBTools(wx.Dialog):
 
         self.batch_update_db_match(match_lists)
         self.populate_footprint_list()
+        wx.MessageBox(
+            _('The matching is complete. Check the matching result carefully. You can try to manually match the "Unmatched" part.'),
+            _("Info"),
+            style=wx.ICON_INFORMATION,
+        )
 
 
     def batch_update_db_match(self, matched_lists):

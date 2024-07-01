@@ -18,6 +18,7 @@ import pcbnew
 import json
 import os
 
+
 parameters = {
     "mpn": _("MPN"),
     "manufacturer": _("Manufacturer"),
@@ -75,7 +76,8 @@ class AssignedPartView(UiAssignedPartPanel):
         self.PartDetailsModel.DeleteAll()
         for k, v in parameters.items():
             self.PartDetailsModel.AddRow([v, " "])
-        self.data_list.Refresh()
+        self.part_image.SetBitmap(wx.NullBitmap)
+        self.Layout()
 
     def on_open_pdf(self, event):
         """Open the linked datasheet PDF on button click."""
@@ -92,7 +94,6 @@ class AssignedPartView(UiAssignedPartPanel):
                     query_pos = self.pdfurl.rfind('?')
                     if query_pos != -1:
                         self.pdfurl = self.pdfurl[:query_pos]
-                # 确保 URL 以 'http' 开头
                 if not self.pdfurl.startswith('http'):
                     self.pdfurl = 'http:' + self.pdfurl
                 webbrowser.open(self.pdfurl)
@@ -178,7 +179,6 @@ class AssignedPartView(UiAssignedPartPanel):
         new_height = int(image.height * factor)
         resized_image = image.resize((new_width, new_height), Image.LANCZOS)
 
-        # 将PIL图像转换为wxPython图像
         wx_image = wx.Image(new_width, new_height)
         wx_image.SetData(resized_image.convert('RGB').tobytes())
         
@@ -237,7 +237,7 @@ class AssignedPartView(UiAssignedPartPanel):
             return 
         show_more = self.data_list.GetTextValue(row, 0)
         if show_more == _("Show more"): 
-            url = "http://www.fdatasheets.com/api/chiplet/products/productDetail"
+            url = "http://www.eda.cn/api/chiplet/products/productDetail"
 
             response = self.api_request_interface( url, self.show_more_body )
             res_datas = response.json().get("result", {})
@@ -250,7 +250,6 @@ class AssignedPartView(UiAssignedPartPanel):
                 for data in res_data.get("attrInfoVO", "-"):
                     if not data:
                         return
-
                     if self.lang.count("中文"):
                         property = data.get("attrName", "-")
                         value = data.get("attrValue", "-")

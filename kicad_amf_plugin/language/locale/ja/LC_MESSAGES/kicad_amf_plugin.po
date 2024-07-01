@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-04 14:57+0800\n"
-"PO-Revision-Date: 2024-06-04 14:59+0800\n"
+"POT-Creation-Date: 2024-07-01 17:01+0800\n"
+"PO-Revision-Date: 2024-07-01 17:03+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ja\n"
@@ -41,33 +41,29 @@ msgid "The browser will be launched automatically while ready"
 msgstr "準備が整うとブラウザが自動的に起動します"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:314
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:571
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:565
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad\fabrication_data_generator_thread.py:67
 msgid "Sending order request"
 msgstr "注文リクエストの送信"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:463
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:493
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:562
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:460
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:490
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:559
 msgid "No available url for querying price in current region"
 msgstr "現在の地域の価格を照会するための使用可能なURLがありません"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:483
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:480
 msgid "Incorrect form parameter: "
 msgstr "フォームパラメータが正しくありません: "
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:511
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:528
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:508
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:525
 msgid "Return false"
 msgstr "偽戻る"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:544
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:541
 msgid "No available url for placing order in current region"
 msgstr "現在の地域で注文するための利用可能なURLがありません"
-
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\main_frame.py:565
-msgid "Place perform \"BOM Match\""
-msgstr "場所実行\"BOMマッチングです\""
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\bom_price_model.py:11
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\foot_print_list.py:88
@@ -250,40 +246,40 @@ msgstr "グローバル（英語）"
 msgid "Worldwide (Japanese)"
 msgstr "グローバル（日本語）"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:85
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:86
 msgid "Designator"
 msgstr "識別子です"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:92
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:93
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\foot_print_list.py:38
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:59
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:54
 msgid "Value"
 msgstr "値"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:99
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:100
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\foot_print_list.py:45
 msgid "Footprint"
 msgstr "パッケージレイアウトです"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:108
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:109
 msgid "Build Time"
 msgstr "納期"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:115
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:116
 msgid "Qty"
 msgstr "量"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:122
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:143
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:123
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:144
 msgid "Price"
 msgstr "価格"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:136
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:137
 msgid "Item"
 msgstr "アイテム"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:180
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:178
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\pcb_fabrication\process\process_info_view.py:47
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\pcb_fabrication\process\process_info_view.py:57
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\pcb_fabrication\process\process_info_view.py:86
@@ -291,7 +287,7 @@ msgstr "アイテム"
 msgid "Green"
 msgstr "緑"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:372
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\summary_panel.py:368
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\foot_print_list.py:52
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:22
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:19
@@ -299,78 +295,78 @@ msgstr "緑"
 msgid "MPN"
 msgstr "MPN"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:50
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:47
 msgid "BOM View"
 msgstr "BOM観"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:58
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:55
 msgid "BOM Match"
 msgstr "BOMマッチングです"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:66
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:63
 msgid "Cost Detail"
 msgstr "コスト詳細"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:85
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:82
 msgid "Order Summary"
 msgstr "注文の概要"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:94
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:91
 msgid "Tip"
 msgstr "チップ"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:96
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:93
 msgid ""
 "Factors that affect the price : Layer,  Min Trace/Space Outer, Min Pilled "
 "Hole "
 msgstr "価格に影響を与える要因:板層、最小線幅線距離、最小開口部です"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:101
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:98
 msgid "Min Trace/Space Outer(Recommand) : 6mil--10mil"
 msgstr "最小トレース/スペースアウター：6mil--10mil"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:108
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:105
 msgid "Board Type (Recommand) : Single Piece"
 msgstr "ボードタイプ( すいしょう推奨) : シングル"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:115
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:112
 msgid "Flnsihed Copper Weight (Best Price) : 1zo"
 msgstr "仕上げられた銅の重量(ベスト価格): 1zo"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:122
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:119
 msgid "Solder Mask Color (Best Price) : Green"
 msgstr "半田マスクの色(ベストプライス):緑"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:144
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:141
 msgid "Update Price"
 msgstr "価格を更新する"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:147
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\ui_summary_panel.py:144
 msgid "Add to Cart"
 msgstr "カートに追加"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\upload_file.py:112
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:423
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:463
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:464
 msgid "HTTP request timed out: {error}"
 msgstr "httpリクエストがタイムアウトしました: {error}"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\upload_file.py:114
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:306
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:305
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\part_selector.py:301
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:276
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:277
 msgid "HTTP error occurred: {error}"
 msgstr "エラーが発生したHTTP: {error}"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\upload_file.py:116
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:308
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:307
 msgid "Failed to parse JSON response: {error}"
 msgstr "jsonレスポンスの解析に失敗しました: {error}"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\upload_file.py:118
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:310
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:309
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\part_selector.py:303
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:278
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:279
 msgid "An unexpected HTTP error occurred: {error}"
 msgstr "予期しないhttpエラーが発生しました: {error}"
 
@@ -387,13 +383,13 @@ msgstr ""
 "もう一度リクエストしてみてください。\n"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\gui\summary\upload_file.py:124
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:932
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:280
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:316
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:938
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:279
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:315
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\part_selector.py:364
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\part_selector.py:409
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:249
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:284
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:250
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:285
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\pcb_fabrication\base\base_info_view.py:123
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\pcb_fabrication\base\base_info_view.py:130
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\pcb_fabrication\base\base_info_view.py:138
@@ -458,27 +454,13 @@ msgstr "すべて"
 msgid "Unmanaged"
 msgstr "未管理です"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:370
-msgid ""
-"The matching is complete. Check the matching result carefully. You can try "
-"to manually match the \"Unmatched\" part"
-msgstr ""
-"マッチング完了です。マッチング結果をよくチェックしてください。デバイスは手動"
-"で一致を試みることができます"
-
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:371
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:436
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:924
-msgid "Info"
-msgstr "ベース情報"
-
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:427
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:467
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:468
 msgid "An error occurred during the request: {error}"
 msgstr "要求中にエラーが発生しました: {error}"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:432
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:471
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:472
 msgid "non-OK HTTP response status: {status_code}"
 msgstr "非ok HTTPレスポンスのステータス:{status_code}"
 
@@ -486,34 +468,48 @@ msgstr "非ok HTTPレスポンスのステータス:{status_code}"
 msgid "No return data"
 msgstr "返品出来ないデータ"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:477
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\part_selector.py:216
-msgid "No corresponding data was matched"
-msgstr "対応するデータが一致しませんでした"
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:436
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:441
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:502
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:930
+msgid "Info"
+msgstr "ベース情報"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:838
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:441
+msgid "No corresponding data was matched. You can try to manually match."
+msgstr "対応するデータが一致しませんでした。手動で一致させることもできます。"
+
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:501
+msgid ""
+"The matching is complete. Check the matching result carefully. You can try "
+"to manually match the \"Unmatched\" part."
+msgstr ""
+"マッチング完了です。マッチング結果をよくチェックしてください。デバイスは手動"
+"で一致を試みることができます。"
+
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:844
 msgid "Copy MPN"
 msgstr "コピーMPN"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:842
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:848
 msgid "Paste MPN"
 msgstr "ペーストMPN"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:846
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:852
 msgid "Manual Match"
 msgstr "手動試合"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:850
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:856
 msgid "Remove Assigned MPN"
 msgstr "割り当てられたMPNを取り除く"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:923
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:929
 msgid "Export BOM file finished. file path : {temp_dir}"
 msgstr ""
 "BOMファイルのエクスポートが完了しました。ファイルお分かり頂けるでしょう："
 "{temp_dir}"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:931
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\mainwindow.py:937
 msgid ""
 "Failed to download part detail from the BOM API:\r\n"
 "{reasons}\r\n"
@@ -566,11 +562,11 @@ msgid "Side"
 msgstr "めんです"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_model.py:46
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:219
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:239
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:218
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:238
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_model.py:62
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:192
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:209
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:193
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:210
 msgid "Show more"
 msgstr "多くのことを見せる"
 
@@ -586,9 +582,9 @@ msgid "Description"
 msgstr "記述"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:27
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:87
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:88
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:24
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:84
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:85
 msgid "Datasheet"
 msgstr "マニュアルデータです"
 
@@ -598,22 +594,22 @@ msgid "Property"
 msgstr "財産"
 
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:172
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:147
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:148
 msgid "The width and height of new size must be greater than 0"
 msgstr "new sizeの幅と高さは0より大きくなければなりません"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:196
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:170
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:195
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:171
 msgid "returned data does not have expected clicked part"
 msgstr "返されるデータは、クリックされた部分が期待されていません"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:245
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:244
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\part_selector.py:261
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:215
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:216
 msgid "No corresponding sku data was matched"
 msgstr "対応するskuデータが一致しませんでした"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:279
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:278
 msgid ""
 "Failed to download part detail: {reason}\r\n"
 "We looked for a part named:\r\n"
@@ -623,15 +619,15 @@ msgstr ""
 "私たちは、という名前の部品を探しました:\n"
 "{ mpn }\n"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:304
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:303
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\part_selector.py:299
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:274
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:275
 msgid "HTTP request timed out"
 msgstr "httpリクエストがタイムアウトしました"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:315
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\nextpcb_tools_view\ui_assigned_part_panel\assigned_part_view.py:314
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\part_selector.py:408
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:283
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:284
 msgid ""
 "Failed to download part detail from the BOM API:\r\n"
 "{reasons}\r\n"
@@ -672,6 +668,10 @@ msgstr "導出します..."
 msgid "BOM Search Online"
 msgstr "BOM Search Online"
 
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\part_selector.py:216
+msgid "No corresponding data was matched"
+msgstr "対応するデータが一致しませんでした"
+
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\part_selector.py:227
 msgid "returned JSON data does not have expected 'part' attribute"
 msgstr "返されるjsonデータには期待される'part'属性がありません"
@@ -697,7 +697,7 @@ msgstr "助け"
 msgid "Select Part"
 msgstr "選択部"
 
-#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:248
+#: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\kicad_nextpcb_new\part_selector_view\ui_part_details_panel\part_details_view.py:249
 msgid ""
 "Failed to download part detail: {reason}\r\n"
 "We looked for a part named:\r\n"
@@ -1567,6 +1567,9 @@ msgstr "PCB基板をカスタマイズします"
 #: c:\Users\haf\Documents\KiCad\8.0\scripting\plugins\kicad-hqpcb-plugin\kicad_amf_plugin\smt_pcb_fabrication\smt_base\ui_smt_base_info.py:71
 msgid "BOM Material Purchase"
 msgstr "BOMマテリアルの調達です"
+
+#~ msgid "Place perform \"BOM Match\""
+#~ msgstr "場所実行\"BOMマッチングです\""
 
 #~ msgid "The final quotation is subject to review."
 #~ msgstr "最終見積書は審査の対象です。"
