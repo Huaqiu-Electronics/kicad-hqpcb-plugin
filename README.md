@@ -42,6 +42,7 @@ Everything is in sync, so no additional adjustments are required. Of course, you
 The following regions are supported:
 
 - China mainland [HQPCB](https://www.hqpcb.com/quote/)
+- For regions out of China, please use NextPCB plugin. The features are identical.
 
 ## Installation
 
@@ -68,3 +69,8 @@ you can use the HQ DFM Gerber Viewer to double check your manufacturing files, a
 HQ PCB specializes in reliable multilayer PCB manufacture and assembly, and like KiCad, our goal is to enable engineers to build tomorrow's electronics. HQ PCB is working with KiCad to provide smart tools to simplify the progression from design to physical product. With 3 major factories catering to prototyping, mass production and PCB assembly, and over 15 years of engineering expertise, HQ PCB believes our industrial experience will prove invaluable to KiCad users and the PCB design community.
 
 We are a [KiCad Platinum Sponsor](https://www.nextpcb.com/blog/kicad-nextpcb-platinum-sponsorship).
+
+## Credits
+This project contains copies or makes use of other works. These works and their respective license and terms are:
+
+[Bouni's kicad-jlcpcb-tools](https://github.com/Bouni/kicad-jlcpcb-tools) is under [MIT License](https://github.com/theacodes/kicanvas/blob/main/LICENSE.md)
