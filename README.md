@@ -55,7 +55,7 @@ Download the latest release ZIP file from **reserved for package** then within K
 NextPCB is the overseas version of HQ PCB, supporting orders in Japan, Europe and U.S.A.
 
 - Europe and the U.S.A : [NextPCB](https://www.nextpcb.com/pcb-quote)
-- Japan:[JP.NextPCB](https://jp.nextpcb.com/pcb-quote#/pcb-quote/)
+- Japan：[NextPCB](https://jp.nextpcb.com/pcb-quote#/pcb-quote/)
 
 ## HQ DFM
 
@@ -73,4 +73,4 @@ We are a [KiCad Platinum Sponsor](https://www.nextpcb.com/blog/kicad-nextpcb-pla
 ## Credits
 This project contains copies or makes use of other works. These works and their respective license and terms are:
 
-[Bouni's kicad-jlcpcb-tools](https://github.com/Bouni/kicad-jlcpcb-tools) is under [MIT License](https://github.com/theacodes/kicanvas/blob/main/LICENSE.md)
+- [Bouni's kicad-jlcpcb-tools](https://github.com/Bouni/kicad-jlcpcb-tools) is under [MIT License](https://github.com/theacodes/kicanvas/blob/main/LICENSE.md)
