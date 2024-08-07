@@ -9,7 +9,7 @@ HQ PCB 插件将帮助您：
 - 生成 Gerber 文件并将其与您的个人电路板设置一起上传到华秋
 
 上传完成后，您可以使用华秋 DFM 仔细检查您的制造文件，调整电路板参数，然后将其直接添加到您的华秋购物车。
-![华秋插件](https://github.com/Huaqiu-Electronics/kicad-hqpcb-plugin/blob/main/docs/bom_plugin.gif)
+![华秋插件](https://github.com/Huaqiu-Electronics/kicad-hqpcb-plugin/blob/main/docs/plugin.gif)
 
 ## 特色
 
