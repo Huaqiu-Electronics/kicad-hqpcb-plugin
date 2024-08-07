@@ -9,7 +9,7 @@ HQ PCB plugin will help you:
 - Generate Gerber files and upload them to HQ PCB along with your personal board settings
 
 Once the upload is complete, you can use the HQ DFM Gerber Viewer to double check your manufacturing files, adjust board parameters then add it to your HQ PCB cart directly.
-![NextPCB Plugin](https://github.com/SYSUeric66/kicad-amf-plugin/blob/8318782634b7f8237bd4a650c37e4031e876e3a0/docs/下单_BOM匹配插件.gif)
+![NextPCB Plugin](https://github.com/SYSUeric66/kicad-amf-plugin/blob/8318782634b7f8237bd4a650c37e4031e876e3a0/docs/amf.gif)
 
 ## Features
 
