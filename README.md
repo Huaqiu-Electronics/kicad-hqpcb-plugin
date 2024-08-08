@@ -13,7 +13,7 @@ HQ PCB plugin will help you:
 - Generate Gerber files and upload them to HQ PCB along with your personal board settings
 
 Once the upload is complete, you can use the HQ DFM Gerber Viewer to double check your manufacturing files, adjust board parameters then add it to your HQ PCB cart directly.
-![NextPCB Plugin](https://github.com/SYSUeric66/kicad-amf-plugin/blob/8318782634b7f8237bd4a650c37e4031e876e3a0/docs/amf.gif)
+![HQ PCB](https://github.com/Huaqiu-Electronics/kicad-hqpcb-plugin/blob/main/docs/hqpcb-screen.gif)
 
 ## Features
 
@@ -33,7 +33,7 @@ _Note: These parameters cannot be edited from the plugin as they are extracted d
 
 Click the "Update Price" button to get the latest pricing and lead time for your boards from HQ PCB.
 
-You can modify other parameters (E.g. solder mask color, board quantity, etc.) at any time and re-quote the price with a click of a button. All the options are synced with [NextPCB](https://www.nextpcb.com/).
+You can modify other parameters (E.g. solder mask color, board quantity, etc.) at any time and re-quote the price with a click of a button. All the options are synced with [HQ PCB](https://www.hqpcb.com/).
 
 _Note: Some combinations are restricted (E.g. white silkscreen cannot be chosen with white solder mask)._
 
