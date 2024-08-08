@@ -13,7 +13,11 @@ HQ PCB 插件将帮助您：
 - 生成 Gerber 文件并将其与您的个人电路板设置一起上传到华秋
 
 上传完成后，您可以使用华秋 DFM 仔细检查您的制造文件，调整电路板参数，然后将其直接添加到您的华秋购物车。
+<<<<<<< HEAD
 ![HQ PCB插件](https://github.com/Huaqiu-Electronics/kicad-hqpcb-plugin/blob/main/docs/hqpcb-screen.gif)
+=======
+![华秋插件](https://github.com/Huaqiu-Electronics/kicad-hqpcb-plugin/blob/main/docs/plugin.gif)
+>>>>>>> c684dde070913997e43b8c6c0d53b0af5b81e59d
 
 ## 特色
 
@@ -37,7 +41,7 @@ _注意：这些参数无法从插件中编辑，因为它们是直接从您的 
 
 _注意：某些组合受到限制（例如白色丝印不能与白色阻焊层一起选择）。_
 
-###一键 Gerber 生成并同步到订单页面
+### 一键 Gerber 生成并同步到订单页面
 
 单击“下订单”按钮生成 Gerber 和 NC 钻孔文件，并将其与您的电路板参数一起直接上传到华秋的订单页面。
 
