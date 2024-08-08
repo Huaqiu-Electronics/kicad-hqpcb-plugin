@@ -69,7 +69,7 @@ class UploadFile:
             return True
         else:
             return False
-        
+
     def upload_bomfile(self):
         if self.smt_order_region == 1:
             form = { 'type': 'pcbabomfile',

@@ -3,6 +3,7 @@ from kicad_amf_plugin.order.supported_region import SupportedRegion
 from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
 from kicad_amf_plugin.settings.single_plugin import SINGLE_PLUGIN
 from kicad_amf_plugin.utils.form_panel_base import FormKind, FormPanelBase
+from kicad_amf_plugin.utils.observer_class import Subject
 from .base_info_model import BaseInfoModel
 from kicad_amf_plugin.gui.event.pcb_fabrication_evt_list import (
     LayerCountChange, boardCount,EVT_BOARD_COUNT )
@@ -102,12 +103,12 @@ AVAILABLE_QUANTITY = [
     10000,
 ]
  
-class SmtBaseInfoView(UiSmtBaseInfo, FormPanelBase):
+class SmtBaseInfoView(UiSmtBaseInfo, FormPanelBase, Subject,):
     def __init__(self, parent, board_manager: BoardManager):
         super().__init__(parent)
+        Subject.__init__(self)
         self.board_manager = board_manager
-        
-        self.combo_number.Bind(wx.EVT_TEXT, self.on_combo_number_change)
+        self.combo_number.Bind(wx.EVT_TEXT, self.subject_update_data)
 
 
     @property
@@ -117,8 +118,6 @@ class SmtBaseInfoView(UiSmtBaseInfo, FormPanelBase):
 
     def get_pcb_length(self):
         """Default is mm
-
-
         Returns:
             _type_: float
         """
@@ -127,8 +126,6 @@ class SmtBaseInfoView(UiSmtBaseInfo, FormPanelBase):
 
     def get_pcb_width(self):
         """Default is mm
-
-
         Returns:
             _type_: float
         """
@@ -196,9 +193,10 @@ class SmtBaseInfoView(UiSmtBaseInfo, FormPanelBase):
         self.edit_size_x.SetValue(str(boardWidth))
         self.edit_size_y.SetValue(str(boardHeight))
 
-    def on_combo_number_change(self, evt):
+    def subject_update_data(self,evt):
+        # notice observer
         new_number = self.combo_number.GetValue()
-        pub.sendMessage("combo_number", param1=new_number)
+        self.notify_observers(int(new_number) )
 
 
     def on_region_changed(self):

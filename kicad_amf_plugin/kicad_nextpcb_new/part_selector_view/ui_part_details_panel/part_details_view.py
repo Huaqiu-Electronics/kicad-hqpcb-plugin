@@ -90,7 +90,7 @@ class PartDetailsView(UiPartDetailsPanel):
                     query_pos = self.pdfurl.rfind('?')
                     if query_pos != -1:
                         self.pdfurl = self.pdfurl[:query_pos]
-                # 确保 URL 以 'http' 开头
+
                 if not self.pdfurl.startswith('http'):
                     self.pdfurl = 'http:' + self.pdfurl
                 webbrowser.open(self.pdfurl)
@@ -116,7 +116,7 @@ class PartDetailsView(UiPartDetailsPanel):
             url = "https:" + url
         self.logger.debug(f"image_count: {url}")
         header = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.9999.999 Safari/537.36"
+             "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0"    
         }
         
         try:
@@ -189,7 +189,27 @@ class PartDetailsView(UiPartDetailsPanel):
                 self.PartDetailsModel.AddRow([v, str(val)])
             else:
                 self.PartDetailsModel.AddRow( [v, "-"] )
-        
+    
+        prices_stair = self.clicked_part.get("price", [])
+        if prices_stair == "-":
+            self.PartDetailsModel.AddRow([_("Price"), "-"])
+        else:
+            # Populate price_echelon based on prices_stair data
+            price_echelon = {}
+            for index, price_range in enumerate(prices_stair):
+                break_min = price_range.get("breakMin")
+                break_max = price_range.get("breakMax")
+                if break_max is 0:
+                    key = f">{break_min} " + _("Piece")+"(￥)"
+                else:
+                    key = f"{break_min}-{break_max} " + _("Piece")+"(￥)"
+
+                val = str( price_range["rmb"] )
+                price_echelon[key] = "-" if val == "0.0" else val
+            # Populate self.data_list with the key-value pairs
+            for key, value in price_echelon.items():
+                self.PartDetailsModel.AddRow([key, value ])
+
         self.PartDetailsModel.AddRow( [_("Show more"), ""] )
         self.data_list.Refresh()
 
@@ -208,14 +228,14 @@ class PartDetailsView(UiPartDetailsPanel):
             return 
         show_more = self.data_list.GetTextValue(row, 0)
         if show_more == _("Show more"): 
-            url = "http://www.eda.cn/api/chiplet/products/productDetail"
+            url = "https://www.eda.cn/api/chiplet/products/productDetail"
 
             response = self.api_request_interface( url, self.show_more_body )
             res_datas = response.json().get("result", {})
             if not response.json():
                 wx.MessageBox( _("No corresponding sku data was matched") )
             
-            self.PartDetailsModel.DeleteRows( [7] )
+            self.PartDetailsModel.DeleteRows( [row] )
             extraction_datas =  res_datas.get("groupAttrInfoVOList", {})
             for res_data in extraction_datas:
                 for data in res_data.get("attrInfoVO", "-"):

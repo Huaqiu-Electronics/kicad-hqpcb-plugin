@@ -46,6 +46,10 @@ class BaseApp(wx.EvtHandler):
     def startup_dialog(self):
         from kicad_amf_plugin.gui.main_frame import MainFrame
         from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
+        from kicad_amf_plugin.kicad_nextpcb_new.mainwindow import NextPCBTools
+
+        # dlg = NextPCBTools(None, self.board_manager)
+        # dlg.ShowModal()
         
         self.progress_dialog.Update( 60 )
         self.main_wind = MainFrame(
@@ -55,4 +59,7 @@ class BaseApp(wx.EvtHandler):
         self.main_wind.Show()
 
         self.progress_dialog.Update( 100 )
+        self.progress_dialog.Destroy()
+
+    def __del__(self):
         self.progress_dialog.Destroy()

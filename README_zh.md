@@ -1,5 +1,9 @@
 # HQ PCB
 
+<p>
+    中文 |<a href="README.md">English<a/>
+</p>
+
 ### 在 KiCad 一键询价和下单
 
 HQ PCB 插件将帮助您：
@@ -44,8 +48,8 @@ _注意：某些组合受到限制（例如白色丝印不能与白色阻焊层�
 
 ## 安装
 
-从 **为包保留** 下载最新版本的 ZIP 文件，然后在 KiCad 中，从主窗口打开“插件和内容管理器”。最后，使用窗口底部的“从文件安装...”来安装 ZIP 文件。
-![图片](https://github.com/HubertHQH/HQ-NextPCB/assets/125419974/97ef0ca3-380e-4f6f-a14b-6960271118fc)
+从KiCad主窗口打开“扩展内容管理器”。然后，“KiCad official repository”中找到“HQ PCB”,进行安装安装。
+![图片](https://github.com/Huaqiu-Electronics/kicad-hqpcb-plugin/blob/main/kicad_amf_plugin/icon/image.png)
 
 
 ## NextPCB
@@ -66,3 +70,8 @@ HQ DFM 一键分析开短路、断头线、线距线宽等20余项设计风险�
 华秋专注于可靠的多层 PCB 制造和组装，与 KiCad 一样，我们的目标是帮助工程师构建未来的电子产品。 华秋 PCB 正在与 KiCad 合作提供智能工具来简化从设计到物理产品的流程。华秋拥有 3 家主要从事原型设计、批量生产和 PCB 组装的工厂，并拥有超过 15 年的工程专业知识，相信我们的行业经验对于 KiCad 用户和 PCB 设计社区来说将是无价的。
 
 我们是 [KiCad 白金赞助商](https://www.nextpcb.com/blog/kicad-nextpcb-platinum-sponsorship)。
+
+## Credits
+
+该项目包含副本或使用其他作品。这些作品及其各自的许可和条款是：
+[kicad-jlcpcb-tools](https://github.com/Bouni/kicad-jlcpcb-tools.git)  基于[MIT License](https://github.com/Bouni/kicad-jlcpcb-tools/blob/main/LICENSE)

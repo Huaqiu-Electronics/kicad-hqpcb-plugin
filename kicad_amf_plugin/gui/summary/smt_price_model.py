@@ -65,3 +65,4 @@ class SmtPriceModel(PriceModelBase):
 
     def set_visibility(self, visibility):
         self.visible = visibility
+

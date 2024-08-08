@@ -26,6 +26,8 @@ def load_board_manager():
         if board:
             return BoardManager(board)
     except Exception as e:
-        for fp in   "C:\\Program Files\\demos\\video\\video.kicad_pcb",'C:\\Program Files\\demos\\flat_hierarchy\\flat_hierarchy.kicad_pcb',:
+        for fp in   ('C:\\Program Files\\demos\\flat_hierarchy\\flat_hierarchy.kicad_pcb',
+                     'C:\\Program Files\\demos\\amulet_controller\\amulet_controller.kicad_pcb',
+                     "C:\\Program Files\\demos\\video\\video.kicad_pcb",):
             if os.path.exists(fp):
                 return BoardManager(LoadBoard(fp))

@@ -29,45 +29,30 @@ class PartDetailsModel(dv.DataViewIndexListModel):
     # This method is called to provide the data object for a
     # particular row,col
     def GetValueByRow(self, row, col):
-        # # 检查行索引是否在有效范围内
-        # if row < 0 or row >= self.GetCount():
-        #     print(f"Error: Row index {row} is out of range. It must be between 0 and {self.GetCount() - 1}.")
-        #     return None
         
-        # # 检查列索引是否在有效范围内
-        # if col < 0 or col >= len(self.data[row]):
-        #     print(f"Error: Column index {col} is out of range for row {row}. It must be between 0 and {len(self.data[row]) - 1}.")
-        #     return None
-        # return self.data[row][col]
-        
-        # 检查列索引是否在有效范围内
         if col < 0 or col >= MAX_COLS:
             return None 
         try:
-            # 使用循环来获取数据，而不是多个 elif 语句
             return self.data[row][col]
         
         except IndexError as e:
-            # 如果 row 索引超出了范围，捕获错误
             print(f"Error: Row index {row} is out of range. {e}")
             return None
         except Exception as e:
-            # 捕获其他可能的错误
             print(f"An unexpected error occurred: {e}")
             return None
     
     
     def GetAttrByRow(self, row, col, attr):
-        ##self.log.write('GetAttrByRow: (%d, %d)' % (row, col))
-        if col == 0 and row == 7 and self.data[row][col] == _("Show more"):
-            attr.SetColour('blue')  # 设置单元格颜色
+        # print('GetAttrByRow: (%d, %d)' % (row, col))
+        if col == 0 and self.data[row][col] == _("Show more"):
+            attr.SetColour('blue')  
             return True
 
         return False
 
     # This method is called when the user edits a data item in the view.
     def SetValueByRow(self, value, row, col):
-        # 根据列的索引更新数据
         if 0 <= col < len(self.data[row]):
             self.data[row][col] = value
             self.RowChanged(row)
@@ -80,8 +65,8 @@ class PartDetailsModel(dv.DataViewIndexListModel):
 
     # Specify the data type for a column
     def GetColumnType(self, col):
-        return "string"  # 所有列的数据类型都是字符串
-
+        return "string" 
+    
     # Report the number of rows in the model
     def GetCount(self):
         #self.log.write('GetCount')
@@ -98,19 +83,16 @@ class PartDetailsModel(dv.DataViewIndexListModel):
         row1 = self.GetRow(item1)
         row2 = self.GetRow(item2)
         if col == 0:
-            # 对键进行排序
             return (self.data[row1][0] > self.data[row2][0]) - (self.data[row1][0] < self.data[row2][0]) if ascending else -1 * ((self.data[row1][0] > self.data[row2][0]) - (self.data[row1][0] < self.data[row2][0]))
         else:
             return 0
        
     def DeleteRows(self, rows):
-        # 删除行的实现
         rows = list(rows)
         # use reverse order so the indexes don't change as we remove items
         rows.sort(reverse=True)
 
         for row in rows:
-            # 检查行索引是否在有效范围内
             if row < 0 or row >= self.GetCount():
                 print(f"Delete Error: Row index {row} is out of range. It must be between 0 and {self.GetCount() - 1}.")
                 continue
@@ -119,7 +101,6 @@ class PartDetailsModel(dv.DataViewIndexListModel):
             self.RowDeleted(row)
 
         for row in rows:
-            # 删除数据结构中的行
             try:
                 del self.data[row]
             except IndexError:
@@ -127,7 +108,6 @@ class PartDetailsModel(dv.DataViewIndexListModel):
                 continue
 
     def DeleteAll( self ):
-        # 删除行的实现
         total_rows = self.GetCount()
         self.data = []
         for row in range(total_rows - 1, -1, -1):
@@ -141,7 +121,5 @@ class PartDetailsModel(dv.DataViewIndexListModel):
 
     def AddRows(self, values):
         for row_index, new_value in enumerate(values):
-                # 添加新行到数据结构
                 self.data.append(new_value)
-                # 通知模型新行已被添加
                 self.RowAppended()

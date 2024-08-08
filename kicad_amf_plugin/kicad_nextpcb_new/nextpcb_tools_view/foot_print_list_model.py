@@ -16,29 +16,26 @@ import wx.dataview as dv
 #
 # For this example our data is stored in a simple list of lists.  In
 # real life you can use whatever you want or need to hold your data.
-# 定义列的最大数量
-MAX_COLS = 7
+MAX_COLS = 14
 
-class PartListModel(dv.DataViewIndexListModel):
+class FootprintListModel(dv.DataViewIndexListModel):
     def __init__(self, data ):
-        dv.DataViewIndexListModel.__init__(self, len(data))
-        self.data = data
-
-        # self.log = log
+        # dv.DataViewIndexListModel.__init__(self, len(data))
+            # 尝试初始化基类
+            dv.DataViewIndexListModel.__init__(self, len(data))
+            # super(FootprintListModel, self).__init__(len(data))
+            self.data = data
 
     # This method is called to provide the data object for a
     # particular row,col
     def GetValueByRow(self, row, col):
 
-        # 检查列索引是否在有效范围内
         if col < 0 or col >= MAX_COLS:
             return None 
-        # 使用循环来获取数据，而不是多个 elif 语句
         return self.data[row][col]
-
+    
     # This method is called when the user edits a data item in the view.
     def SetValueByRow(self, value, row, col):
-        # 根据列的索引更新数据
         if 0 <= col < len(self.data[row]):
             self.data[row][col] = value
             return True
@@ -50,7 +47,7 @@ class PartListModel(dv.DataViewIndexListModel):
 
     # Specify the data type for a column
     def GetColumnType(self, col):
-        return "string"  # 所有列的数据类型都是字符串
+        return "string"  
 
     # Report the number of rows in the model
     def GetCount(self):
@@ -68,13 +65,11 @@ class PartListModel(dv.DataViewIndexListModel):
         row1 = self.GetRow(item1)
         row2 = self.GetRow(item2)
         if col == 0:
-            # 对键进行排序
             return (self.data[row1][0] > self.data[row2][0]) - (self.data[row1][0] < self.data[row2][0]) if ascending else -1 * ((self.data[row1][0] > self.data[row2][0]) - (self.data[row1][0] < self.data[row2][0]))
         else:
             return 0
         
     def DeleteRows(self, rows):
-        # 删除行的实现
         for row in sorted(rows, reverse=True):
             del self.data[row]
         self.RowDeleted(row)
@@ -85,4 +80,4 @@ class PartListModel(dv.DataViewIndexListModel):
         self.data.append(value)
         # notify views
         self.RowAppended()
-        
+

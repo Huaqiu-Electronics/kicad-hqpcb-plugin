@@ -62,15 +62,17 @@ logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 from kicad_amf_plugin.kicad.board_manager import BoardManager
 import time
+from kicad_amf_plugin.kicad_nextpcb_new.nextpcb_tools_view.foot_print_list_model import FootprintListModel
 
 DB_MPN = 3
 DB_MANU = 4
 DB_CATE = 5
 DB_SKU = 6
-DB_QUANT = 7
-DB_BOM = 8
-DB_POS = 9
-DB_SIDE = 10
+DB_PRICE = 7
+DB_QUANT = 8
+DB_BOM = 9
+DB_POS = 10
+DB_SIDE = 11
 
 
 class NextPCBTools(wx.Dialog):
@@ -195,7 +197,7 @@ class NextPCBTools(wx.Dialog):
         grid_sizer1 = wx.GridSizer(0, 1, 0, 0)
         self.first_panel.SetSizer(grid_sizer1)
         grid_sizer1.Fit(self.first_panel)
-        self.fplist_all = FootPrintList(self.first_panel, self)
+        self.fplist_all = FootPrintList( self.first_panel, self )
         grid_sizer1.Add(self.fplist_all, 20, wx.ALL | wx.EXPAND, 5)
         self.selected_page_index = 0
 
@@ -242,7 +244,6 @@ class NextPCBTools(wx.Dialog):
         self.Centre(wx.BOTH)
 
 
-
         self.bom = [
             {
                 "reference": "",
@@ -252,13 +253,15 @@ class NextPCBTools(wx.Dialog):
                 "manufacturer": "",
                 "Category": "",
                 "SKU": "",
+                "price": "",
                 "quantity": "",
+                
             }
         ]
-        
-        self.last_call_time = 0  # 记录上一次事件触发的时间
-        self.throttle_interval = 0.4  # 设置时间间隔，单位为秒
-        
+
+        self.last_call_time = 0  # record last time targger 
+        self.throttle_interval = 0.4  # set interval
+
         self.Bind(wx.EVT_BUTTON, self.export_bom, self.match_part_view.export_csv)
         
         self.Bind(wx.EVT_COMBOBOX, self.group_parts, self.cb_group_strategy)
@@ -286,7 +289,7 @@ class NextPCBTools(wx.Dialog):
         self.notebook.Bind(
             wx.dataview.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.toggle_update_to_db
         )
-        
+
 
         # ---------------------------------------------------------------------
         # ------------------------ Custom Events ------------------------------
@@ -365,12 +368,6 @@ class NextPCBTools(wx.Dialog):
             
             self.bom_match_api_request (unmanaged_parts )
 
-            # wx.CallAfter( self.populate_footprint_list )
-            # wx.MessageBox(
-            #     _('The matching is complete. Check the matching result carefully. You can try to manually match the "Unmatched" part'),
-            #     _("Info"),
-            #     style=wx.ICON_INFORMATION,
-            # )
         finally:
             wx.EndBusyCursor()
             self.upper_toolbar.EnableTool(ID_AUTO_MATCH, True)
@@ -393,7 +390,6 @@ class NextPCBTools(wx.Dialog):
         match_lists = []
         request_bodys = []
         for index, batch_part in enumerate(unmanaged_parts):
-            # 在每个子数组的末尾添加该子数组的索引值
             batch_part.append( str(index) )
             value = batch_part[1]
             footprint = batch_part[2]
@@ -414,24 +410,25 @@ class NextPCBTools(wx.Dialog):
         
         # body =[{'line_no': '1', 'mpn': '', 'manufacturer': '', 'package': 'LED_D3.0mm', 'reference': '', 'quantity': 0, 'sku': '', 'comment': 'LED'}, {'line_no': '2', 'mpn': '', 'manufacturer': '', 'package': 'DSUB-9_Female_Horizontal_P2.77x2.84mm_EdgePinOffset14.56mm_Housed_MountingHolesOffset15.98mm', 'reference': '', 'quantity': 0, 'sku': '', 'comment': 'DB9FEM'}, {'line_no': '3', 'mpn': '', 'manufacturer': '', 'package': 'LRTDK', 'reference': '', 'quantity': 0, 'sku': '', 'comment': '470ns'}, {'line_no': '4', 'mpn': '', 'manufacturer': '', 'package': 'subclick', 'reference': '', 'quantity': 0, 'sku': '', 'comment': 'BNC'}, {'line_no': '5', 'mpn': '', 'manufacturer': '', 'package': 'PinHeader_1x02_P2.54mm_Vertical', 'reference': '', 'quantity': 0, 'sku': '', 'comment': 'CONN_2'}, {'line_no': '6', 'mpn': '', 'manufacturer': '', 'package': 'PinHeader_1x05_P2.54mm_Vertical', 'reference': '', 'quantity': 0, 'sku': '', 'comment': 'CONN_5'}]
         body = request_bodys
-        url = "http://www.eda.cn/api/chiplet/kicad/bomComponentsMatch"
+        url = "https://www.eda.cn/api/chiplet/kicad/bomComponentsMatch"
         
         try:
-            response = requests.post(url, headers=headers, json=body, timeout=5)
-        except requests.exceptions.Timeout:
+            response = requests.post(url, headers=headers, json=body, timeout = 30)
+        except requests.exceptions.Timeout as e:
             self.report_part_search_error(
-                self.report_part_search_error(_("HTTP request timed out: {error}").format( error=e))
-            )
+                _("HTTP request timed out: {error}").format( error=e)
+                )
+            return
         except requests.exceptions.RequestException as e:
             self.report_part_search_error(
                 _("An error occurred during the request: {error}").format(error=e)
             )
-        
+            return
         if response.status_code != 200:
             self.report_part_search_error(
                 _("non-OK HTTP response status: {status_code}").format(status_code = response.status_code) 
             )
-
+            return
         if not response.json():
             wx.MessageBox( _("No return data"), _("Info"), style=wx.ICON_ERROR )
             return
@@ -440,7 +437,7 @@ class NextPCBTools(wx.Dialog):
         if not res_datas:
             wx.MessageBox( _("No corresponding data was matched. You can try to manually match."), _("Info") )
             return
-        
+
         request_bodys = []
         for res_data in res_datas:
             for batch_part in unmanaged_parts:
@@ -455,44 +452,55 @@ class NextPCBTools(wx.Dialog):
 
 
         body = request_bodys
-        url = "http://www.eda.cn/api/chiplet/kicad/searchSupplyChain"
-        
+        url = "https://www.eda.cn/api/chiplet/kicad/searchSupplyChain"
+
         try:
-            response = requests.post(url, headers=headers, json=body, timeout=5)
-        except requests.exceptions.Timeout:
+            response = requests.post(url, headers=headers, json=body, timeout = 30 )
+        except requests.exceptions.Timeout as e:
             self.report_part_search_error(
                 _("HTTP request timed out: {error}").format( error=e)
             )
+            return
         except requests.exceptions.RequestException as e:
             self.report_part_search_error(
                 _("An error occurred during the request: {error}").format(error=e)
             )
+            return
         if response.status_code != 200:
             self.report_part_search_error(
                 _("non-OK HTTP response status: {status_code}").format(status_code = response.status_code) 
             )
-            
+            return
 
         res_datas = response.json().get("result", {})
-        # if not res_datas:
-        #     wx.MessageBox( _("No corresponding data was matched") )
-            
+
         for batch_part in unmanaged_parts:
-            match_list = [None, None, None, None, None, None, None]
+            match_list = [None, None, None, None, None, None, None, None]
             if len(batch_part) >= 5:
                 sku = "-"
+                price = "-"
+                prices_stair = "-"
                 for data in res_datas:
                     if data.get("mpn") ==  batch_part[4].get("mpn") and data.get("vendor") == "hqself":
                         sku = data.get("sku", "-") 
+                        prices_stair = data.get("price", "-") 
+                        if prices_stair != "-":
+                            for index, price_range in enumerate(prices_stair):
+                                price = str(price_range["rmb"])
+                                price = "-" if price == "0.0" else price
+                                break
+
                         break 
                 batch_part[4]["sku"] = sku
+                batch_part[4]["price"] = prices_stair
 
                 match_list[0] = batch_part[0]
                 match_list[1] = batch_part[4].get("mpn", "-")
                 match_list[2] = batch_part[4].get("manufacturer", "-")
                 match_list[3] = batch_part[4].get("category", "-")
                 match_list[4] = batch_part[4].get("sku", "-")
-                match_list[5] = batch_part[4]
+                match_list[5] = price
+                match_list[6] = batch_part[4]
                 match_lists.append(match_list)
 
         self.batch_update_db_match(match_lists)
@@ -512,24 +520,24 @@ class NextPCBTools(wx.Dialog):
 
     def download_and_cache_image(self, matched_lists):
         for matched_list in matched_lists :
-            image_url  =  matched_list[5].get("image", {})
+            image_url  =  matched_list[6].get("image", {})
             if image_url:
                 if not image_url.startswith("http:") and not image_url.startswith("https:"):
                     image_url = "https:" + image_url
                 self.logger.debug(f"image_count: {image_url}")
                 header = {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.9999.999 Safari/537.36"
+                    "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0"    
                 }
                 content = None
                 try:
-                    response = requests.get(image_url, headers=header, timeout=10)
+                    response = requests.get(image_url, headers=header, timeout= 30 )
                     response.raise_for_status()  # Raises an HTTPError for bad responses
                     content = response.content
                 except requests.exceptions.RequestException as e:
                     self.logger.error(f"Error downloading image: {e}. attempts: {image_url}")
                 
                 if content:
-                    matched_list[6] = content
+                    matched_list[7] = content
         self.store.set_batch_cache_image(matched_lists)
 
 
@@ -547,7 +555,7 @@ class NextPCBTools(wx.Dialog):
         """Assign a selected nextPCB number to parts"""
         if len(e.references) == 1 and isinstance(e.references[0], str):
             detail = e.selected_part_detail
-            match_list =[e.mpn, e.manufacturer, e.category, e.sku, e.selected_part_detail]
+            match_list =[e.mpn, e.manufacturer, e.category, e.sku, e.price, e.selected_part_detail]
             self.store.set_bom_match_ref( e.references[0],match_list )
         self.populate_footprint_list()
 
@@ -564,7 +572,6 @@ class NextPCBTools(wx.Dialog):
         """Populate/Refresh list of footprints."""
         if not self.store:
             self.init_store()
-        self.footprint_list.DeleteAllItems()
         toogles_dict = {
             0: False,
             1: True,
@@ -583,7 +590,8 @@ class NextPCBTools(wx.Dialog):
                 part[DB_MANU] = (part[DB_MANU].split(","))[0]
                 part[DB_CATE] = (part[DB_CATE].split(","))[0]
                 part[DB_SKU] = part[DB_SKU]
-                part[DB_QUANT] = part[DB_QUANT]
+                part[DB_PRICE] = part[DB_PRICE]
+                
                 part[DB_BOM] = 0 if "0" in part[DB_BOM].split(",") else 1
                 part[DB_POS] = 0 if "0" in part[DB_POS].split(",") else 1
                 part[DB_SIDE] = (
@@ -591,20 +599,27 @@ class NextPCBTools(wx.Dialog):
                     if ("top" in part[DB_SIDE]) and ("bottom" in part[DB_SIDE])
                     else (part[DB_SIDE].split(","))[0]
                 )
+            part[DB_QUANT] = str( part[DB_QUANT] )
             part[DB_BOM] = toogles_dict.get(part[DB_BOM], toogles_dict.get(1))
             part[DB_POS] = toogles_dict.get(part[DB_POS], toogles_dict.get(1))
             if "," not in part[0]:
                 side = "top" if fp.GetLayer() == 0 else "bottom"
                 self.store.set_part_side(part[0], side)
                 part[DB_SIDE] = side
-            part.insert(11, "")
+            part.insert(12, "")
             parts.append(part)
+        new_parts = []
         for idx, part in enumerate(parts, start=1):
             part.insert(0, f"{idx}")
-            part[8] = str(part[8])
+
             if self.selected_page_index == 1 and part[4]:
                 continue
-            self.footprint_list.AppendItem(part)
+            else:
+                new_parts.append(part)
+        self.FootprintListModel = FootprintListModel( new_parts )
+        self.footprint_list.AssociateModel(self.FootprintListModel)
+        self.Layout()  
+
 
     def on_sort_footprint_list(self, e):
         """Set order_by to the clicked column and trigger list refresh."""
@@ -663,7 +678,7 @@ class NextPCBTools(wx.Dialog):
             mpn = self.footprint_list.GetTextValue(row, 4)
             if mpn:
                 if refs:
-                    match_list =['', '', '', '', '']
+                    match_list =['', '', '', '', '', '']
                     self.store.set_bom_match_ref( refs,match_list )
                     self.store.set_bom( refs, True )
                     self.store.set_pos( refs, True )
@@ -691,10 +706,6 @@ class NextPCBTools(wx.Dialog):
 
 
     def get_part_details_timer_event(self, event):
-        current_time = time.time()
-        if current_time - self.last_call_time < self.throttle_interval:
-            return  # 如果时间间隔小于设定的阈值，则不处理事件
-        self.last_call_time = current_time
         self.get_part_details()
 
     def get_part_details(self):
@@ -774,7 +785,6 @@ class NextPCBTools(wx.Dialog):
             wx.BeginBusyCursor()
             PartSelectorDialog(self, selection).ShowModal()
         except Exception as e:
-            # 处理异常，例如记录日志或向用户显示错误消息
             self.logger.error("An exception occurred: %s", e)
         finally:
             wx.EndBusyCursor()
@@ -791,6 +801,7 @@ class NextPCBTools(wx.Dialog):
         part += str(self.footprint_list.GetTextValue(row, 5)) + "\n"
         part += str(self.footprint_list.GetTextValue(row, 6)) + "\n"
         part += str(self.footprint_list.GetTextValue(row, 7)) + "\n"
+        part += str(self.footprint_list.GetTextValue(row, 8)) + "\n"
         ref = self.footprint_list.GetTextValue(row, 1).split(",")[0]
         detail = self.store.get_part_detail(ref)[0]
         part += str( detail )
@@ -913,33 +924,39 @@ class NextPCBTools(wx.Dialog):
         temp_dir = os.path.join(self.file_path, "nextpcb")
         bomFileName = "BOM_" + schematic_name + ".csv"
         if len(self.bom) > 0:
-            with open(
-                (os.path.join(temp_dir, bomFileName)),
-                "w",
-                newline="",
-                encoding="utf-8-sig",
-            ) as outfile:
-                csv_writer = csv.writer(outfile)
-                # writing headers of CSV file
-                csv_writer.writerow(self.bom[0].keys())
-                # Output all of the component information
-                for component in self.parts:
-                    csv_writer.writerow(component)
-            wx.MessageBox(
-                _("Export BOM file finished. file path : {temp_dir}").format(temp_dir=temp_dir),
-                _("Info"),
-                style=wx.ICON_INFORMATION,
-            )
-            
-            
+            try:
+                with open(
+                    (os.path.join(temp_dir, bomFileName)),
+                    "w",
+                    newline="",
+                    encoding="utf-8-sig",
+                ) as outfile:
+                    csv_writer = csv.writer(outfile)
+                    # writing headers of CSV file
+                    csv_writer.writerow(self.bom[0].keys())
+                    # Output all of the component information
+                    for component in self.parts:
+                        csv_writer.writerow(component)
+                wx.MessageBox(
+                    _("Export BOM file finished. file path : {temp_dir}").format(temp_dir=temp_dir),
+                    _("Info"),
+                    style=wx.ICON_INFORMATION,
+                )
+            except PermissionError as e:
+                wx.MessageBox(
+                    _("Export BOM file error: {e}").format(e=e),
+                    _("Error"),
+                    style=wx.ICON_ERROR,
+                )
+
+
     def report_part_search_error(self, reason):
         wx.MessageBox(
             _("Failed to download part detail from the BOM API:\r\n{reasons}\r\nPlease try again later.\r\n").format(reasons=reason),
             _("Error"),
             style=wx.ICON_ERROR,
         )
-        wx.CallAfter(wx.EndBusyCursor)
-        return
+
 
     def __del__(self):
         pass

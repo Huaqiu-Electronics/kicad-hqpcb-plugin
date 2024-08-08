@@ -1,5 +1,9 @@
 # HQ PCB
 
+<p>
+    English |<a href="README_zh.md">中文<a/>
+</p>
+
 ### Get PCB quotations within KiCad and order with a single click
 
 HQ PCB plugin will help you:
@@ -45,8 +49,8 @@ The following regions are supported:
 
 ## Installation
 
-Download the latest release ZIP file from **reserved for package** then within KiCad, open the "Plugin and Content Manager" from the main window. Finally, install the ZIP file using "Install from File..." at the bottom of the window.
-![image](https://github.com/HubertHQH/HQ-NextPCB/assets/125419974/97ef0ca3-380e-4f6f-a14b-6960271118fc)
+- Open the "Plugin and Content Manager" from the KiCad main window. Next, find "HQ PCB" from "KiCad official repository" and click install.
+![Image](https://github.com/Huaqiu-Electronics/kicad-hqpcb-plugin/blob/main/kicad_amf_plugin/icon/image.png)
 
 
 ## NextPCB
@@ -68,3 +72,9 @@ you can use the HQ DFM Gerber Viewer to double check your manufacturing files, a
 HQ PCB specializes in reliable multilayer PCB manufacture and assembly, and like KiCad, our goal is to enable engineers to build tomorrow's electronics. HQ PCB is working with KiCad to provide smart tools to simplify the progression from design to physical product. With 3 major factories catering to prototyping, mass production and PCB assembly, and over 15 years of engineering expertise, HQ PCB believes our industrial experience will prove invaluable to KiCad users and the PCB design community.
 
 We are a [KiCad Platinum Sponsor](https://www.nextpcb.com/blog/kicad-nextpcb-platinum-sponsorship).
+
+
+## Credits
+
+This project contains copies or makes use of other works. These work and their respective license and terms：
+- [kicad-jlcpcb-tools](https://github.com/Bouni/kicad-jlcpcb-tools.git)  is under the[MIT License](https://github.com/Bouni/kicad-jlcpcb-tools/blob/main/LICENSE)

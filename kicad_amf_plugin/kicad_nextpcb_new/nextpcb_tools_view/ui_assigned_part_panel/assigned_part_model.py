@@ -43,7 +43,7 @@ class PartDetailsModel(dv.DataViewIndexListModel):
     
     def GetAttrByRow(self, row, col, attr):
         ##self.log.write('GetAttrByRow: (%d, %d)' % (row, col))
-        if col == 0 and row == 7 and self.data[row][col] == _("Show more"):
+        if col == 0 and self.data[row][col] == _("Show more"):
             attr.SetColour('blue')  # 设置单元格颜色
             return True
 
@@ -88,7 +88,6 @@ class PartDetailsModel(dv.DataViewIndexListModel):
             return 0
        
     def DeleteRows(self ,rows):
-        # 删除行的实现
         rows = list(rows)
         # use reverse order so the indexes don't change as we remove items
         rows.sort(reverse=True)

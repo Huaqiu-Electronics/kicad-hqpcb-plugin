@@ -102,6 +102,7 @@ class Store:
                     "manufacturer TEXT,"
                     "category TEXT,"
                     "sku TEXT,"
+                    "price TEXT,"
                     "quantity INT DEFAULT 1,"
                     "bomcheck INT DEFAULT 1,"
                     "poscheck INT DEFAULT 1,"
@@ -114,16 +115,19 @@ class Store:
 
     def read_all(self):
         """Read all parts from the database."""
-        with contextlib.closing(sqlite3.connect(self.dbfile)) as con:
-            con.create_collation("naturalsort", natural_sort_collation)
-            with con as cur:
-                return [
-                    list(part)
-                    for part in cur.execute(
-                        f"SELECT reference, value, footprint,  mpn, manufacturer, category, sku, 1 as quantity,\
-                            bomcheck, poscheck, side FROM part_info ORDER BY {self.order_by} COLLATE naturalsort {self.order_dir}"
-                    ).fetchall()
-                ]
+        try:
+            with contextlib.closing(sqlite3.connect(self.dbfile)) as con:
+                con.create_collation("naturalsort", natural_sort_collation)
+                with con as cur:
+                    return [
+                        list(part)
+                        for part in cur.execute(
+                            f"SELECT reference, value, footprint,  mpn, manufacturer, category, sku, price, 1 as quantity,\
+                                bomcheck, poscheck, side FROM part_info ORDER BY {self.order_by} COLLATE naturalsort {self.order_dir}"
+                        ).fetchall()
+                    ]
+        except sqlite3.Error as e:
+            wx.MessageBox( _("Database error occurred. \r\nPlease delete database : {dbfile}").format(dbfile = self.dbfile) )
 
     def read_parts_by_group_value_footprint(self):
         """"""
@@ -131,7 +135,7 @@ class Store:
             con.create_collation("naturalsort", natural_sort_collation)
             with con as cur:
                 query = f"SELECT GROUP_CONCAT(reference), value, footprint, mpn, manufacturer, \
-                category, sku,  COUNT(*) as quantity, GROUP_CONCAT(bomcheck), GROUP_CONCAT(poscheck), \
+                category, sku, price,  COUNT(*) as quantity, GROUP_CONCAT(bomcheck), GROUP_CONCAT(poscheck), \
                  GROUP_CONCAT(side) FROM part_info GROUP BY value, footprint, mpn, manufacturer \
                 ORDER BY {self.order_by} COLLATE naturalsort {self.order_dir}"
                 a = [list(part) for part in cur.execute(query).fetchall()]
@@ -143,12 +147,11 @@ class Store:
             con.create_collation("naturalsort", natural_sort_collation)
             with con as cur:
                 query = f"SELECT GROUP_CONCAT(reference), value, footprint, mpn, manufacturer, \
-                category, sku, COUNT(*) as quantity FROM part_info \
+                category, sku, price, COUNT(*) as quantity FROM part_info \
                 GROUP BY value, footprint, mpn, manufacturer \
                 ORDER BY reference COLLATE naturalsort ASC "
                 a = [list(part) for part in cur.execute(query).fetchall()]
                 return a
-
 
 
     def read_bom_parts(self):
@@ -179,14 +182,12 @@ class Store:
             with contextlib.closing(sqlite3.connect(self.dbfile)) as con:
                 cur = con.cursor()
                 cur.execute(
-                    "INSERT INTO part_info VALUES (?,?,?,?,'','','','',?,?,?,'','' )",
+                    "INSERT INTO part_info VALUES (?,?,?,?,'','','','','',?,?,?,'','' )",
                     part, 
                 )
                 con.commit()
         except sqlite3.Error as e:
-            # 打印异常信息，可以根据需要进行其他异常处理
             print(f"An error occurred: {e}")
-            # 可以选择重新抛出异常，或者处理它
             raise
 
 
@@ -197,7 +198,7 @@ class Store:
                 if len(part) == 7:
                     cur.execute(
                         "UPDATE part_info set value = ?, footprint = ?,  mpn = '', manufacturer = '', \
-                        category = '',sku = '',  quantity = '', bomcheck = ?, poscheck = ?, side = ?, part_detail = '',image = '' WHERE reference = ?",
+                        category = '',sku = '', price = '',  quantity = '', bomcheck = ?, poscheck = ?, side = ?, part_detail = '',image = '' WHERE reference = ?",
                         part[PART_VALUE:PART_MPN]
                         + part[PART_BOMCHECK:]
                         + part[PART_REFERENCE:PART_VALUE],
@@ -217,22 +218,23 @@ class Store:
             manufacturer = ?, 
             category = ?, 
             sku = ?, 
+            price = ?, 
             part_detail = ?
         WHERE reference = ?
         """
         try:
             with contextlib.closing(sqlite3.connect(self.dbfile)) as con:
                 for value in values:
-                    detail_data = json.dumps(value[5])
+                    detail_data = json.dumps(value[6])
                     update_params = (
                         value[1],  # mpn
                         value[2],  # manufacturer
                         value[3],  # category
                         value[4],  # sku
+                        value[5],  # price
                         detail_data,  # part_detail as JSON
                     )
                     for reference in value[0].split(","):
-                        # 为每个 reference 添加到参数列表
                         con.execute(update_statement, update_params + (reference,))
                 con.commit() 
         except sqlite3.Error as e:
@@ -245,18 +247,18 @@ class Store:
     def set_bom_match_ref(self,references, value):
         """Change the BOM attribute for a part in the database."""
         with contextlib.closing(sqlite3.connect(self.dbfile)) as con:
-            if isinstance(value[4], str) and value[4]:
-                 value[4] = json.loads( value[4] )
+            if isinstance(value[5], str) and value[5]:
+                 value[5] = json.loads( value[5] )
             
-            detail_data = json.dumps(value[4])
-            update_params = (value[0], value[1], value[2], value[3], detail_data)
+            detail_data = json.dumps(value[5])
+            update_params = (value[0], value[1], value[2], value[3],  value[4], detail_data)
             try:
                 for reference in references.split(","):
                     
                     with con as cur:
                         cur.execute(
                             f"UPDATE part_info SET  mpn = ?, manufacturer = ?, \
-                                category = ?,sku = ?,part_detail = ? WHERE reference = '{reference}'",
+                                category = ?,sku = ?, price = ?,part_detail = ? WHERE reference = '{reference}'",
                                 update_params,
                         )
                         cur.commit()
@@ -270,7 +272,7 @@ class Store:
         """Cache image binary data in the database."""
         with contextlib.closing(sqlite3.connect(self.dbfile)) as con:
             for value in values:
-                image_params = (value[6] )
+                image_params = (value[7] )
                 try:
                     for reference in value[0].split(","):
                         with con as cur:
@@ -326,13 +328,38 @@ class Store:
         with contextlib.closing(sqlite3.connect(self.dbfile)) as con:
             with con:
                 cur = con.cursor()
-                # 使用 DISTINCT 来获取不同的 mpn 值，并计数
+                # Use DISTINCT to get different mpn values and count them
                 cur.execute(
                     "SELECT value, footprint FROM part_info GROUP BY value, footprint;"
                 )
                 all_results = cur.fetchall()   
-                total_count = len(all_results)  # 计算总数
+                total_count = len(all_results)  
                 return total_count   
+
+
+    def get_total_prices(self):
+        """Get the count of unique mpn values from the database."""
+        try:
+            total_price = 0.0
+            with contextlib.closing(sqlite3.connect(self.dbfile)) as con:
+                with con:
+                    cur = con.cursor()
+                    cur.execute(
+                        "SELECT price FROM part_info;"
+                    )
+                    prices = cur.fetchall() 
+                    for price_tuple in prices:
+                                price_str = price_tuple[0] 
+                                if price_str != '-' and price_str != '': 
+                                    try:
+                                        price = float(price_str) 
+                                        total_price += price  
+                                    except ValueError:
+                                        continue
+                    return total_price
+        except sqlite3.Error as e:
+            wx.MessageBox( _("Database error occurred. \r\nPlease delete database : {dbfile}").format(dbfile = self.dbfile) )
+            return 0
             
     def delete_part(self, ref):
         """Delete a part from the database by its reference."""
@@ -421,7 +448,9 @@ class Store:
                 self.create_part(part)
             else:
                 # if the board part matches the dbpart except for the and the stock value,
-                if part[PART_REFERENCE:PART_FOOTPRINT] == list(dbpart[PART_REFERENCE:PART_FOOTPRINT]) and part[PART_BOMCHECK:PART_POSCHECK ] == [bool(x) for x in dbpart[8:9] ]:
+                if (part[PART_REFERENCE:PART_FOOTPRINT] == list(dbpart[PART_REFERENCE:PART_FOOTPRINT]) 
+                # and part[PART_BOMCHECK:PART_POSCHECK ] == [bool(x) for x in dbpart[9:10] ]
+                ):
                     # if part in the database, has no mpn value the board part has a mpn value, update including mpn
                     # if dbpart and not dbpart[PART_MPN]:
                     #     self.logger.debug(

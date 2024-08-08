@@ -76,7 +76,7 @@ class PartSelectorDialog(wx.Dialog):
         # ---------------------------- bind events ----------------------------
         # ---------------------------------------------------------------------
         self.search_view.description.SetValue(
-            self.part_info[0]+ " " + self.part_info[1] + " " +  self.part_info[2] + " " + self.part_info[3] 
+            self.part_info[0]+ "  " + self.part_info[1] + "  " +  self.part_info[2] + "  " + self.part_info[3] 
         )
         self.search_view.description.Bind(wx.EVT_SEARCH, self.search)
         self.search_view.mpn_textctrl.Bind(wx.EVT_TEXT_ENTER, self.search)
@@ -152,7 +152,7 @@ class PartSelectorDialog(wx.Dialog):
 
     def search(self, e):
         """Search the library for parts that meet the search criteria."""
-        wx.BeginBusyCursor()
+
         if self.current_page == 0:
             self.current_page = 1
 
@@ -199,19 +199,21 @@ class PartSelectorDialog(wx.Dialog):
             }
 
 
-        url = "http://www.eda.cn/api/chiplet/products/queryPage"
-
+        url = "https://www.eda.cn/api/chiplet/products/queryPage"
+        wx.BeginBusyCursor()
         self.search_view.search_button.Disable()
         try:
+            
             self.search_api_request(url, body)
         finally:
+            wx.EndBusyCursor()
             self.search_view.search_button.Enable()
-            wx.CallAfter(wx.EndBusyCursor)
 
     def search_api_request(self, url, data):
         response = self.api_request_interface(url, data )
         self.search_part_list = []
-        res_datas = response.json().get("result", {})
+        datas = response.json()
+        res_datas = datas.get("result", {})
         if not res_datas:
             wx.MessageBox( _("No corresponding data was matched") )
             return
@@ -229,7 +231,7 @@ class PartSelectorDialog(wx.Dialog):
             search_part = item.get("queryPartVO", {}).get("part", {})
             self.search_part_list.append(search_part)
         wx.CallAfter(self.populate_part_list)
-        
+
 
 
     def populate_part_list(self):
@@ -244,7 +246,7 @@ class PartSelectorDialog(wx.Dialog):
         else:
             self.part_list_view.result_count.SetLabel(_("{total} Results").format(total=self.total_num))
 
-        parameters = ["mpn", "manufacturer", "pkg", "category", "sku"]
+        parameters = ["mpn", "manufacturer", "pkg", "category", "sku", "price"]
         body = []
         
         for part_info in self.search_part_list:
@@ -253,46 +255,57 @@ class PartSelectorDialog(wx.Dialog):
             body_value = ( f"{manu_id}-{mpn}" )
             body.append(body_value)
         
-        url = "http://www.eda.cn/api/chiplet/kicad/searchSupplyChain"
+        url = "https://www.eda.cn/api/chiplet/kicad/searchSupplyChain"
 
         response = self.api_request_interface( url, body )
         res_datas = response.json().get("result", {})
         if not response.json():
             wx.MessageBox( _("No corresponding sku data was matched") )
-        
+
         part_list_data = []
-        if not self.search_part_list:  # 如果列表为空
-            print("搜索结果为空，没有可处理的数据。")
+        if not self.search_part_list: 
+            print("Search results are empty with no data to process.")
             return
         else:
             for idx, part_info in enumerate(self.search_part_list, start=1):
-                sku = "-"
+                sku = "-" 
+                price = "-"
+                
                 mpn = part_info["mpn"]
                 for data in res_datas:
                     if data.get("mpn") == mpn and data.get("vendor") == "hqself":
                         sku = data.get("sku", "-") 
+                        price = data.get("price", "-") 
                         break 
                 part_info["sku"] = sku
+                part_info["price"] = price
 
                 # 确保idx-1不会超出列表的范围
                 if idx-1 < len(self.search_part_list):
                     self.search_part_list[idx-1]["sku"] = sku
-                    
                 part = []
                 for k in parameters:
-                    val = part_info.get(k, "")
-                    val = "-" if val == "" else val
+                    if k == "price":
+                        val = "-"
+                        prices_stair = part_info.get(k, "-")
+                        if prices_stair != "-":
+                            for index, price_range in enumerate(prices_stair):
+                                val = str(price_range["rmb"])
+                                val = "-" if val == "0.0" else val
+                                break
+                    else:
+                        val = part_info.get(k, "")
+                        val = "-" if val == "" else val
                     part.append(val)
                 part.insert(0, f"{idx}")
                 part_list_data.append(part)
-                
             self.part_list_view.init_data_view(part_list_data)
 
 
     def api_request_interface(self, url, data ):
         headers = {"Content-Type": "application/json"}
         try:
-            response = requests.post(url, headers=headers, json=data, timeout=30)
+            response = requests.post(url, headers=headers, json=data, timeout = 30)
             response.raise_for_status()
             return response
         except Timeout:
@@ -313,12 +326,14 @@ class PartSelectorDialog(wx.Dialog):
         manu = self.part_list_view.part_list.GetValue(row, 2)
         cate = self.part_list_view.part_list.GetValue(row, 4)
         sku = self.part_list_view.part_list.GetValue(row, 5)
+        price = self.part_list_view.part_list.GetValue(row, 6)
         self.selected_part = self.search_part_list[row]
         evt = AssignPartsEvent(
             mpn=selection,
             manufacturer=manu,
             category=cate,
             sku=sku,
+            price=price,
             references=list(self.parts.keys()),
             selected_part_detail=self.selected_part,
         )
@@ -379,7 +394,7 @@ class PartSelectorDialog(wx.Dialog):
             self.update_page_label()
             self.search(None)
             self.cancel_selcetion()
-            
+
 
     def update_page_label(self):
         self.part_list_view.page_label.SetLabel(

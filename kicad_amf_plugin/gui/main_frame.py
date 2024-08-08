@@ -60,8 +60,7 @@ from kicad_amf_plugin.smt_pcb_fabrication.personalized.personalized_info_view im
 )
 from urllib.parse import urlencode
 from kicad_amf_plugin.gui.summary.upload_file import UploadFile
-from wx.lib.pubsub import pub
-import threading
+from kicad_amf_plugin.utils.observer_class import Observer
 
 class SMTPCBFormPart(Enum):
     SMT_BASE_INFO = 0
@@ -102,7 +101,7 @@ FEE = "fee"
 BCOUNT = "bcount"
 
 
-class MainFrame(wx.Frame):
+class MainFrame(wx.Frame, Observer):
     def __init__(self, board_manager: BoardManager, size, parent=None):
         wx.Frame.__init__(
             self,
@@ -123,6 +122,8 @@ class MainFrame(wx.Frame):
         self._number = 5
         SINGLE_PLUGIN.register_main_wind(self)
         self.init_ui()
+        
+        
 
 
     def show_data_gen_progress_dialog(self):
@@ -177,9 +178,6 @@ class MainFrame(wx.Frame):
             i.init()
             i.on_region_changed()
 
-        # thread = threading.Thread(target=self.init_pcb_parts)
-        # thread.start()  # 启动线程
-
         #------------smt-------------
         self.surface_mount_technology = wx.Panel( self.main_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         self.main_notebook.AddPage( self.surface_mount_technology, u"         BOM && SMT         ", False )
@@ -215,8 +213,6 @@ class MainFrame(wx.Frame):
         for j in self.smt_pcb_form_parts.values():
             j.init()
             j.on_region_changed()
-        # thread = threading.Thread(target=self.init_smt_parts)
-        # thread.start()  # 启动线程
 
         #---- book ctrl ----
         self.main_splitter.SplitVertically(
@@ -255,7 +251,8 @@ class MainFrame(wx.Frame):
         self.Bind(EVT_SHOW_MIN_TRACE_WIDTH, self.OnShowTipMinTraceWidth )
         
         
-        pub.subscribe(self.receive_number_data, "combo_number")
+        self.smt_pcb_form_parts[SMTPCBFormPart.SMT_BASE_INFO].register_observer(self.summary_view)
+        self.smt_pcb_form_parts[SMTPCBFormPart.SMT_BASE_INFO].register_observer(self)
 
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
         main_sizer.Add(self.main_splitter, 1, wx.EXPAND, 5)
@@ -264,16 +261,6 @@ class MainFrame(wx.Frame):
         self.Centre(wx.BOTH)
 
 
-
-    def init_pcb_parts(self):
-        for i in self._pcb_form_parts.values():
-            i.init()
-            i.on_region_changed()
-    
-    def init_smt_parts(self):
-        for j in self.smt_pcb_form_parts.values():
-            j.init()
-            j.on_region_changed()
 
 
     def OnShowTipFinishedCopperWeight(self, evt ):
@@ -550,7 +537,7 @@ class MainFrame(wx.Frame):
                 self.get_place_order_form(), 
                 url
             )
-            
+
         elif self.selected_page_index == 1:
             if not self.form_is_valid():
                 return
@@ -587,8 +574,8 @@ class MainFrame(wx.Frame):
             finally:
                 self.destory_data_gen_dialog()
 
-    def receive_number_data(self, param1):
-        self._number =  param1
+    def observer_update(self, pcb_number):
+        self._number =  pcb_number
 
     def adjust_size(self):
         for i in self._pcb_form_parts.values():
@@ -621,3 +608,4 @@ class MainFrame(wx.Frame):
     def OnClose(self, evt):
         SINGLE_PLUGIN.register_main_wind(None)
         self.Destroy()
+

@@ -31,6 +31,10 @@ from enum import Enum
 from .price_model_base import PriceModelBase
 from .pcb_price_model import PCBPriceModel
 from .smt_price_model import SmtPriceModel
+from .bom_price_model import BomPriceModel
+from ...utils.mediator_class import Mediator
+from wx.lib.pubsub import pub
+from kicad_amf_plugin.utils.observer_class import Observer
 
 OrderRegionSettings = (
     EditDisplayRole(SupportedRegion.CHINA_MAINLAND, _("Mainland China")),
@@ -41,9 +45,10 @@ OrderRegionSettings = (
 class PriceCategory(Enum):
     PCB = "pcb"
     SMT = "smt"
+    BOM = "bom"
 
 
-class SummaryPanel(UiSummaryPanel):
+class SummaryPanel(UiSummaryPanel, Observer):
     def __init__(self, parent, board_manager: BoardManager):
         super().__init__(parent)
         self._board_manager = board_manager
@@ -57,14 +62,17 @@ class SummaryPanel(UiSummaryPanel):
         self.db_file_path = os.path.join(self.project_path, "database","project.db")
         self.get_files_dir = os.path.join(self.project_path, "nextpcb", "production_files")
         self.store = Store(self, self.project_path, self._board_manager.board )
-        self.price_category: "dict[int,PriceModelBase]" = {
-            PriceCategory.PCB: PCBPriceModel(),
-            PriceCategory.SMT: SmtPriceModel(),
-        }
+
         self.pcb_price_model = { PriceCategory.PCB: PCBPriceModel() }
         self.smt_price_model = { PriceCategory.PCB: self.pcb_price_model[PriceCategory.PCB],
                 PriceCategory.SMT: SmtPriceModel(),
+                PriceCategory.BOM: BomPriceModel(),
                 }
+        
+        self.pcb_number = 5
+        self.singles_pcb_prices : float = 0
+        self.mediator = Mediator()
+        self.mediator.register( self.smt_price_model[ PriceCategory.BOM ] )
 
         self.init_ui()
         self.load_Designator()
@@ -77,9 +85,8 @@ class SummaryPanel(UiSummaryPanel):
             self.splitter_detail_summary,
         )
         self.btn_bom_match.Bind(wx.EVT_BUTTON, self.on_bom_match)
-
-        
         SETTING_MANAGER.set_order_region(SupportedRegion.CHINA_MAINLAND)
+        
 
     def init_ui(self ):
         self.list_bom_view.AppendTextColumn(
@@ -199,6 +206,7 @@ class SummaryPanel(UiSummaryPanel):
     def is_database_exists(self):
         result = os.path.exists(self.db_file_path)
         
+        
         evt = GetUniqueValueFpCount(-1, unique_value_fp_count = self.store.get_unique_value_fp_count() )
         wx.PostEvent(self.Parent, evt)
         parts = self.store.get_reference_mpn_footprint()
@@ -210,10 +218,23 @@ class SummaryPanel(UiSummaryPanel):
         parts = []
         self.list_bom_view.DeleteAllItems()
         parts = self.store.get_reference_mpn_footprint()
-
+        
+        self.singles_pcb_prices = self.store.get_total_prices()
+        self.update_total_price()
+        
         for part in parts:
             self.list_bom_view.AppendItem(part)
 
+    def observer_update(self, pcb_number):
+        self.pcb_number = int(pcb_number)
+        self.update_total_price()
+    
+    def update_total_price(self):
+        total_prices = self.pcb_number * self.singles_pcb_prices
+        self.mediator.notify( total_prices  )
+        self.list_price_detail.Refresh()
+    
+    
     def _get_file_list(self):
         file_list = []
         if os.path.exists(self.get_files_dir) and os.path.isdir(self.get_files_dir):
@@ -270,7 +291,6 @@ class SummaryPanel(UiSummaryPanel):
         self.list_price_detail.AssociateModel(self.model_price_summary)
         
         
-
     def switch_to_smt(self):
         self.splitter_detail_summary.Unsplit(self.switch_amf_panel)
         self.switch_smt_splitter.SplitHorizontally(self.switch_smt_panel, self.m_panel9, 0)
@@ -304,7 +324,7 @@ class SummaryPanel(UiSummaryPanel):
         if result in (wx.ID_OK, wx.ID_CANCEL):
             dlg.Destroy()
         self.load_Designator()
-        
+
 
     def on_update_price_clicked(self, ev):
         self.clear_content()
@@ -356,6 +376,7 @@ class SummaryPanel(UiSummaryPanel):
 
     def load_Designator(self):
         if self.is_database_exists():
+            self.list_bom_view.DeleteAllItems()
             for fp in get_valid_footprints(self._board_manager.board):
                 part = [
                     fp.GetReference(),
@@ -368,5 +389,4 @@ class SummaryPanel(UiSummaryPanel):
             column_to_replace.SetTitle( _("MPN") )
             self.Layout()
             self.get_data()
-
 

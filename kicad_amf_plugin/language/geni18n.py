@@ -38,6 +38,7 @@ m, s, _ = platform.python_version_tuple()
 
 if os.name == "nt" and m == "3" and s == "8":
     # setup some stuff to get at Python I18N tools/utilities
+    # pygettext.py是一个用于从Python源代码中提取可翻译字符串的脚本。
     pyExe = sys.executable
     pyFolder = os.path.split(pyExe)[0]
     pyToolsFolder = os.path.join(pyFolder, "Tools")
