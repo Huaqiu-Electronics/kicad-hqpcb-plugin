@@ -74,15 +74,8 @@ HQ PCB specializes in reliable multilayer PCB manufacture and assembly, and like
 
 We are a [KiCad Platinum Sponsor](https://www.nextpcb.com/blog/kicad-nextpcb-platinum-sponsorship).
 
-<<<<<<< HEAD
 
 ## Credits
 
 This project contains copies or makes use of other works. These work and their respective license and terms：
 - [kicad-jlcpcb-tools](https://github.com/Bouni/kicad-jlcpcb-tools.git)  is under the[MIT License](https://github.com/Bouni/kicad-jlcpcb-tools/blob/main/LICENSE)
-=======
-## Credits
-This project contains copies or makes use of other works. These works and their respective license and terms are:
-
-- [Bouni's kicad-jlcpcb-tools](https://github.com/Bouni/kicad-jlcpcb-tools) is under [MIT License](https://github.com/theacodes/kicanvas/blob/main/LICENSE.md)
->>>>>>> c684dde070913997e43b8c6c0d53b0af5b81e59d
