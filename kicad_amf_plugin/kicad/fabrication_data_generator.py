@@ -50,7 +50,7 @@ class FabricationDataGenerator:
         nextpcb_path = os.path.join(self.path, "nextpcb")
         try:
             Path(nextpcb_path).mkdir(parents=True, exist_ok=True)
-        except PermissionError as e:
+        except (PermissionError, OSError) as e:
             nextpcb_path = os.path.join(tempfile.gettempdir(), "nextpcb")
         return nextpcb_path
 

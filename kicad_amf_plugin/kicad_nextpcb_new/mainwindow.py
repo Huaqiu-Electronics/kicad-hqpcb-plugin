@@ -317,7 +317,7 @@ class NextPCBTools(wx.Dialog):
         file_path = os.path.join(self.project_path, "nextpcb")
         try:
             Path(file_path).mkdir(parents=True, exist_ok=True)
-        except PermissionError as e:
+        except (PermissionError, OSError) as e:
             return os.path.join(tempfile.gettempdir())
         return os.path.join(self.project_path)
 
@@ -942,7 +942,7 @@ class NextPCBTools(wx.Dialog):
                     _("Info"),
                     style=wx.ICON_INFORMATION,
                 )
-            except PermissionError as e:
+            except (PermissionError, OSError) as e:
                 wx.MessageBox(
                     _("Export BOM file error: {e}").format(e=e),
                     _("Error"),

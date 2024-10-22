@@ -56,7 +56,7 @@ class SummaryPanel(UiSummaryPanel, Observer):
         nextpcb_path = os.path.join(self.project_path, "nextpcb")
         try:
             Path(nextpcb_path).mkdir(parents=True, exist_ok=True)
-        except PermissionError as e:
+        except (PermissionError, OSError) as e:
             self.project_path = os.path.join(tempfile.gettempdir() )
         
         self.db_file_path = os.path.join(self.project_path, "database","project.db")

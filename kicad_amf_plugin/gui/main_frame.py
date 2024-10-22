@@ -61,6 +61,9 @@ from kicad_amf_plugin.smt_pcb_fabrication.personalized.personalized_info_view im
 from urllib.parse import urlencode
 from kicad_amf_plugin.gui.summary.upload_file import UploadFile
 from kicad_amf_plugin.utils.observer_class import Observer
+from requests.exceptions import Timeout, HTTPError
+import requests
+
 
 class SMTPCBFormPart(Enum):
     SMT_BASE_INFO = 0
@@ -446,8 +449,10 @@ class MainFrame(wx.Frame, Observer):
             if url is None:
                 wx.MessageBox(_("No available url for querying price in current region"))
                 return
+            
             try:
                 form = self.get_query_price_form()
+                ata=RequestHelper.convert_dict_to_request_data(form)
                 rep = urllib.request.Request(
                     url, data=RequestHelper.convert_dict_to_request_data(form)
                 )
@@ -456,18 +461,20 @@ class MainFrame(wx.Frame, Observer):
                 encoding = fp.info().get_content_charset("utf-8")
                 content = data.decode(encoding)
                 quote = json.loads(content)
-                if DATA in quote and LIST in quote[DATA]:
-                    return self.parse_price_list(quote[DATA][LIST])
-                elif SUGGEST in quote:
-                    return self.parse_price(quote)
-                else:
-                    err_msg = quote
-                    if "msg" in quote:
-                        err_msg = quote["msg"]
-                    wx.MessageBox(_("Incorrect form parameter: ") + err_msg)
             except Exception as e:
-                wx.MessageBox(str(e))
-                raise e  # TODO remove me
+                self.report_part_search_error(_("An unexpected HTTP error occurred: {error}").format(error=e))
+            if DATA in quote and LIST in quote[DATA]:
+                return self.parse_price_list(quote[DATA][LIST])
+            elif SUGGEST in quote:
+                return self.parse_price(quote)
+            else:
+                err_msg = quote
+                if "msg" in quote:
+                    err_msg = quote["msg"]
+                elif "message" in quote:
+                    err_msg = quote["message"]
+                wx.MessageBox(_("Incorrect form parameter: ") + err_msg)
+            
 
         elif self.selected_page_index == 1:
             if not self.form_is_valid():
@@ -531,6 +538,9 @@ class MainFrame(wx.Frame, Observer):
             if self._dataGenThread is not None:
                 self._dataGenThread.join()
                 self._dataGenThread = None
+            data = self.get_place_order_form()
+            file = self.fabrication_data_generator
+            print("----data----\n",data)
             self._dataGenThread = DataGenThread(
                 self, 
                 self.fabrication_data_generator, 
@@ -609,3 +619,11 @@ class MainFrame(wx.Frame, Observer):
         SINGLE_PLUGIN.register_main_wind(None)
         self.Destroy()
 
+    def report_part_search_error(self, reason):
+        wx.MessageBox(
+            _("Failed to request the API:\r\n{reason}.\r\n \r\nPlease try making the request again.\r\n").format(reason=reason),
+            _("Error"),
+            style=wx.ICON_ERROR,
+        )
+        return
+    

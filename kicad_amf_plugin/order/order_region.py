@@ -12,10 +12,10 @@ class URL_KIND(Enum):
 class OrderRegion:
     AVAILABLE_URLS = {
         SupportedRegion.CHINA_MAINLAND: {
-            URL_KIND.PLACE_ORDER: "https://www.hqpcb.com/External/fileQuote",
-            URL_KIND.QUERY_PRICE: "https://www.hqpcb.com/public/ajax_valuation",
-            URL_KIND.SMT_QUERY_PRICE: "https://smt.hqchip.com/smtservice/app/price/pricing",
-            URL_KIND.SMT_PLACE_ORDER: "https://smt.hqchip.com/userCenterApi/DfmOrder/saveDfmSmtTmpOrder",
+            URL_KIND.PLACE_ORDER: "https://www.eda.cn/openapi/api/hqpcb/External/fileQuote",
+            URL_KIND.QUERY_PRICE: "https://www.eda.cn/openapi/api/hqpcb/public/ajax_valuation",
+            URL_KIND.SMT_QUERY_PRICE: "https://www.eda.cn/openapi/api/smt-hqchip/smtservice/app/price/pricing",
+            URL_KIND.SMT_PLACE_ORDER: "https://www.eda.cn/openapi/api/smt-hqchip/userCenterApi/DfmOrder/saveDfmSmtTmpOrder",
         },
         SupportedRegion.EUROPE_USA: {
             URL_KIND.PLACE_ORDER: "https://www.nextpcb.com/Upfile/kiCadUpFile",

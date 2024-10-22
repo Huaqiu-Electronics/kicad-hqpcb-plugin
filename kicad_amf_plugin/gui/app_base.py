@@ -35,7 +35,10 @@ class BaseApp(wx.EvtHandler):
 
     def load_success(self):
         from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
-
+        try:
+            import PIL
+        except ImportError:
+            wx.MessageBox(_("Pillow is not installed in python.Please try to install it."))
         SETTING_MANAGER.register_app(self)
         self.board_manager = load_board_manager()
         if self.board_manager.board.GetCopperLayerCount() not in AVAILABLE_LAYER_COUNTS:

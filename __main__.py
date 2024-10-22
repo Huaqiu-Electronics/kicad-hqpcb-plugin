@@ -9,7 +9,7 @@ class StandAloneApp(App):
     def OnInit(self):
         from kicad_amf_plugin.settings.setting_manager import SETTING_MANAGER
 
-        self.locale = Locale(SETTING_MANAGER.get_language())
+        # self.locale = Locale(SETTING_MANAGER.get_language())
         return True
 
 if __name__ == "__main__":
@@ -17,3 +17,4 @@ if __name__ == "__main__":
     app = StandAloneApp()
     _main()
     app.MainLoop()
+

@@ -8,7 +8,7 @@ import logging
 from .ui_part_details_panel import UiPartDetailsPanel
 import wx.dataview as dv
 import threading
-from PIL import Image
+
 from requests.exceptions import Timeout, ConnectionError, HTTPError
 from .part_details_model import PartDetailsModel
 import pcbnew
@@ -66,8 +66,8 @@ class PartDetailsView(UiPartDetailsPanel):
         self.PartDetailsModel = PartDetailsModel( self.part_details_data )
         self.data_list.AssociateModel(self.PartDetailsModel)
         wx.CallAfter(self.m_panel3.Layout)
-        
-    
+
+
     def initialize_data(self):
         self.PartDetailsModel.DeleteAll()
         for k, v in parameters.items():
@@ -118,7 +118,7 @@ class PartDetailsView(UiPartDetailsPanel):
         header = {
              "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0"    
         }
-        
+
         try:
             response = requests.get(url, headers=header)
             response.raise_for_status()  # Raises an HTTPError for bad responses
@@ -135,25 +135,25 @@ class PartDetailsView(UiPartDetailsPanel):
     def display_bitmap(self, content):
         io_bytes = io.BytesIO(content)
         try:
+            from PIL import Image
             image = Image.open(io_bytes)
+            sb_size = self.part_image.GetSize()
+            min_dimension = min(sb_size.GetWidth(), sb_size.GetHeight())
+            if min_dimension <= 0:
+                self.report_part_data_fetch_error(
+                    _("The width and height of new size must be greater than 0")
+                )
+                return
+            # Scale the image
+            factor = min_dimension / max(image.width, image.height) 
+            new_width = int(image.width * factor)
+            new_height = int(image.height * factor)
+            resized_image = image.resize((new_width, new_height), Image.LANCZOS)
+
         except (IOError, SyntaxError) as e:
             # Handle the error if the image file is not valid
             print(f"Error opening image: {e}")
             return
-        
-        sb_size = self.part_image.GetSize()
-        min_dimension = min(sb_size.GetWidth(), sb_size.GetHeight())
-        if min_dimension <= 0:
-            self.report_part_data_fetch_error(
-                _("The width and height of new size must be greater than 0")
-            )
-            return
-        # Scale the image
-        factor = min_dimension / max(image.width, image.height) 
-        new_width = int(image.width * factor)
-        new_height = int(image.height * factor)
-        resized_image = image.resize((new_width, new_height), Image.LANCZOS)
-
         # 将PIL图像转换为wxPython图像
         wx_image = wx.Image(new_width, new_height)
         wx_image.SetData(resized_image.convert('RGB').tobytes())
