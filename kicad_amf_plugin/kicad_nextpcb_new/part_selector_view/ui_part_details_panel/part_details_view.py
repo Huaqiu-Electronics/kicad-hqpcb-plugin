@@ -14,6 +14,8 @@ from .part_details_model import PartDetailsModel
 import pcbnew
 import json
 import os
+from kicad_amf_plugin.utils.warning import SilentLogTarget
+
 
 parameters = {
     "mpn": _("MPN"),
@@ -55,8 +57,11 @@ class PartDetailsView(UiPartDetailsPanel):
         )
         self.data_list.Bind(wx.dataview.EVT_DATAVIEW_SELECTION_CHANGED, self.on_open_pdf)
         self.data_list.Bind(wx.dataview.EVT_DATAVIEW_SELECTION_CHANGED, self.on_show_more_info)
-        
         self.data_list.Bind(wx.dataview.EVT_DATAVIEW_SELECTION_CHANGED, self.on_tooltip)
+
+        log_target = SilentLogTarget()
+        wx.Log.SetActiveTarget(log_target)
+        
         self.init_UI()
         self.get_language_setting()
 
@@ -132,37 +137,55 @@ class PartDetailsView(UiPartDetailsPanel):
         return bitmap
 
 
+
     def display_bitmap(self, content):
         io_bytes = io.BytesIO(content)
+        sb_size = self.part_image.GetSize()
+        min_dimension = min(sb_size.GetWidth(), sb_size.GetHeight())
+        if min_dimension <= 0:
+            self.report_part_data_fetch_error( 
+                _("The width and height of new size must be greater than 0")
+            )
+            return
+        wx.InitAllImageHandlers()
         try:
             from PIL import Image
             image = Image.open(io_bytes)
-            sb_size = self.part_image.GetSize()
-            min_dimension = min(sb_size.GetWidth(), sb_size.GetHeight())
-            if min_dimension <= 0:
-                self.report_part_data_fetch_error(
-                    _("The width and height of new size must be greater than 0")
-                )
-                return
+
             # Scale the image
             factor = min_dimension / max(image.width, image.height) 
             new_width = int(image.width * factor)
             new_height = int(image.height * factor)
             resized_image = image.resize((new_width, new_height), Image.LANCZOS)
+            wx_image = wx.Image(new_width, new_height)
+            wx_image.SetData(resized_image.convert('RGB').tobytes())
+            
+        except (IOError, SyntaxError,ImportError) as e:
+            try:
+                wx_image = wx.Image(io_bytes, wx.BITMAP_TYPE_ANY, -1)
+                if not wx_image.IsOk():
+                    return None
+                
+                # Scale the image
+                factor = min_dimension / max(wx_image.GetWidth(), wx_image.GetHeight())
+                new_width = int(wx_image.GetWidth() * factor)
+                new_height = int(wx_image.GetHeight() * factor)
+                wx_image = wx_image.Rescale(new_width, new_height )
+                bitmap = wx_image.ConvertToBitmap()
 
-        except (IOError, SyntaxError) as e:
-            # Handle the error if the image file is not valid
-            print(f"Error opening image: {e}")
-            return
-        # 将PIL图像转换为wxPython图像
-        wx_image = wx.Image(new_width, new_height)
-        wx_image.SetData(resized_image.convert('RGB').tobytes())
-        
+                self.part_image.SetBitmap(bitmap)
+            except Exception as e:
+                # Handle the error if the image file is not valid
+                print(f"Error opening image: {e}")
+                return None
+
         if not wx_image.IsOk():
             self.logger.error("The wx.Image is not valid.")
             return None
         result = wx.Bitmap(wx_image)
         return result
+
+
 
     def get_part_data(self, _clicked_part):
         """fetch part data from NextPCB API and parse it into the table, set picture and PDF link"""

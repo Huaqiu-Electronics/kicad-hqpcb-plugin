@@ -786,6 +786,9 @@ class NextPCBTools(wx.Dialog):
             PartSelectorDialog(self, selection).ShowModal()
         except Exception as e:
             self.logger.error("An exception occurred: %s", e)
+        except:
+            # 这里会捕获所有异常，但是不推荐这样做
+            self.logger.error("An exception occurred", exc_info=True)
         finally:
             wx.EndBusyCursor()
 
