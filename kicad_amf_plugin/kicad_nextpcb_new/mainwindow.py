@@ -413,7 +413,7 @@ class NextPCBTools(wx.Dialog):
         url = "https://www.eda.cn/api/chiplet/kicad/bomComponentsMatch"
         
         try:
-            response = requests.post(url, headers=headers, json=body, timeout = 30)
+            response = requests.post(url, headers=headers, json=body, timeout = 120)
         except requests.exceptions.Timeout as e:
             self.report_part_search_error(
                 _("HTTP request timed out: {error}").format( error=e)
@@ -455,7 +455,7 @@ class NextPCBTools(wx.Dialog):
         url = "https://www.eda.cn/api/chiplet/kicad/searchSupplyChain"
 
         try:
-            response = requests.post(url, headers=headers, json=body, timeout = 30 )
+            response = requests.post(url, headers=headers, json=body, timeout = 120 )
         except requests.exceptions.Timeout as e:
             self.report_part_search_error(
                 _("HTTP request timed out: {error}").format( error=e)

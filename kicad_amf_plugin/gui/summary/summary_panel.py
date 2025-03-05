@@ -59,7 +59,7 @@ class SummaryPanel(UiSummaryPanel, Observer):
         except (PermissionError, OSError) as e:
             self.project_path = os.path.join(tempfile.gettempdir() )
         
-        self.db_file_path = os.path.join(self.project_path, "database","project.db")
+        self.db_file_path = os.path.join(self.project_path, "database","hqproject.db")
         self.get_files_dir = os.path.join(self.project_path, "nextpcb", "production_files")
         self.store = Store(self, self.project_path, self._board_manager.board )
 

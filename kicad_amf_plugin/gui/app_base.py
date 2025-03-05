@@ -62,3 +62,4 @@ class BaseApp(wx.EvtHandler):
 
     def __del__(self):
         self.progress_dialog.Destroy()
+        

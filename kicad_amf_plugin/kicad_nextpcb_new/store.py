@@ -36,7 +36,7 @@ class Store:
 
 
         self.datadir = os.path.join(self.file_path, "database")    
-        self.dbfile = os.path.join(self.datadir, "project.db") 
+        self.dbfile = os.path.join(self.datadir, "hqproject.db") 
         self.order_by = "reference"
         self.order_dir = "ASC"
         self.board = board
