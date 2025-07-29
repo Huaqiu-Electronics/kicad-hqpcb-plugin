@@ -333,7 +333,8 @@ class NextPCBTools(wx.Dialog):
 
     def quit_dialog(self, e):
         """Destroy dialog on close"""
-        self.Destroy()
+        #self.Destroy()
+        self.EndModal(wx.ID_OK)
 
     def init_store(self):
         """Initialize the store of part assignments"""
