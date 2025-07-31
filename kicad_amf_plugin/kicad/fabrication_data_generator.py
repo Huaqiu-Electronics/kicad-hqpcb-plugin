@@ -37,6 +37,42 @@ from pcbnew import (
 
 from .helpers import get_exclude_from_pos, get_footprint_by_ref, get_smd, is_nightly
 
+from enum import IntEnum
+class PCB_LAYER_ID(IntEnum):
+    UNDEFINED_LAYER = -1
+    UNSELECTED_LAYER = -2
+    F_Cu = 0
+    B_Cu = 2
+    In1_Cu = 4
+    In2_Cu = 6
+    In3_Cu = 8
+    In4_Cu = 10
+    In5_Cu = 12
+    In6_Cu = 14
+    In7_Cu = 16
+    In8_Cu = 18
+    In9_Cu = 20
+    In10_Cu = 22
+    In11_Cu = 24
+    In12_Cu = 26
+    In13_Cu = 28
+    In14_Cu = 30
+    In15_Cu = 32
+    In16_Cu = 34
+    In17_Cu = 36
+    In18_Cu = 38
+    In19_Cu = 40
+    In20_Cu = 42
+    In21_Cu = 44
+    In22_Cu = 46
+    In23_Cu = 48
+    In24_Cu = 50
+    In25_Cu = 52
+    In26_Cu = 54
+    In27_Cu = 56
+    In28_Cu = 58
+    In29_Cu = 60
+    In30_Cu = 62
 
 class FabricationDataGenerator:
     def __init__(self, board):
@@ -162,13 +198,50 @@ class FabricationDataGenerator:
             plot_plan = plot_plan_top + plot_plan_bottom
         # Everything with inner layers
         else:
+            # plot_plan = (
+            #     plot_plan_top
+            #     + [
+            #         (f"CuIn{layer}", layer, f"Inner layer {layer}")
+            #         for layer in range(1, layer_count - 1)
+            #     ]
+            #     + plot_plan_bottom
+            # )
             plot_plan = (
-                plot_plan_top
+                plot_plan_top 
                 + [
-                    (f"CuIn{layer}", layer, f"Inner layer {layer}")
-                    for layer in range(1, layer_count - 1)
-                ]
-                + plot_plan_bottom
+                    ("CuIn1", PCB_LAYER_ID.In1_Cu, "Inner layer 1"  ) ,
+                    ("CuIn2", PCB_LAYER_ID.In2_Cu, "Inner layer 2"  ) ,
+                    ("CuIn3", PCB_LAYER_ID.In3_Cu, "Inner layer 3"  ) ,
+                    ("CuIn4", PCB_LAYER_ID.In4_Cu, "Inner layer 4"  ) ,
+                    ("CuIn5", PCB_LAYER_ID.In5_Cu, "Inner layer 5"  ) ,
+                    ("CuIn6", PCB_LAYER_ID.In6_Cu, "Inner layer 6"  ) ,
+                    ("CuIn7", PCB_LAYER_ID.In7_Cu, "Inner layer 7"  ) ,
+                    ("CuIn8", PCB_LAYER_ID.In8_Cu, "Inner layer 8"  ) ,
+                    ("CuIn9", PCB_LAYER_ID.In9_Cu, "Inner layer 9"  ) ,
+                    ("CuIn10", PCB_LAYER_ID.In10_Cu, "Inner layer 10" ) ,   
+                    ("CuIn11", PCB_LAYER_ID.In11_Cu, "Inner layer 11"  ) ,
+                    ("CuIn12", PCB_LAYER_ID.In12_Cu, "Inner layer 12"  ) ,
+                    ("CuIn13", PCB_LAYER_ID.In13_Cu, "Inner layer 13"  ) ,
+                    ("CuIn14", PCB_LAYER_ID.In14_Cu, "Inner layer 14"  ) ,
+                    ("CuIn15", PCB_LAYER_ID.In15_Cu, "Inner layer 15"  ) ,
+                    ("CuIn16", PCB_LAYER_ID.In16_Cu, "Inner layer 16"  ) ,
+                    ("CuIn17", PCB_LAYER_ID.In17_Cu, "Inner layer 17"  ) ,
+                    ("CuIn18", PCB_LAYER_ID.In18_Cu, "Inner layer 18"  ) ,
+                    ("CuIn19", PCB_LAYER_ID.In19_Cu, "Inner layer 19"  ) ,
+                    ("CuIn20", PCB_LAYER_ID.In20_Cu, "Inner layer 20"  ) ,  
+                    ("CuIn21", PCB_LAYER_ID.In21_Cu, "Inner layer 21"  ) ,
+                    ("CuIn22", PCB_LAYER_ID.In22_Cu, "Inner layer 22"  ) ,
+                    ("CuIn23", PCB_LAYER_ID.In23_Cu, "Inner layer 23"  ) ,
+                    ("CuIn24", PCB_LAYER_ID.In24_Cu, "Inner layer 24"  ) ,
+                    ("CuIn25", PCB_LAYER_ID.In25_Cu, "Inner layer 25"  ) ,
+                    ("CuIn26", PCB_LAYER_ID.In26_Cu, "Inner layer 26"  ) ,
+                    ("CuIn27", PCB_LAYER_ID.In27_Cu, "Inner layer 27"  ) ,
+                    ("CuIn28", PCB_LAYER_ID.In28_Cu, "Inner layer 28"  ) ,
+                    ("CuIn29", PCB_LAYER_ID.In29_Cu, "Inner layer 29"  ) ,
+                    ("CuIn30", PCB_LAYER_ID.In30_Cu, "Inner layer 30"  )                                  
+                ] 
+
+                +plot_plan_bottom
             )
 
         for layer_info in plot_plan:
