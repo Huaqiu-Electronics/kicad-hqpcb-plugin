@@ -214,8 +214,18 @@ class ProcessInfoView(UiProcessInfo, FormPanelBase):
         self.Parent.Layout()
 
     def set_board_thickness(self, thickness):
+        # Step 1: 优先匹配 ±10% 容差
         for i in range(self.combo_board_thickness.GetCount()):
-            if thickness <= float(self.combo_board_thickness.GetString(i)):
+            nominal = float(self.combo_board_thickness.GetString(i))
+            lower = nominal * 0.9
+            upper = nominal * 1.1
+            if thickness >= lower and thickness <= upper:
+                self.combo_board_thickness.SetSelection(i)
+                return
+
+        # Step 2: fallback 到原来的向上取整
+        for i in range(self.combo_board_thickness.GetCount()):
+            if float(self.combo_board_thickness.GetString(i)) >= thickness:
                 self.combo_board_thickness.SetSelection(i)
                 break
 
