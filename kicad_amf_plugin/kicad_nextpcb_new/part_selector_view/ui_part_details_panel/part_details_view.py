@@ -8,6 +8,7 @@ import logging
 from .ui_part_details_panel import UiPartDetailsPanel
 import wx.dataview as dv
 import threading
+import base64
 
 from requests.exceptions import Timeout, ConnectionError, HTTPError
 from .part_details_model import PartDetailsModel
@@ -20,11 +21,12 @@ from kicad_amf_plugin.utils.warning import SilentLogTarget
 parameters = {
     "mpn": _("MPN"),
     "manufacturer": _("Manufacturer"),
-    "pkg": _("Package / Footprint"),
+    "package": _("Package / Footprint"),
     "category": _("Category"),
     "part_desc": _("Description"),
     "datasheet":_("Datasheet"),
-    "sku": _("SKU"),
+    "sku": _("ProductUrl"),
+    "stock": _("Stock"),
 }
 
 class PartDetailsView(UiPartDetailsPanel):
@@ -55,7 +57,13 @@ class PartDetailsView(UiPartDetailsPanel):
         self.value = self.data_list.AppendTextColumn(
             _("Value"), width=-1, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_LEFT
         )
+        self.data_list.Bind(wx.dataview.EVT_DATAVIEW_ITEM_ACTIVATED, self.on_open_pdf)
+        self.data_list.Bind(wx.dataview.EVT_DATAVIEW_ITEM_ACTIVATED, self.on_open_mpn_url)
+        self.data_list.Bind(wx.dataview.EVT_DATAVIEW_ITEM_ACTIVATED, self.on_open_sku_url)
+
         self.data_list.Bind(wx.dataview.EVT_DATAVIEW_SELECTION_CHANGED, self.on_open_pdf)
+        self.data_list.Bind(wx.dataview.EVT_DATAVIEW_SELECTION_CHANGED, self.on_open_mpn_url)
+        self.data_list.Bind(wx.dataview.EVT_DATAVIEW_SELECTION_CHANGED, self.on_open_sku_url)
         self.data_list.Bind(wx.dataview.EVT_DATAVIEW_SELECTION_CHANGED, self.on_show_more_info)
         self.data_list.Bind(wx.dataview.EVT_DATAVIEW_SELECTION_CHANGED, self.on_tooltip)
 
@@ -86,22 +94,77 @@ class PartDetailsView(UiPartDetailsPanel):
         row = self.data_list.ItemToRow(item)
         if item is None or row == -1:
             return 
-        datasheet = self.data_list.GetTextValue(row, 0)
-        if datasheet == _("Datasheet"): 
-            if self.pdfurl != "-" :
-                self.logger.info("opening %s", str(self.pdfurl))
-                filename_pos = self.pdfurl.find('filename=')
-                if filename_pos != -1:
-                    query_pos = self.pdfurl.rfind('?')
-                    if query_pos != -1:
-                        self.pdfurl = self.pdfurl[:query_pos]
+        col = self.data_list.GetCurrentColumn().GetModelColumn()
+        if col == 1:
+            datasheet = self.data_list.GetTextValue(row, 0)
+            if datasheet == _("Datasheet"): 
+                if self.pdfurl != "-" :
+                    self.logger.info("opening %s", str(self.pdfurl))
+                    filename_pos = self.pdfurl.find('filename=')
+                    if filename_pos != -1:
+                        query_pos = self.pdfurl.rfind('?')
+                        if query_pos != -1:
+                            self.pdfurl = self.pdfurl[:query_pos]
 
-                if not self.pdfurl.startswith('http'):
-                    self.pdfurl = 'http:' + self.pdfurl
-                webbrowser.open(self.pdfurl)
+                    if not self.pdfurl.startswith('http'):
+                        self.pdfurl = 'http:' + self.pdfurl
+                    webbrowser.open(self.pdfurl)
         else:
             self.logger.debug(f"pdf trigger link error")
         event.Skip()
+
+
+    def on_open_mpn_url(self, event):
+        """Open the linked datasheet PDF on button click."""
+        item = self.data_list.GetSelection()
+        row = self.data_list.ItemToRow(item)
+        if item is None or row == -1:
+            return 
+        col = self.data_list.GetCurrentColumn().GetModelColumn()
+        if col == 1:
+            datasheet = self.data_list.GetTextValue(row, 0)
+            if datasheet == _("MPN"): 
+            # if datasheet != _("Datasheet"): 
+                if self.mpn_url != "-" or self.mpn_url:
+
+                    # 使用 UTF-8 编码将字符串转换为字节
+                    bytes_string = self.mpn_url.encode('utf-8')
+
+                    # 进行 Base64 编码
+                    base64_bytes = base64.b64encode(bytes_string)
+
+                    # 将 Base64 编码后的字节转换为字符串
+                    base64_string = base64_bytes.decode('utf-8')
+
+                    # 转换为 URL 安全的 Base64 编码
+                    base64_urlsafe_string = base64_string.replace('+', '-').replace('/', '_').rstrip('=')
+
+                    self.logger.info("opening %s", str(self.pdfurl))
+                    self.mpnurl = 'https://www.eda.cn/productDetail/' + base64_urlsafe_string
+                    webbrowser.open(self.mpnurl)
+        else:
+            self.logger.debug(f"pdf trigger link error")
+        event.Skip()
+
+
+
+    def on_open_sku_url(self, event):
+        """Open the linked datasheet PDF on button click."""
+        item = self.data_list.GetSelection()
+        row = self.data_list.ItemToRow(item)
+        if item is None or row == -1:
+            return 
+        col = self.data_list.GetCurrentColumn().GetModelColumn()
+        if col == 1:
+
+            datasheet = self.data_list.GetTextValue(row, 0)
+            if datasheet == _("ProductUrl"): 
+                if "http" in self.sku_url:
+                    webbrowser.open(self.sku_url)
+        else:
+            self.logger.debug(f"pdf trigger link error")
+        event.Skip()
+
 
     def show_image(self, picture):
         if picture:
@@ -204,10 +267,22 @@ class PartDetailsView(UiPartDetailsPanel):
             "mpn": mpn
             }
 
+        if mpn != "-" and manu_id != "-":
+            self.mpn_url =  manu_id +'-'+ mpn
 
         self.part_details_data.clear()
         for k, v in parameters.items():
-            val = self.clicked_part.get(k, "-")
+            if k == "sku":
+                    _sku = self.clicked_part.get(k, "-")
+                    if _sku != "-":
+                        # 类似（https://item.hqchip.com/2500217622.html），
+                        val = "https://item.hqchip.com/"+_sku+ ".html"
+                    else:
+                        val = " "
+                    self.sku_url = val
+            else:
+                val = self.clicked_part.get(k, "-")
+
             if val != "null" and val:
                 self.PartDetailsModel.AddRow([v, str(val)])
             else:
@@ -222,7 +297,7 @@ class PartDetailsView(UiPartDetailsPanel):
             for index, price_range in enumerate(prices_stair):
                 break_min = price_range.get("breakMin")
                 break_max = price_range.get("breakMax")
-                if break_max is 0:
+                if break_max == 0:
                     key = f">{break_min} " + _("Piece")+"(￥)"
                 else:
                     key = f"{break_min}-{break_max} " + _("Piece")+"(￥)"

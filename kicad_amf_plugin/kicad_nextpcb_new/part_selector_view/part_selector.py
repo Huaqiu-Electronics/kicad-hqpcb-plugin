@@ -12,6 +12,7 @@ from .ui_part_list_panel.part_list_view import PartListView
 import time
 import threading
 import logging
+import webbrowser
 from requests.exceptions import Timeout, ConnectionError, HTTPError
 
 # 配置日志
@@ -98,6 +99,11 @@ class PartSelectorDialog(wx.Dialog):
             wx.dataview.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.on_right_down
         )
         
+        # self.part_list_view.part_list.Bind(wx.dataview.EVT_DATAVIEW_SELECTION_CHANGED, self.on_open_sku_url)
+        # self.part_list_view.part_list.Bind(wx.dataview.EVT_DATAVIEW_ITEM_ACTIVATED, self.on_open_sku_url)
+        self.part_list_view.part_list.Bind(
+            wx.dataview.EVT_DATAVIEW_ITEM_ACTIVATED, self.on_part_selected_timer_event
+        )
 
 
         self.part_list_view.prev_button.Bind(wx.EVT_BUTTON, self.on_prev_page)
@@ -227,6 +233,9 @@ class PartSelectorDialog(wx.Dialog):
         res_datas = datas.get("result", {})
         if not res_datas:
             wx.MessageBox( _("No corresponding data was matched") )
+            self.total_num = 0
+            self.current_page = 0
+            self.populate_part_list()
             return
         self.total_num = response.json().get("total", {})
         if self.total_num == 0:
@@ -247,8 +256,7 @@ class PartSelectorDialog(wx.Dialog):
 
     def populate_part_list(self):
         """Populate the list with the result of the search."""
-        if self.search_part_list is None:
-            return
+
         self.total_pages = ceil(self.total_num, self.one_page_size)
         self.update_page_label()
         self.part_list_view.result_count.SetLabel(_("{total} Results").format(total=self.total_num))
@@ -257,8 +265,10 @@ class PartSelectorDialog(wx.Dialog):
         else:
             self.part_list_view.result_count.SetLabel(_("{total} Results").format(total=self.total_num))
 
-        parameters = ["mpn", "manufacturer", "pkg", "category", "sku", "price"]
+        parameters = ["mpn", "manufacturer", "package", "category", "sku", "price", "stock"]
         body = []
+        if self.search_part_list is None:
+            return
         if not self.search_part_list: 
             print("Search results are empty with no data to process.")
             return
@@ -273,9 +283,11 @@ class PartSelectorDialog(wx.Dialog):
         for idx, part_info in enumerate(self.search_part_list, start=1):
             sku = "-" 
             price = "-"
+            stock = "-"
             mpn = part_info["mpn"]
             part_info["sku"] = sku
             part_info["price"] = price
+            part_info["stock"] = stock
 
             # 确保idx-1不会超出列表的范围
             if idx-1 < len(self.search_part_list):
@@ -324,14 +336,17 @@ class PartSelectorDialog(wx.Dialog):
         for idx, part_info in enumerate(self.search_part_list, start=1):
             sku = "-" 
             price = "-"
+            stock = "-"
             mpn = part_info["mpn"]
             for data in res_datas:
                 if data.get("mpn") == mpn and data.get("vendor") == "hqself":
                     sku = data.get("sku", "-") 
                     price = data.get("price", "-") 
+                    stock = data.get("stock", "-") 
                     break 
             part_info["sku"] = sku
             part_info["price"] = price
+            part_info["stock"] = stock
 
             # 确保idx-1不会超出列表的范围
             if idx-1 < len(self.search_part_list):
@@ -346,6 +361,9 @@ class PartSelectorDialog(wx.Dialog):
                             val = str(price_range["rmb"])
                             val = "-" if val == "0.0" else val
                             break
+                elif k == "stock":
+                    val = str( part_info.get(k, "") )
+                    val = "-" if val == "" else val
                 else:
                     val = part_info.get(k, "")
                     val = "-" if val == "" else val
@@ -499,3 +517,25 @@ class PartSelectorDialog(wx.Dialog):
         self.part_list_view.part_list.PopupMenu(conMenu)
         conMenu.Destroy()
 
+
+
+    def on_open_sku_url(self, event):
+        """Open the linked datasheet PDF on button click."""
+        
+        item = self.part_list_view.part_list.GetSelection()
+        row = self.part_list_view.part_list.ItemToRow(item)
+        # col = self.part_list_view.part_list.GetCurrentColumn()
+        try:
+
+            col = self.part_list_view.part_list.GetCurrentColumn().GetModelColumn()
+            if row == -1:
+                return 
+            if col == 5:
+                sku_url = self.part_list_view.part_list.GetTextValue(row, 5)
+                if "http" in sku_url:
+                    webbrowser.open(sku_url)
+            else:
+                self.logger.debug(f"pdf trigger link error")
+        except Exception as e:
+            self.logger.debug(f"pdf trigger link error {e}")
+        event.Skip()

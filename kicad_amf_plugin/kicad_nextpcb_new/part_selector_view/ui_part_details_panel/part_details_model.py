@@ -48,6 +48,9 @@ class PartDetailsModel(dv.DataViewIndexListModel):
         if col == 0 and self.data[row][col] == _("Show more"):
             attr.SetColour('blue')  
             return True
+        if col == 1 and( row == 0 or row == 5 or row == 6):
+            attr.SetColour('blue')  
+            return True
 
         return False
 

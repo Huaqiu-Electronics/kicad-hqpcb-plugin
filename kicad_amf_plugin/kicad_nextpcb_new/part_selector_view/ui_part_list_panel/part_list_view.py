@@ -48,6 +48,9 @@ class PartListView(UiPartListPanel):
         self.sku = self.part_list.AppendTextColumn(
            _("Price /Pc.")+"(￥)", width=100, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
         )
+        self.sku = self.part_list.AppendTextColumn(
+           _("Stock")+"(pcs)", width=100, mode=dv.DATAVIEW_CELL_ACTIVATABLE, align=wx.ALIGN_CENTER
+        )
         self.part_list.AppendTextColumn(
             " ",
             width=1,
