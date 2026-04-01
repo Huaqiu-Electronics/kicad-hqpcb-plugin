@@ -301,13 +301,13 @@ class Fabrication:
         """Generate BOM file."""
         bomname = f"BOM-{self.filename.split('.')[0]}.csv"
         with open(
-            os.path.join(self.outputdir, bomname), "w", newline="", encoding="utf-8"
+            os.path.join(self.outputdir, bomname), "w", newline="", encoding="utf-8-sig"
         ) as csvfile:
             writer = csv.writer(csvfile, delimiter=",")
-            # writer.writerow(["Value", "Designator", "Footprint", "MPN"])
-            writer.writerow(["MPN", "Qty", "Designator","value", "manufacturer", "Category", "SKU", "Customer Supply", "Customer Remark"])
-            for part in self.parent.store.read_bom_parts():
-                writer.writerow(part)
+            writer.writerow(["序号","型号","规格参数","封装","品牌","位号","单机用量"])
+
+            for idx, part in enumerate(self.parent.store.export_parts_by_group(), start=1):
+                writer.writerow([idx] + list(part))
         self.logger.info("Finished generating BOM file")
 
     def path_message(self):

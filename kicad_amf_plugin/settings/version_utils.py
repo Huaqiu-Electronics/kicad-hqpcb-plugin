@@ -15,6 +15,8 @@ def get_version():
     # print(f"{ float('.'.join( ki_version ))  }")
     return version_float  # e.g GetBuildVersion(): e.g. '7.99.0-3969-gc5ac2337e4'
 
+def is_v10(version = get_version()):
+    return version >= 9.99 
 
 def is_v9(version = get_version()):
     return version >= 8.99 and version < 9.99
@@ -25,7 +27,7 @@ def is_v8(version = get_version()):
 def plot_text(popt):
     version = get_version()
     
-    if  is_v9(version):
+    if  is_v9(version) or is_v10(version):
         return
     else:
         return popt.SetPlotInvisibleText(False)

@@ -255,7 +255,19 @@ class NextPCBTools(wx.Dialog):
                 "SKU": "",
                 "price": "",
                 "quantity": "",
-                
+
+            }
+        ]
+        self.bom_cn = [
+            {
+                "序号": "", # 顺序号
+                "型号": "",  # MPN
+                "规格参数": "", #value
+                "封装": "",  #footprint
+                "品牌": "", # manufacturer
+                "位号": "",  # reference
+                "单机用量": "", #quantity
+
             }
         ]
 
@@ -926,7 +938,7 @@ class NextPCBTools(wx.Dialog):
         self.parts = self.store.export_parts_by_group()
         temp_dir = os.path.join(self.file_path, "nextpcb")
         bomFileName = "BOM_" + schematic_name + ".csv"
-        if len(self.bom) > 0:
+        if len(self.bom_cn) > 0:
             try:
                 with open(
                     (os.path.join(temp_dir, bomFileName)),
@@ -936,10 +948,13 @@ class NextPCBTools(wx.Dialog):
                 ) as outfile:
                     csv_writer = csv.writer(outfile)
                     # writing headers of CSV file
-                    csv_writer.writerow(self.bom[0].keys())
+                    csv_writer.writerow(self.bom_cn[0].keys())
                     # Output all of the component information
-                    for component in self.parts:
-                        csv_writer.writerow(component)
+                    # SQL returns: mpn, value, footprint, manufacturer, reference, quantity
+                    # bom_cn order: 序号, 型号, 规格参数, 封装, 品牌, 位号, 单机用量
+                    for idx, component in enumerate(self.parts, start=1):
+                        row = [idx] + list(component)
+                        csv_writer.writerow(row)
                 wx.MessageBox(
                     _("Export BOM file finished. file path : {temp_dir}").format(temp_dir=temp_dir),
                     _("Info"),

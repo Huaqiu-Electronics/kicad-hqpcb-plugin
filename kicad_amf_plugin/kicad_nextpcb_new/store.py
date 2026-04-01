@@ -146,8 +146,8 @@ class Store:
         with contextlib.closing(sqlite3.connect(self.dbfile)) as con:
             con.create_collation("naturalsort", natural_sort_collation)
             with con as cur:
-                query = f"SELECT GROUP_CONCAT(reference), value, footprint, mpn, manufacturer, \
-                category, sku, price, COUNT(*) as quantity FROM part_info \
+                query = f"SELECT mpn, value, footprint, manufacturer, \
+                GROUP_CONCAT(reference), COUNT(*) as quantity FROM part_info \
                 GROUP BY value, footprint, mpn, manufacturer \
                 ORDER BY reference COLLATE naturalsort ASC "
                 a = [list(part) for part in cur.execute(query).fetchall()]
