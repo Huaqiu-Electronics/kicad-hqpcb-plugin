@@ -9,6 +9,7 @@ from zipfile import ZipFile
 import contextlib
 import shutil
 import tempfile
+import pcbnew
 
 from pcbnew import (
     EXCELLON_WRITER,
@@ -154,6 +155,39 @@ class FabricationDataGenerator:
             ("VScore", Cmts_User, "V score cut"),
         ]
 
+        layer_map = {
+        "In1_Cu": pcbnew.In1_Cu,
+        "In2_Cu": pcbnew.In2_Cu,
+        "In3_Cu": pcbnew.In3_Cu,
+        "In4_Cu": pcbnew.In4_Cu,
+        "In5_Cu": pcbnew.In5_Cu,
+        "In6_Cu": pcbnew.In6_Cu,
+        "In7_Cu": pcbnew.In7_Cu,
+        "In8_Cu": pcbnew.In8_Cu,
+        "In9_Cu": pcbnew.In9_Cu,
+        "In10_Cu": pcbnew.In10_Cu,
+        "In11_Cu": pcbnew.In11_Cu,
+        "In12_Cu": pcbnew.In12_Cu,
+        "In13_Cu": pcbnew.In13_Cu,
+        "In14_Cu": pcbnew.In14_Cu,
+        "In15_Cu": pcbnew.In15_Cu,
+        "In16_Cu": pcbnew.In16_Cu,
+        "In17_Cu": pcbnew.In17_Cu,
+        "In18_Cu": pcbnew.In18_Cu,
+        "In19_Cu": pcbnew.In19_Cu,
+        "In20_Cu": pcbnew.In20_Cu,
+        "In21_Cu": pcbnew.In21_Cu,
+        "In22_Cu": pcbnew.In22_Cu,
+        "In23_Cu": pcbnew.In23_Cu,
+        "In24_Cu": pcbnew.In24_Cu,
+        "In25_Cu": pcbnew.In25_Cu,
+        "In26_Cu": pcbnew.In26_Cu,
+        "In27_Cu": pcbnew.In27_Cu,
+        "In28_Cu": pcbnew.In28_Cu,
+        "In29_Cu": pcbnew.In29_Cu,
+        "In30_Cu": pcbnew.In30_Cu,
+        }
+
         plot_plan = []
 
         # Single sided PCB
@@ -167,7 +201,7 @@ class FabricationDataGenerator:
             plot_plan = (
                 plot_plan_top
                 + [
-                    (f"CuIn{layer}", layer, f"Inner layer {layer}")
+                    (f"CuIn{layer}", layer_map[f"In{layer}_Cu"], f"Inner layer {layer}")
                     for layer in range(1, layer_count - 1)
                 ]
                 + plot_plan_bottom
